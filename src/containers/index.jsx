@@ -13,15 +13,17 @@ class HoursTracking extends Component {
   render() {
     return (<BrowserRouter>
     <div>
-      <nav>
-        <li>
-          <ul><Link to="/">Inicio</Link></ul>
-          <ul><Link to="/about">Acerca de</Link></ul>
-          <ul><Link to="/login">Iniciar Sesión</Link></ul>
-          <ul><Link to="/logout">Cerrar Sesión</Link></ul>
-          <ul><Link to="/signup">Registrarte</Link></ul>
-        </li>
-      </nav>
+      <header>
+        <nav>
+          <li>
+            <ul><Link to="/">Inicio</Link></ul>
+            <ul><Link to="/about">Acerca de</Link></ul>
+            <ul><Link to="/login">Iniciar Sesión</Link></ul>
+            <ul><Link to="/logout">Cerrar Sesión</Link></ul>
+            <ul><Link to="/signup">Registrarte</Link></ul>
+          </li>
+        </nav>
+      </header>
       <div>
         <Route exact path="/" component={App}/>
         <Route path="/about" component={About}/>

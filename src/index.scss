@@ -5,14 +5,69 @@ html {
   @return #{$px/16}rem;
 }
 body {
-
+  box-sizing: border-box;
 }
 
 header, footer {
+  background-color: aquamarine;
+  padding: px2rem(10);
+  border-radius: px2rem(4);
+  text-align: center;
+}
 
+header {
+  margin: 4rem 8rem;
+}
+
+footer {
+  margin: 16rem 8rem 8rem;
+}
+
+li {
+  list-style-type: none;
+  ul {
+    padding: 0;
+  }
+}
+
+p {
+  line-height: 1.6;
+}
+
+button, input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-color: burlywood;
 }
 
 main {
+  margin: 0 auto;
+  padding: px2rem(40);
+  display: -webkit-flex;
+  display: flex;
+  justify-content: space-around;
+  button {
+    height: 2rem;
+    margin: px2rem(10) 0;
+  }
+  label {
+    margin: 0 px2rem(20);
+    float: left;
+  }
+  #record {
+    text-align: right;
+  }
+  input {
+    width: 10rem;
+    height: 1.5rem;
+  }
+  form {
+    text-align: right;
+  }
+  p {
+    border-bottom: solid px2rem(3);
+  }
   @media screen
   and (orientation: landscape) {
 
@@ -22,5 +77,35 @@ main {
 @media only screen
 and (min-width: 320px)
 and (max-width: 480px) {
-
+  header {
+    margin: 8rem 0;
+  }  
+  footer {
+    margin: 16rem 0 8rem;
+  }
+  main {
+    -ms-flex-direction: column;
+    flex-direction: column;
+    text-align: left;
+    button {
+      display: -webkit-box;
+      box-sizing: border-box;
+      height: 40px;
+      border-radius: 4px;
+    }
+    #record {
+      display: -webkit-inline-flex;
+      display: inline-flex;
+      flex-direction: column;
+      text-align: left;
+    }
+    .item {
+      flex-basis: 44%;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+    }
+  }
 }

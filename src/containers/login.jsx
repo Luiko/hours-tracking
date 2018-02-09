@@ -9,11 +9,11 @@ class Login extends Component {
     return (
       <main>
         <form action="/login" method="post">
-        <label htmlFor="username">Nombre de Usuario</label>
-        <input type="text" id="username" name="username"/>
-        <label htmlFor="password">Constraseña</label>
-        <input type="text" id="password" name="password"/>
-        <input type="submit" value="Iniciar Sesión"/>
+          <label htmlFor="username">Nombre de Usuario</label>
+          <input required type="text" id="username" name="username"/><br/>
+          <label htmlFor="password">Constraseña</label>
+          <input required type="password" id="password" name="password"/><br/>
+          <input type="submit" value="Iniciar Sesión"/>
         </form>
       </main>
     );

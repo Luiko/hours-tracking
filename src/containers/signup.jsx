@@ -9,15 +9,15 @@ class Signup extends Component {
     return (
       <main>
         <form action="/login" method="post">
-        <label htmlFor="username">Nombre de Usuario</label>
-        <input type="text" id="username" name="username"/>
-        <label htmlFor="email">Nombre de Usuario</label>
-        <input type="email" id="email" name="email"/>
-        <label htmlFor="password">Constraseña</label>
-        <input type="text" id="password" name="password"/>
-        <label htmlFor="repeatpassword">Repetir Constraseña</label>
-        <input type="text" id="repeatpassword" name="repeatpassword"/>
-        <input type="submit" value="Registarte"/>
+          <label htmlFor="username">Nombre de Usuario</label>
+          <input required type="text" id="username" name="username"/><br/>
+          <label htmlFor="email">Email</label>
+          <input required type="email" id="email" name="email"/><br/>
+          <label htmlFor="password">Constraseña</label>
+          <input required type="password" id="password" name="password"/><br/>
+          <label htmlFor="repeatpassword">Repetir Constraseña</label>
+          <input required type="password" id="repeatpassword" name="repeatpassword"/><br/>
+          <input type="submit" value="Registarte"/>
         </form>
       </main>
     );

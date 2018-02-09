@@ -4,7 +4,8 @@
   "description": "simple time tracking",
   "main": "server/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "front": "webpack && node server/index"
   },
   "repository": {
     "type": "git",
@@ -40,6 +41,7 @@
     "enzyme": "^3.3.0",
     "eslint": "^4.16.0",
     "eslint-plugin-react": "^7.6.1",
+    "file-loader": "^1.1.6",
     "html-webpack-plugin": "^2.30.1",
     "node-sass": "^4.7.2",
     "nodemon": "^1.14.12",

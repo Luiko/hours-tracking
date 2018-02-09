@@ -23,6 +23,26 @@ const server = new Hapi.Server({
     path: '/',
     handler: (request, h) => h.file('index.html')
   });
+  server.route({
+    method: 'GET',
+    path: '/about',
+    handler: (require, h) => h.file('index.html')
+  });
+  server.route({
+    method: 'GET',
+    path: '/login',
+    handler: (require, h) => h.file('index.html')
+  });
+  server.route({
+    method: 'GET',
+    path: '/logout',
+    handler: (require, h) => h.file('index.html')
+  });
+  server.route({
+    method: 'GET',
+    path: '/signup',
+    handler: (require, h) => h.file('index.html')
+  });
 
   server.route({
     method: 'GET',
