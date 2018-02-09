@@ -48,8 +48,12 @@ main {
   display: flex;
   justify-content: space-around;
   button {
-    height: 2rem;
+    display: -webkit-box;
+    box-sizing: border-box;
     margin: px2rem(10) 0;
+    height: 3rem;
+    width: 6rem;
+    border-radius: 4px;
   }
   label {
     margin: 0 px2rem(20);
@@ -87,12 +91,6 @@ and (max-width: 480px) {
     -ms-flex-direction: column;
     flex-direction: column;
     text-align: left;
-    button {
-      display: -webkit-box;
-      box-sizing: border-box;
-      height: 40px;
-      border-radius: 4px;
-    }
     #record {
       display: -webkit-inline-flex;
       display: inline-flex;
