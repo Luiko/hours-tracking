@@ -31,11 +31,14 @@ class App extends Component {
   }
 
   setTimer() {
+    let start = Date.now();
     timer = setInterval(function () {
       if (this.state.remainingTime > 0) {
+        const now = Date.now();
         this.setState(prevState => ({ 
-          remainingTime: prevState.remainingTime - 1
+          remainingTime: prevState.remainingTime - Math.floor((now - start) / 1000)
         }));
+        start = now;
       }
     }.bind(this), 1000);
   }
@@ -57,12 +60,23 @@ class App extends Component {
   }
 
   componentDidUpdate() {
-    if (this.state.name === PAUSE && !this.state.remainingTime) {
+    const { name, remainingTime } = this.state;
+    const aHour = 60 * 60;
+    if (name === PAUSE && remainingTime === 0) {
       this.setState(function (prevState) {
         return {
-          remainingTime: 60 * 60,
+          remainingTime: aHour,
           dayHours: prevState.dayHours + 1,
           weekHours: prevState.weekHours + 1
+        };
+      });
+    } else if (name === PAUSE && remainingTime < 0) {
+      this.setState(function (prevState) {
+        const hourPassed = Math.floor((-1 * prevState.remainingTime) / aHour);
+        return {
+          remainingTime: hourPassed? aHour * hourPassed + remainingTime: aHour + remainingTime,
+          dayHours: prevState.dayHours + 1 + hourPassed,
+          weekHours: prevState.weekHours + 1 + hourPassed
         };
       });
     }
