@@ -19,7 +19,7 @@ class HoursTracking extends Component {
             <ul><Link to="/">Inicio</Link></ul>
             <ul><Link to="/about">Acerca de</Link></ul>
             <ul><Link to="/login">Iniciar Sesión</Link></ul>
-            <ul><Link to="/logout">Cerrar Sesión</Link></ul>
+            <ul><a href="/logout">Cerrar Sesión</a></ul>
             <ul><Link to="/signup">Registrarte</Link></ul>
           </li>
         </nav>
