@@ -3,11 +3,11 @@ const Path = require('path');
 const Inert = require('inert');
 const HapiAuthCookie = require('hapi-auth-cookie');
 const Bcrypt = require('bcrypt');
-const { getUsers } = require('./models');
+const { getUsers, addAccount } = require('./models');
 require('dotenv').config();
 
 const server = new Hapi.Server({
-  port: 3000,
+  port: process.env.PORT,
   routes: {
     files: {
       relativeTo: Path.join(__dirname, '../dist')
@@ -53,12 +53,12 @@ const server = new Hapi.Server({
   server.route({
     method: 'GET',
     path: '/about',
-    handler: (require, h) => h.file(INDEX)
+    handler: (request, h) => h.file(INDEX)
   });
   server.route({
     method: 'GET',
     path: '/login',
-    handler: (require, h) => h.file(INDEX)
+    handler: (request, h) => h.file(INDEX)
   });
   server.route({
     method: 'POST',
@@ -99,8 +99,24 @@ const server = new Hapi.Server({
   server.route({
     method: 'GET',
     path: '/signup',
-    handler: (require, h) => h.file(INDEX)
+    handler: (request, h) => h.file(INDEX)
   });
+  server.route({
+    method: 'POST',
+    path: '/signup',
+    handler({ payload }, h) {
+      return addAccount(payload.username, payload.email, payload.password)
+        .then(function (username) {
+          return username;
+        })
+        .catch(function (err) {
+          console.error('sign up failed');
+          console.error(err.message);
+          return h.response(err.errors || err.code).code(400);
+        })
+      ;
+    }
+  })
 
   server.route({
     method: 'GET',

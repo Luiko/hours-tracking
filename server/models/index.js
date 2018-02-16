@@ -12,15 +12,12 @@ db.once('open', function () {
 const Account = mongoose.model('Account', accountSchema);
 mongoose.connect(process.env.STR_DB_CON);
 
-exports.addAccount = async function (username, password) {
-  try {
-    const hash = await Bcrypt.hash(password.toString(), 14);
-    const account = new Account({ username, password: hash });
-    const process = await account.save();
-    process.log();
-  } catch (error) {
-    console.error(error);
-  }
+exports.addAccount = async function (username, email, password) {
+  const hash = await Bcrypt.hash(password.toString(), 14);
+  const account = new Account({ username, email, password: hash });
+  const process = await account.save();
+  process.log();
+  return username;
 }
 
 exports.getUsers = async function () {

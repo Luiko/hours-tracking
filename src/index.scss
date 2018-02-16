@@ -41,6 +41,25 @@ button, input {
   background-color: burlywood;
 }
 
+.welcome-faded {
+  padding: 1em;
+  position: absolute;
+  color: rosybrown;
+  transition-delay: 500ms;
+  transition-duration: 2s;
+  transition-property: opacity;
+  transition-timing-function: ease-in-out;
+  opacity: 1;
+}
+.faded {
+  background-color: rgba($color: #000000, $alpha: 0.8);
+  transition-delay: 500ms;
+  transition-duration: 2s;
+  transition-property: opacity;
+  transition-timing-function: ease-in-out;
+  opacity: 0;
+}
+
 main {
   margin: 0 auto;
   padding: px2rem(40);
