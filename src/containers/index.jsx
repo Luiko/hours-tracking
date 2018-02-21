@@ -35,7 +35,7 @@ class HoursTracking extends Component {
         if (username) {
           this.setState({
             username, dayHours, remainingTime,
-            stateName: remainingTime? CONTINUE : START
+            stateName: remainingTime && remainingTime % 3600 ? CONTINUE : START
           });
         }
       }.bind(this))
