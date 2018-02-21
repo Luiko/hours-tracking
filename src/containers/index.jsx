@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { BrowserRouter, Link, Route } from 'react-router-dom';
-import { get } from 'axios';
+import { get, post } from 'axios';
 import App from './app.jsx';
 import About from '../components/about.jsx';
 import Login from './login.jsx';
@@ -11,6 +11,7 @@ const START = 'Start';
 const PAUSE = 'Pause';
 const CONTINUE = 'Continue';
 let timer;
+let start;
 
 class HoursTracking extends Component {
   constructor(props) {
@@ -30,9 +31,12 @@ class HoursTracking extends Component {
 
   componentDidMount() {
     get('/auth')
-      .then(function ({ data: { username } }) {
+      .then(function ({ data: { username, dayHours, remainingTime } }) {
         if (username) {
-          this.setState({ username });
+          this.setState({
+            username, dayHours, remainingTime,
+            stateName: remainingTime? CONTINUE : START
+          });
         }
       }.bind(this))
       .catch(console.error)
@@ -79,14 +83,15 @@ class HoursTracking extends Component {
   }
 
   setTimer() {
-    let start = Date.now();
+    start = Date.now();
+    let cycle = start;
     timer = setInterval(function () {
       if (this.state.remainingTime > 0) {
         const now = Date.now();
         this.setState(prevState => ({
-          remainingTime: prevState.remainingTime - Math.floor((now - start) / 1000)
+          remainingTime: prevState.remainingTime - Math.floor((now - cycle) / 1000)
         }));
-        start = now;
+        cycle = now;
       }
     }.bind(this), 1000);
   }
@@ -97,6 +102,14 @@ class HoursTracking extends Component {
       this.setState({ stateName: PAUSE, remainingTime: 60 * 60 });
       this.setTimer();
     } else if (stateName === PAUSE) {
+      post('/iterations', { start, end: Date.now() })
+        .then(function (res) {
+          console.log(res.data);
+        })
+        .catch(function (err) {
+          console.error(err.message)
+        });
+      ;
       this.setState({ stateName: CONTINUE });
       clearInterval(timer);
     } else if (stateName === CONTINUE) {

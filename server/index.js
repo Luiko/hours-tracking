@@ -3,7 +3,7 @@ const Path = require('path');
 const Inert = require('inert');
 const HapiAuthCookie = require('hapi-auth-cookie');
 const Bcrypt = require('bcrypt');
-const { getUsers, addAccount } = require('./models');
+const { getUsers, addAccount, addIteration, getDaySeconds } = require('./models');
 require('dotenv').config();
 
 const server = new Hapi.Server({
@@ -32,7 +32,7 @@ const server = new Hapi.Server({
     redirectTo: '/login',
     redirectOnTry: 'false',
     requestDecoratorName: 'cookieAuth',
-    validateFunc: async function (request, { username }) {
+    async validateFunc(request, { username }) {
       const users = await getUsers();
       const user = users[username];
       return { valid: !!user };
@@ -63,7 +63,7 @@ const server = new Hapi.Server({
   server.route({
     method: 'POST',
     path: '/login',
-    handler: async function (request, h) {
+    async handler(request, h) {
       if (request.auth.isAuthenticated) return h.redirect('/');
       try {
         var { username, password } = request.payload;
@@ -127,8 +127,53 @@ const server = new Hapi.Server({
         mode: 'try'
       }
     },
-    handler: (request) => request.auth.isAuthenticated && request.auth.credentials
-  })
+    async handler(request, h) {
+      const { isAuthenticated } = request.auth;
+      if (isAuthenticated) {
+        try {
+          console.log('credentials', request.auth.credentials);
+          const { credentials: { username } } = request.auth;
+          const daySeconds = await getDaySeconds(username);
+          const dayHours = Math.floor(daySeconds / 3600);
+          const remainingTime = 3600 - (daySeconds % 3600);
+          request.cookieAuth.set('dayHours', dayHours);
+          request.cookieAuth.set('remainingTime', remainingTime);
+          return { username, dayHours, remainingTime };
+        } catch (error) {
+          console.log(error);
+          return h.response(error.message).code(500);
+        }
+      }
+      return false;
+    }
+  });
+  server.route({
+    method: 'POST',
+    path: '/iterations',
+    options: {
+      auth: 'restricted',
+      plugins: {
+        'hapi-auth-cookie': {
+          redirectTo: false
+        }
+       }
+    },
+    handler(request, h) {
+      const { username } = request.auth.credentials;
+      return addIteration(username, request.payload)
+      .then(function () {
+        console.log('iteration added to ', username);
+        return h.response(`iteration added to ${username}`);
+      }, function (err) {
+        if (err.statusCode === 404) {
+          console.log('add iteration failed', err);
+          return h.response(err.message).code(err.statusCode);
+        }
+        console.log('add iteration failed', err);
+        return h.response(err.message).code(500);
+      });
+    }
+  });
 
   server.route({
     method: 'GET',
