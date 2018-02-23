@@ -13,12 +13,11 @@ db.once('open', function () {
 const Account = mongoose.model('Account', accountSchema);
 mongoose.connect(process.env.STR_DB_CON);
 
-exports.addAccount = async function (username, email, password) {
+exports.addAccount = async function (email, username, password) {
   const hash = await Bcrypt.hash(password.toString(), 14);
   const account = new Account({ username, email, password: hash });
   const process = await account.save();
   process.log();
-  return username;
 };
 
 exports.getUsers = async function () {
@@ -91,3 +90,16 @@ exports.getHoursDay = async function (username, day) {
   const secondsDay = await exports.getDaySeconds(username, day);
   return Math.floor(secondsDay / (60 * 60));
 };
+
+exports.deleteUser = async function (username) {
+  return new Promise(function (resolve, reject) {
+    Account.deleteOne({ username }, function (err) {
+      if (err) {
+        console.log(err.message);
+        reject(err);
+        return;
+      }
+      resolve();
+    });
+  });
+}

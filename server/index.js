@@ -68,21 +68,21 @@ const server = new Hapi.Server({
       try {
         var { username, password } = request.payload;
       } catch (error) {
-        return h.file(INDEX).code(400); //missing username or password
+        return h.file(INDEX).code(400);
       }
       if (!username || !password) {
-        return h.file(INDEX).code(400); //missing username or password
+        return h.file(INDEX).code(400);
       }
       const users = await getUsers();
       const user = users[username];
       if (!user) {
-          return h.file(INDEX).code(401); //invalid username
+          return h.file(INDEX).code(401);
       }
       if (await Bcrypt.compare(password, user.password)) {
         request.cookieAuth.set({ username });
-        return h.redirect('/'); //home authenticated
+        return h.redirect('/');
       }
-      return h.file('index.html'); //auth failed
+      return h.file('index.html'); //fourth auth failed
     }
   });
   server.route({
@@ -104,19 +104,24 @@ const server = new Hapi.Server({
   server.route({
     method: 'POST',
     path: '/signup',
-    handler({ payload }, h) {
-      return addAccount(payload.username, payload.email, payload.password)
-        .then(function (username) {
-          return username;
-        })
-        .catch(function (err) {
-          console.error('sign up failed');
-          console.error(err.message);
-          return h.response(err.errors || err.code).code(400);
-        })
-      ;
+    async handler({ payload }, h) {
+      if (!payload || !payload.email) {
+        console.error('invalid payload');
+        return h.response({
+          message: 'invalid payload',
+          statusCode: 400
+        }).code(400);
+      }
+      const { email, username, password } = payload;
+      try {
+        await addAccount(email, username, password);
+        return username;
+      } catch (err) {
+        console.error('sign up failed:', err.message);
+        return h.response(err.name || err.code).code(400);
+      }
     }
-  })
+  });
 
   server.route({
     method: 'GET',
@@ -131,20 +136,20 @@ const server = new Hapi.Server({
       const { isAuthenticated } = request.auth;
       if (isAuthenticated) {
         try {
-          console.log('credentials', request.auth.credentials);
           const { credentials: { username } } = request.auth;
           const daySeconds = await getDaySeconds(username);
           const dayHours = Math.floor(daySeconds / 3600);
           const remainingTime = 3600 - (daySeconds % 3600);
           request.cookieAuth.set('dayHours', dayHours);
           request.cookieAuth.set('remainingTime', remainingTime);
+          console.log('credentials', request.auth.credentials);
           return { username, dayHours, remainingTime };
         } catch (error) {
           console.log(error);
           return h.response(error.message).code(500);
         }
       }
-      return false;
+      return h.response(false).code(401);
     }
   });
   server.route({
@@ -161,16 +166,16 @@ const server = new Hapi.Server({
     handler(request, h) {
       const { username } = request.auth.credentials;
       return addIteration(username, request.payload)
-      .then(function () {
-        console.log('iteration added to ', username);
-        return h.response(`iteration added to ${username}`);
-      }, function (err) {
-        if (err.statusCode === 404) {
+        .then(function () {
+          console.log('iteration added to ', username);
+          return h.response(`iteration added to ${username}`);
+        }, function (err) {
+          if (err.statusCode === 404) {
+            console.log('add iteration failed', err);
+            return h.response(err.message).code(err.statusCode);
+          }
           console.log('add iteration failed', err);
-          return h.response(err.message).code(err.statusCode);
-        }
-        console.log('add iteration failed', err);
-        return h.response(err.message).code(500);
+          return h.response(err.message).code(500);
       });
     }
   });
