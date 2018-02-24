@@ -91,7 +91,7 @@ exports.getHoursDay = async function (username, day) {
   return Math.floor(secondsDay / (60 * 60));
 };
 
-exports.deleteUser = async function (username) {
+exports.deleteUser = function (username) {
   return new Promise(function (resolve, reject) {
     Account.deleteOne({ username }, function (err) {
       if (err) {
@@ -102,4 +102,35 @@ exports.deleteUser = async function (username) {
       resolve();
     });
   });
-}
+};
+
+exports.getWeekSeconds = function (username) {
+  return new Promise(function (resolve, reject) {
+    Account.findOne({ username }, function (err, user) {
+      if (err) {
+        console.log(err.message);
+        reject(err);
+        return;
+      }
+      const weekIterations = user.iterations.filter(iterationToWeek);
+
+      const m = moment();
+      const weekSeconds = weekIterations.reduce(iterationsToWeekSeconds, 0);
+      resolve(weekSeconds);
+
+      function iterationToWeek({ start, end }) {
+        const isSame = moment().isSame.bind(moment());
+        return isSame(start, 'day') || isSame(end, 'week');
+      }
+
+      const weekStart = m.startOf('week');
+      const weekEnd = m.endOf('week');
+
+      function iterationsToWeekSeconds(prev, { start, end }) {
+        const _start = moment(start).isSame(m, 'week')? start: weekStart;
+        const _end = moment(end).isSame(m, 'week')? end: weekEnd;
+        return prev + (moment(_end).diff(_start, 'seconds'));
+      }
+    });
+  });
+};

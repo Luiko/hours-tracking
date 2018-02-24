@@ -31,10 +31,10 @@ class HoursTracking extends Component {
 
   componentDidMount() {
     get('/auth')
-      .then(function ({ data: { username, dayHours, remainingTime } }) {
+      .then(function ({ data: { username, dayHours, weekHours, remainingTime } }) {
         if (username) {
           this.setState({
-            username, dayHours, remainingTime,
+            username, dayHours, remainingTime, weekHours,
             stateName: remainingTime && remainingTime % 3600 ? CONTINUE : START
           });
         }

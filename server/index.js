@@ -3,7 +3,9 @@ const Path = require('path');
 const Inert = require('inert');
 const HapiAuthCookie = require('hapi-auth-cookie');
 const Bcrypt = require('bcrypt');
-const { getUsers, addAccount, addIteration, getDaySeconds } = require('./models');
+const {
+  getUsers, addAccount, addIteration, getDaySeconds, getWeekSeconds
+} = require('./models');
 require('dotenv').config();
 
 const server = new Hapi.Server({
@@ -137,13 +139,17 @@ const server = new Hapi.Server({
       if (isAuthenticated) {
         try {
           const { credentials: { username } } = request.auth;
+          const hour = 3600;
           const daySeconds = await getDaySeconds(username);
-          const dayHours = Math.floor(daySeconds / 3600);
-          const remainingTime = 3600 - (daySeconds % 3600);
+          const dayHours = Math.floor(daySeconds / hour);
+          const weekSeconds = await getWeekSeconds(username);
+          const weekHours = Math.floor(weekSeconds / hour);
+          const remainingTime = hour - (weekSeconds % hour);
           request.cookieAuth.set('dayHours', dayHours);
+          request.cookieAuth.set('weekHours', weekHours);
           request.cookieAuth.set('remainingTime', remainingTime);
           console.log('credentials', request.auth.credentials);
-          return { username, dayHours, remainingTime };
+          return { username, dayHours, weekHours, remainingTime };
         } catch (error) {
           console.log(error);
           return h.response(error.message).code(500);
