@@ -21,7 +21,10 @@ exports.addAccount = async function (email, username, password) {
 };
 
 exports.getUsers = async function () {
-  const users = await Account.find({}, { _id: 0, __v: 0 });
+  const users = await Account.find({}, {
+    _id: 0, __v: 0,
+    iterations: 0, createdAt: 0, updatedAt: 0 
+  });
   return users.reduce(function (prev, curr) {
     prev[curr.username] = curr;
     return prev;
