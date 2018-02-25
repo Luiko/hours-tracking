@@ -185,6 +185,22 @@ const server = new Hapi.Server({
       });
     }
   });
+  server.route({
+    method: 'POST',
+    path: '/session',
+    options: {
+      auth: {
+        strategy: 'restricted',
+        mode: 'try'
+      }
+    },
+    handler(request) {
+      const { btnName, start } = request.payload;
+      request.cookieAuth.set('btnName', btnName);
+      request.cookieAuth.set('start', start);
+      return 'state saved'
+    }
+  });
 
   server.route({
     method: 'GET',

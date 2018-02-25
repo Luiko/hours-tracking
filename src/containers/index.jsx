@@ -17,7 +17,7 @@ class HoursTracking extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      stateName: START,
+      btnName: START,
       dayHours: 0,
       weekHours: 0,
       remainingTime: 0,
@@ -35,7 +35,7 @@ class HoursTracking extends Component {
         if (username) {
           this.setState({
             username, dayHours, remainingTime, weekHours,
-            stateName: remainingTime && remainingTime % 3600 ? CONTINUE : START
+            btnName: remainingTime && remainingTime % 3600 ? CONTINUE : START
           });
         }
       }.bind(this))
@@ -64,7 +64,7 @@ class HoursTracking extends Component {
         {<Welcome username={username}/>}
         <Route exact path="/"
           render={() => <App
-            stateName={this.state.stateName}
+            btnName={this.state.btnName}
             dayHours={this.state.dayHours}
             weekHours={this.state.weekHours}
             handleClick={this.handleClick}
@@ -104,11 +104,11 @@ class HoursTracking extends Component {
   }
 
   handleClick() {
-    const { stateName } = this.state;
-    if (stateName === START) {
-      this.setState({ stateName: PAUSE, remainingTime: 60 * 60 });
+    const { btnName } = this.state;
+    if (btnName === START) {
+      this.setState({ btnName: PAUSE, remainingTime: 60 * 60 });
       this.setTimer();
-    } else if (stateName === PAUSE) {
+    } else if (btnName === PAUSE) {
       post('/iterations', { start, end: Date.now() })
         .then(function (res) {
           console.log(res.data);
@@ -117,10 +117,10 @@ class HoursTracking extends Component {
           console.error(err.message)
         });
       ;
-      this.setState({ stateName: CONTINUE });
+      this.setState({ btnName: CONTINUE });
       clearTimeout(timer);
-    } else if (stateName === CONTINUE) {
-      this.setState({ stateName: PAUSE });
+    } else if (btnName === CONTINUE) {
+      this.setState({ btnName: PAUSE });
       this.setTimer();
     } else {
       throw 'This error should never happend';
@@ -128,9 +128,9 @@ class HoursTracking extends Component {
   }
 
   tickUpdate() {
-    const { stateName, remainingTime } = this.state;
+    const { btnName, remainingTime } = this.state;
     const aHour = 60 * 60;
-    if (stateName === PAUSE && remainingTime === 0) {
+    if (btnName === PAUSE && remainingTime === 0) {
       this.setState(function (prevState) {
         return {
           remainingTime: aHour,
@@ -138,7 +138,7 @@ class HoursTracking extends Component {
           weekHours: prevState.weekHours + 1
         };
       });
-    } else if (stateName === PAUSE && remainingTime < 0) {
+    } else if (btnName === PAUSE && remainingTime < 0) {
       this.setState(function (prevState) {
         const hourPassed = Math.floor((-1 * prevState.remainingTime) / aHour);
         return {

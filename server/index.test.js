@@ -185,4 +185,17 @@ test('post routes', function (t) {
     })
     .catch(t.fail)
   ;
+
+  request(app)
+    .post('/iterations')
+    .send({})
+    .expect(401, function (err) {
+      const msg = 'should fail to post empty payload to iterations';
+      if (err) {
+        t.fail(msg, err.message);
+        return;
+      }
+      t.pass(msg);
+    })
+  ;
 });

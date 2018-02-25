@@ -23,7 +23,7 @@ class App extends Component {
 
   render() {
     return (<main>
-      <button onClick={this.props.handleClick}>{this.props.stateName}</button>
+      <button onClick={this.props.handleClick}>{this.props.btnName}</button>
       <div id="record">
         <label htmlFor="dayhours">Horas del día completadas</label>
         <input readOnly type="number" id="dayhours" value={this.props.dayHours}/><br/>
