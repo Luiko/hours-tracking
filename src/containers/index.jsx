@@ -39,7 +39,9 @@ class HoursTracking extends Component {
           });
         }
       }.bind(this))
-      .catch(console.error)
+      .catch(function (err) {
+        console.error(err.message);
+      })
     ;
   }
 
@@ -84,16 +86,21 @@ class HoursTracking extends Component {
 
   setTimer() {
     start = Date.now();
-    let cycle = start;
-    timer = setInterval(function () {
+    timer = setTimeout(interval.bind(this, start), 1000);
+    function interval(cycle) {
+      const now = Date.now();
+      const diff = now - cycle;
       if (this.state.remainingTime > 0) {
-        const now = Date.now();
-        this.setState(prevState => ({
-          remainingTime: prevState.remainingTime - Math.floor((now - cycle) / 1000)
-        }));
-        cycle = now;
+        this.setState(function (prevState) {
+          return {
+            remainingTime: prevState.remainingTime - Math.round(diff / 1000)
+          }
+        });
       }
-    }.bind(this), 1000);
+      const totalms = now - start;
+      const time = Math.min(1000, 1000 - (totalms % 1000));
+      timer = setTimeout(interval.bind(this, now), time);
+    }
   }
 
   handleClick() {
@@ -111,7 +118,7 @@ class HoursTracking extends Component {
         });
       ;
       this.setState({ stateName: CONTINUE });
-      clearInterval(timer);
+      clearTimeout(timer);
     } else if (stateName === CONTINUE) {
       this.setState({ stateName: PAUSE });
       this.setTimer();
