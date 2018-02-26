@@ -31,12 +31,20 @@ class HoursTracking extends Component {
 
   componentDidMount() {
     get('/auth')
-      .then(function ({ data: { username, dayHours, weekHours, remainingTime } }) {
+      .then(function (res) {
+        const {
+          username, dayHours, weekHours,
+          remainingTime, btnName, start: _start
+        } = res.data;
         if (username) {
           this.setState({
             username, dayHours, remainingTime, weekHours,
             btnName: remainingTime && remainingTime % 3600 ? CONTINUE : START
           });
+        } else if (_start) {
+          start = _start;
+          this.setTimer();
+          this.setState({ btnName })
         }
       }.bind(this))
       .catch(function (err) {
@@ -85,7 +93,6 @@ class HoursTracking extends Component {
   }
 
   setTimer() {
-    start = Date.now();
     timer = setTimeout(interval.bind(this, start), 1000);
     function interval(cycle) {
       const now = Date.now();
@@ -106,8 +113,14 @@ class HoursTracking extends Component {
   handleClick() {
     const { btnName } = this.state;
     if (btnName === START) {
+      start = Date.now();
       this.setState({ btnName: PAUSE, remainingTime: 60 * 60 });
       this.setTimer();
+      post('/session', { start, btnName }).then(function (res) {
+        console.log(res.data);
+      }, function (err) {
+        console.log(err.message);
+      });
     } else if (btnName === PAUSE) {
       post('/iterations', { start, end: Date.now() })
         .then(function (res) {
@@ -120,8 +133,14 @@ class HoursTracking extends Component {
       this.setState({ btnName: CONTINUE });
       clearTimeout(timer);
     } else if (btnName === CONTINUE) {
+      start = Date.now();
       this.setState({ btnName: PAUSE });
       this.setTimer();
+      post('/session', { start, btnName }).then(function (res) {
+        console.log(res.data);
+      }, function (err) {
+        console.log(err.message);
+      });
     } else {
       throw 'This error should never happend';
     }
