@@ -34,17 +34,17 @@ class HoursTracking extends Component {
       .then(function (res) {
         const {
           username, dayHours, weekHours,
-          remainingTime, btnName, start: _start
+          remainingTime, start: _start
         } = res.data;
-        if (username) {
+        if (_start) {
+          start = _start;
+          this.setTimer();
+          this.setState({ username, remainingTime: 3600, btnName: 'Pause' })
+        } else if (username) {
           this.setState({
             username, dayHours, remainingTime, weekHours,
             btnName: remainingTime && remainingTime % 3600 ? CONTINUE : START
           });
-        } else if (_start) {
-          start = _start;
-          this.setTimer();
-          this.setState({ btnName })
         }
       }.bind(this))
       .catch(function (err) {

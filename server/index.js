@@ -140,7 +140,7 @@ const server = new Hapi.Server({
         try {
           const { credentials: { username, btnName, start } } = request.auth;
           if (btnName === 'Start' || btnName === 'Continue') {
-            return { btnName, start };
+            return { username, start };
           }
           const hour = 3600;
           const daySeconds = await getDaySeconds(username);
