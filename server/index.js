@@ -174,6 +174,7 @@ const server = new Hapi.Server({
     },
     handler(request, h) {
       const { username } = request.auth.credentials;
+      request.cookieAuth.set('btnName', 'Pause');
       return addIteration(username, request.payload)
         .then(function () {
           console.log('iteration added to ', username);

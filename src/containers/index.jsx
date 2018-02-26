@@ -113,14 +113,8 @@ class HoursTracking extends Component {
   handleClick() {
     const { btnName } = this.state;
     if (btnName === START) {
-      start = Date.now();
-      this.setState({ btnName: PAUSE, remainingTime: 60 * 60 });
-      this.setTimer();
-      post('/session', { start, btnName }).then(function (res) {
-        console.log(res.data);
-      }, function (err) {
-        console.log(err.message);
-      });
+      this.saveState.call(this, btnName);
+      this.setState({ btnName: PAUSE, remainingTime: 3600 });
     } else if (btnName === PAUSE) {
       post('/iterations', { start, end: Date.now() })
         .then(function (res) {
@@ -134,16 +128,21 @@ class HoursTracking extends Component {
       clearTimeout(timer);
     } else if (btnName === CONTINUE) {
       start = Date.now();
+      this.saveState.call(this, btnName);
       this.setState({ btnName: PAUSE });
-      this.setTimer();
-      post('/session', { start, btnName }).then(function (res) {
-        console.log(res.data);
-      }, function (err) {
-        console.log(err.message);
-      });
     } else {
       throw 'This error should never happend';
     }
+  }
+
+  saveState(btnName) {
+    start = Date.now();
+    this.setTimer();
+    post('/session', { start, btnName }).then(function (res) {
+      console.log(res.data);
+    }, function (err) {
+      console.log(err.message);
+    });
   }
 
   tickUpdate() {
