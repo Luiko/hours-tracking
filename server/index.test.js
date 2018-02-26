@@ -2,6 +2,7 @@ const test = require('tape');
 const request = require('supertest');
 const app = require('./index');
 const { deleteUser } = require('./models/index');
+require('dotenv').config();
 
 test('auth', function (t) {
   t.plan(2);
@@ -187,15 +188,30 @@ test('post routes', function (t) {
   ;
 
   request(app)
-    .post('/iterations')
-    .send({})
+    .post('/session')
     .expect(401, function (err) {
-      const msg = 'should fail to post empty payload to iterations';
+      const msg = 'should fail post /session with empty payload';
       if (err) {
-        t.fail(msg, err.message);
+        t.fail(msg + ': ' + err.message);
         return;
       }
       t.pass(msg);
     })
   ;
+  request(app)
+    .post('/session')
+    .send({ btnName: 'PAUSE', start: Date.now() - 3600 })
+    .expect(401, function (err) {
+      const msg = 'should fail post /session without auth';
+      if (err) {
+        t.fail(msg + ': ' + err.message);
+        return;
+      }
+      t.pass(msg);
+    })
+  ;
+});
+
+test('temp cookie', function () {
+
 });

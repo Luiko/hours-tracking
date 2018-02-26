@@ -167,7 +167,7 @@ const server = new Hapi.Server({
         'hapi-auth-cookie': {
           redirectTo: false
         }
-       }
+      }
     },
     handler(request, h) {
       const { username } = request.auth.credentials;
@@ -189,16 +189,21 @@ const server = new Hapi.Server({
     method: 'POST',
     path: '/session',
     options: {
-      auth: {
-        strategy: 'restricted',
-        mode: 'try'
+      auth: 'restricted',
+      plugins: {
+        'hapi-auth-cookie': {
+          redirectTo: false
+        }
       }
     },
-    handler(request) {
+    handler(request, h) {
+      if (!request.payload) {
+        return h.response().code(400);
+      }
       const { btnName, start } = request.payload;
       request.cookieAuth.set('btnName', btnName);
       request.cookieAuth.set('start', start);
-      return 'state saved'
+      return 'state saved';
     }
   });
 
