@@ -106,7 +106,7 @@ const server = new Hapi.Server({
   server.route({
     method: 'POST',
     path: '/signup',
-    async handler({ payload }, h) {
+    async handler({ cookieAuth, payload }, h) {
       if (!payload || !payload.email) {
         console.error('invalid payload');
         return h.response({
@@ -117,6 +117,7 @@ const server = new Hapi.Server({
       const { email, username, password } = payload;
       try {
         await addAccount(email, username, password);
+        cookieAuth.set({ username });
         return username;
       } catch (err) {
         console.error('sign up failed:', err.message);

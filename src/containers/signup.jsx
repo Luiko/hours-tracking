@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { post } from 'axios';
+import { Redirect } from 'react-router-dom';
 
 class Signup extends Component {
   constructor(props) {
@@ -40,6 +41,9 @@ class Signup extends Component {
   }
 
   render() {
+    if (this.props.username) {
+      return <Redirect to="/" />
+    }
     return (
       <main>
         <form action="/signup" method="post" onSubmit={this.handleSubmit}>

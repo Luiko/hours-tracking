@@ -85,7 +85,9 @@ class HoursTracking extends Component {
         />
         <Route path="/about" component={About}/>
         <Route path="/login" component={Login}/>
-        <Route path="/signup" render={() => <SingUp auth={this.auth} />}/>
+        <Route path="/signup" render={function () {
+          return <SingUp auth={this.auth} username={this.state.username} />
+        }.bind(this)}/>
       </div>
     </div>
     </BrowserRouter>);
