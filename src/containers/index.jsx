@@ -38,8 +38,11 @@ class HoursTracking extends Component {
         } = res.data;
         if (_start) {
           start = _start;
+          this.setState({
+            username, dayHours, weekHours,
+            remainingTime: remainingTime, btnName: PAUSE
+          });
           this.setTimer();
-          this.setState({ username, remainingTime: 3600, btnName: 'Pause' })
         } else if (username) {
           this.setState({
             username, dayHours, remainingTime, weekHours,
