@@ -151,7 +151,7 @@ const server = new Hapi.Server({
           request.cookieAuth.set('weekHours', weekHours);
           request.cookieAuth.set('remainingTime', remainingTime);
           console.log('credentials', request.auth.credentials);
-          if (btnName === 'Start' || btnName === 'Continue') {
+          if (btnName === 'Pause') {
             return { username, dayHours, weekHours, remainingTime, start };
           }
           return { username, dayHours, weekHours, remainingTime };
@@ -176,7 +176,7 @@ const server = new Hapi.Server({
     },
     handler(request, h) {
       const { username } = request.auth.credentials;
-      request.cookieAuth.set('btnName', 'Pause');
+      request.cookieAuth.set('btnName', 'Continue');
       return addIteration(username, request.payload)
         .then(function () {
           console.log('iteration added to ', username);
@@ -204,6 +204,7 @@ const server = new Hapi.Server({
     },
     handler(request, h) {
       if (!request.payload) {
+
         return h.response().code(400);
       }
       const { btnName, start } = request.payload;

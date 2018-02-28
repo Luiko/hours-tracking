@@ -118,7 +118,7 @@ class HoursTracking extends Component {
   handleClick() {
     const { btnName } = this.state;
     if (btnName === START) {
-      this.saveState.call(this, btnName);
+      this.saveState.call(this, PAUSE);
       this.setState({ btnName: PAUSE, remainingTime: 3600 });
     } else if (btnName === PAUSE) {
       post('/iterations', { start, end: Date.now() })
@@ -133,7 +133,7 @@ class HoursTracking extends Component {
       clearTimeout(timer);
     } else if (btnName === CONTINUE) {
       start = Date.now();
-      this.saveState.call(this, btnName);
+      this.saveState.call(this, PAUSE);
       this.setState({ btnName: PAUSE });
     } else {
       throw 'This error should never happend';
