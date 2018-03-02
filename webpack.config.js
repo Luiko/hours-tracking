@@ -1,5 +1,4 @@
 const Path = require('path');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
@@ -25,15 +24,13 @@ module.exports = {
           { loader: 'css-loader' },
           { loader: 'sass-loader' }
         ]
-      },
-      {
-        test: /\.jpg/,
-        loader: 'file-loader'
       }
     ]
   },
   plugins: [
-    new CleanWebpackPlugin('  dist'),
-    new HtmlWebpackPlugin({ template: './src/index.html' })
+    new HtmlWebpackPlugin({
+      template: './src/index.html',
+      minify: { html5: true, removeAttributeQuotes: true, removeComments: true }
+    })
   ]
 };
