@@ -8,6 +8,7 @@ class Login extends Component {
   render() {
     return (
       <main>
+        <h1>Iniciar Sesión</h1>
         <form action="/login" method="post">
           <label htmlFor="username">Nombre de Usuario</label>
           <input required type="text" id="username" name="username"/><br/>

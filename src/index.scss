@@ -9,7 +9,7 @@ body {
 }
 
 header, footer {
-  background-color: aquamarine;
+  background-color: coral;
   padding: px2rem(10);
   border-radius: px2rem(4);
   text-align: center;
@@ -27,6 +27,9 @@ li {
   list-style-type: none;
   ul {
     padding: 0;
+    a {
+      color: darkblue;
+    }
   }
 }
 
@@ -65,7 +68,8 @@ main {
   padding: px2rem(40);
   display: -webkit-flex;
   display: flex;
-  justify-content: space-around;
+  flex-direction: column;
+  max-width: px2rem(400);
   button {
     display: -webkit-box;
     box-sizing: border-box;
@@ -73,17 +77,19 @@ main {
     height: 3rem;
     width: 6rem;
     border-radius: 4px;
+    outline: none;
   }
   label {
     margin: 0 px2rem(20);
-    float: left;
-  }
-  #record {
-    text-align: right;
   }
   input {
     width: 10rem;
     height: 1.5rem;
+  }
+  #record {
+    input {
+      margin: 0 px2rem(20);
+    }
   }
   form {
     text-align: right;
@@ -101,10 +107,10 @@ main {
 and (min-width: 320px)
 and (max-width: 480px) {
   header {
-    margin: 8rem 0;
+    margin: 6rem 0;
   }  
   footer {
-    margin: 16rem 0 8rem;
+    margin: 14rem 0 8rem;
   }
   main {
     -ms-flex-direction: column;
@@ -123,6 +129,9 @@ and (max-width: 480px) {
       display: flex;
       flex-direction: column;
       text-align: left;
+    }
+    input {
+      margin: 0 px2rem(20);
     }
   }
 }

@@ -46,6 +46,7 @@ class Signup extends Component {
     }
     return (
       <main>
+        <h1>Registarte</h1>
         <form action="/signup" method="post" onSubmit={this.handleSubmit}>
           <label htmlFor="email">Email</label>
           <input required type="email" id="email" name="email"

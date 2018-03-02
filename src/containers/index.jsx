@@ -99,18 +99,40 @@ class HoursTracking extends Component {
 
   setTimer() {
     timer = setTimeout(interval.bind(this, start), 1000);
+    let another = 0;
+    let allCyclesTime = 0;
+    let counted = 0;
+    let totalSuppusedTime = 0;
     function interval(cycle) {
       const now = Date.now();
       const diff = now - cycle;
+      const totalms = now - start;
+      another += diff;
+      allCyclesTime += time;
+      totalSuppusedTime += 1000;
+      const betterTime = 1000 - (totalms - totalSuppusedTime);
+      const time = 1000 - (totalms % 1000);
+      const decrement = Math.round(diff / 1000);
       if (this.state.remainingTime > 0) {
         this.setState(function (prevState) {
           return {
-            remainingTime: prevState.remainingTime - Math.round(diff / 1000)
-          }
+            remainingTime: prevState.remainingTime - decrement
+          };
         });
       }
-      const totalms = now - start;
-      const time = Math.min(1000, 1000 - (totalms % 1000));
+      if (counted % 3 == 0)
+        console.log(
+          'tt', totalms,
+          'rt', allCyclesTime,
+          'a', another,
+          't', time,
+          'd', diff,
+          'c', counted,
+          'tst', totalSuppusedTime,
+          'bt', betterTime,
+          'd', decrement
+        );
+      counted++;
       timer = setTimeout(interval.bind(this, now), time);
     }
   }
