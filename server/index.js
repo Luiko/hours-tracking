@@ -27,7 +27,9 @@ const server = new Hapi.Server({
   const INDEX = 'index.html';
 
   server.auth.strategy('restricted', 'cookie', {
+    cookie: 'sid',
     password: process.env.COOKIE_PASSWORD,
+    ttl: 2 * 24 * 60 * 60 * 1000,
     clearInvalid: true,
     keepAlive: false,
     isSecure: false,
