@@ -1,15 +1,16 @@
 {
  "name": "Horas Contadas",
- "short_name": "HorasContadas",
+ "short_name": "HorasCon",
  "description": "A simple web app for productivity that track hours",
  "start_url": ".",
  "dir": "ltr",
  "lang": "es",
- "display": "fullscreen",
+ "display": "standalone",
  "orientation": "any",
  "prefer_related_applications": false,
  "background_color": "#ffffff",
  "theme_color": "aliceblue",
+ "scope": "/",
  "icons": [
   {
    "src": "\/android-icon-36x36.png",
