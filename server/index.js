@@ -205,21 +205,31 @@ const server = new Hapi.Server({
         }
       }
     },
-    handler(request, h) {
+    async handler(request, h) {
       const { username } = request.auth.credentials;
-      request.cookieAuth.set('btnName', 'Continue');
-      return addIteration(username, request.payload)
-        .then(function () {
-          console.log('iteration added to ', username);
-          return h.response(`iteration added to ${username}`);
-        }, function (err) {
-          if (err.statusCode === 404) {
-            console.log('add iteration failed', err);
-            return h.response(err.message).code(err.statusCode);
-          }
+      const hour = 3600;
+      try {
+        await addIteration(username, request.payload);
+      } catch (err) {
+        if (err.statusCode === 404) {
           console.log('add iteration failed', err);
-          return h.response(err.message).code(500);
-      });
+          return h.response(err.message).code(err.statusCode);
+        }
+        console.log('add iteration failed', err);
+        return h.response(err.message).code(500);
+      }
+      const daySeconds = await getDaySeconds(username);
+      const weekSeconds = await getWeekSeconds(username);
+      const weekHours = Math.floor(weekSeconds / hour);
+      const remainingTime = hour - (weekSeconds % hour);
+      const remaining = (weekSeconds - daySeconds) % hour;
+      const dayHours = Math.floor((daySeconds + remaining) / hour);
+      request.cookieAuth.set('dayHours', dayHours);
+      request.cookieAuth.set('weekHours', weekHours);
+      request.cookieAuth.set('remainingTime', remainingTime);
+      request.cookieAuth.set('btnName', 'Continue');
+      console.log('iteration added to ', username);
+      return h.response(`iteration added to ${username}`);
     }
   });
   server.route({
