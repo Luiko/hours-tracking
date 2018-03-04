@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 const Hapi = require('hapi');
 const Path = require('path');
 const Inert = require('inert');
