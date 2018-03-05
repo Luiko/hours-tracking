@@ -62,13 +62,13 @@ class HoursTracking extends Component {
     <div>
       <header>
         <nav>
-          <li>
-            <ul><Link to="/">Inicio</Link></ul>
-            <ul><Link to="/about">Acerca de</Link></ul>
-            {!!!username && <ul><Link to="/login">Iniciar Sesión</Link></ul>}
-            {!!username && <ul><a href="/logout">Cerrar Sesión</a></ul>}
-            {!!!username && <ul><Link to="/signup">Registrarte</Link></ul>}
-          </li>
+          <ul>
+            <li><Link to="/">Inicio</Link></li>
+            <li><Link to="/about">Acerca de</Link></li>
+            {!!!username && <li><Link to="/login">Iniciar Sesión</Link></li>}
+            {!!username && <li><a href="/logout">Cerrar Sesión</a></li>}
+            {!!!username && <li><Link to="/signup">Registrarte</Link></li>}
+          </ul>
         </nav>
       </header>
       <div>
