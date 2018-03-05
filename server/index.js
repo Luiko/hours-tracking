@@ -9,8 +9,9 @@ const {
 } = require('./models');
 require('dotenv').config();
 
+const { PORT, COOKIE_PASSWORD, SECURE_CONN } = process.env;
 const server = new Hapi.Server({
-  port: process.env.PORT,
+  port: PORT,
   routes: {
     files: {
       relativeTo: Path.join(__dirname, '../dist')
@@ -29,11 +30,11 @@ const server = new Hapi.Server({
 
   server.auth.strategy('restricted', 'cookie', {
     cookie: 'sid',
-    password: process.env.COOKIE_PASSWORD,
+    password: COOKIE_PASSWORD,
     ttl: 2 * 24 * 60 * 60 * 1000,
     clearInvalid: true,
     keepAlive: false,
-    isSecure: false,
+    isSecure: !!SECURE_CONN.valueOf(),
     redirectTo: '/login',
     redirectOnTry: 'false',
     requestDecoratorName: 'cookieAuth',
