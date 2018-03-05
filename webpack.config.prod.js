@@ -8,7 +8,6 @@ module.exports = {
     filename: 'bundle.js',
     path: Path.resolve(__dirname, 'dist')
   },
-  devtool: 'inline-source-map',
   module: {
     rules: [
       {
@@ -37,6 +36,9 @@ module.exports = {
         removeComments: true,
         collapseWhitespace: true
       }
+    }),
+    new Webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify('produnction')
     }),
     new Webpack.optimize.UglifyJsPlugin()
   ]
