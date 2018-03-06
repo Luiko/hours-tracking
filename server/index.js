@@ -9,13 +9,30 @@ const {
 } = require('./models');
 require('dotenv').config();
 
-const { PORT, COOKIE_PASSWORD, SECURE_CONN } = process.env;
+const { PORT, COOKIE_PASSWORD } = process.env;
 const server = new Hapi.Server({
+  address: '0.0.0.0',
+  app: { version: 'v0.2.0' },
+  autoListen: true,
+  // cache: { engine: require('catbox-memory') },
+  compression: { minBytes: 1024 },
+  debug: { request: ['implementation'] },
+  host: 'www.horascontadas.com',
+  load: { sampleInterval: 0, concurrent: 0 },
+  router: { isCaseSensitive: true, stripTrailingSlash: false },
   port: PORT,
   routes: {
     files: {
       relativeTo: Path.join(__dirname, '../dist')
     }
+  },
+  state: {
+    strictHeader: true,
+    ignoreErrors: false,
+    isSecure: false,
+    isHttpOnly: true,
+    isSameSite: 'Strict',
+    encoding: 'none'
   }
 });
 
@@ -34,7 +51,7 @@ const server = new Hapi.Server({
     ttl: 2 * 24 * 60 * 60 * 1000,
     clearInvalid: true,
     keepAlive: false,
-    isSecure: !!SECURE_CONN.valueOf(),
+    isSecure: false,
     redirectTo: '/login',
     redirectOnTry: 'false',
     requestDecoratorName: 'cookieAuth',
