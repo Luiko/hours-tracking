@@ -8,8 +8,14 @@ const {
   getUsers, addAccount, addIteration, getDaySeconds, getWeekSeconds
 } = require('./models');
 require('dotenv').config();
+const fs = require('fs');
 
-const { PORT, COOKIE_PASSWORD } = process.env;
+const { PORT, COOKIE_PASSWORD, CERT_PATH, PKEY_PATH, NODE_ENV } = process.env;
+let SECURE = true;
+if (NODE_ENV != 'production') {
+  SECURE = false;
+}
+
 const server = new Hapi.Server({
   address: '0.0.0.0',
   app: { version: 'v0.2.0' },
@@ -29,11 +35,13 @@ const server = new Hapi.Server({
   state: {
     strictHeader: true,
     ignoreErrors: false,
-    isSecure: false,
+    isSecure: SECURE,
     isHttpOnly: true,
     isSameSite: 'Strict',
     encoding: 'none'
-  }
+  },
+  tls: SECURE?
+    { cert: fs.readSync(CERT_PATH), key: fs.readSync(PKEY_PATH) } : undefined
 });
 
 (async function () {
@@ -51,7 +59,7 @@ const server = new Hapi.Server({
     ttl: 2 * 24 * 60 * 60 * 1000,
     clearInvalid: true,
     keepAlive: false,
-    isSecure: false,
+    isSecure: SECURE,
     redirectTo: '/login',
     redirectOnTry: 'false',
     requestDecoratorName: 'cookieAuth',
