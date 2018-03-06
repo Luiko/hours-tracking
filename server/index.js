@@ -10,14 +10,16 @@ const {
 require('dotenv').config();
 const fs = require('fs');
 
-const { PORT, COOKIE_PASSWORD, CERT_PATH, PKEY_PATH, NODE_ENV } = process.env;
+const {
+  PORT, COOKIE_PASSWORD, CERT_PATH, PKEY_PATH, NODE_ENV, LOCAL
+} = process.env;
 let SECURE = true;
 if (NODE_ENV != 'production') {
   SECURE = false;
 }
 
 const server = new Hapi.Server({
-  address: '0.0.0.0',
+  address: LOCAL.valueOf()? '127.0.0.1' : '0.0.0.0',
   app: { version: 'v0.2.0' },
   autoListen: true,
   // cache: { engine: require('catbox-memory') },
