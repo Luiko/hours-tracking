@@ -171,16 +171,9 @@ const server = new Hapi.Server({
       if (isAuthenticated) {
         try {
           const { credentials: { username, btnName, start } } = request.auth;
-          const hour = 3600;
-          const daySeconds = await getDaySeconds(username);
-          const weekSeconds = await getWeekSeconds(username);
-          const weekHours = Math.floor(weekSeconds / hour);
-          const remainingTime = hour - (weekSeconds % hour);
-          const remaining = (weekSeconds - daySeconds) % hour;
-          const dayHours = Math.floor((daySeconds + remaining) / hour);
-          request.cookieAuth.set('dayHours', dayHours);
-          request.cookieAuth.set('weekHours', weekHours);
-          request.cookieAuth.set('remainingTime', remainingTime);
+          const {
+            dayHours, weekHours, remainingTime
+          } = await updateCookieState(username, request);
           console.log('credentials', request.auth.credentials);
           if (btnName === 'Pause') {
             return { username, dayHours, weekHours, remainingTime, start };
@@ -207,7 +200,6 @@ const server = new Hapi.Server({
     },
     async handler(request, h) {
       const { username } = request.auth.credentials;
-      const hour = 3600;
       try {
         await addIteration(username, request.payload);
       } catch (err) {
@@ -218,16 +210,7 @@ const server = new Hapi.Server({
         console.log('add iteration failed', err);
         return h.response(err.message).code(500);
       }
-      const daySeconds = await getDaySeconds(username);
-      const weekSeconds = await getWeekSeconds(username);
-      const weekHours = Math.floor(weekSeconds / hour);
-      const remainingTime = hour - (weekSeconds % hour);
-      const remaining = (weekSeconds - daySeconds) % hour;
-      const dayHours = Math.floor((daySeconds + remaining) / hour);
-      request.cookieAuth.set('dayHours', dayHours);
-      request.cookieAuth.set('weekHours', weekHours);
-      request.cookieAuth.set('remainingTime', remainingTime);
-      request.cookieAuth.set('btnName', 'Continue');
+      await updateCookieState(username, request);
       console.log('iteration added to ', username);
       return h.response(`iteration added to ${username}`);
     }
@@ -275,3 +258,18 @@ const server = new Hapi.Server({
 })();
 
 module.exports = server.listener;
+
+async function updateCookieState(username, request) {
+  const hour = 3600;
+  const daySeconds = await getDaySeconds(username);
+  const weekSeconds = await getWeekSeconds(username);
+  const weekHours = Math.floor(weekSeconds / hour);
+  const remainingTime = hour - (weekSeconds % hour);
+  const remaining = (weekSeconds - daySeconds) % hour;
+  const dayHours = Math.floor((daySeconds + remaining) / hour);
+  request.cookieAuth.set('dayHours', dayHours);
+  request.cookieAuth.set('weekHours', weekHours);
+  request.cookieAuth.set('remainingTime', remainingTime);
+  request.cookieAuth.set('btnName', 'Continue');
+  return { dayHours, weekHours, remainingTime };
+}
