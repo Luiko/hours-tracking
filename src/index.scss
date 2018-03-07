@@ -23,10 +23,11 @@ footer {
   margin: 16rem 8rem 8rem;
 }
 
-li {
-  list-style-type: none;
-  ul {
-    padding: 0;
+ul {
+  padding: 0;
+  li {
+    list-style-type: none;
+    padding: px2rem(7);
     a {
       color: darkblue;
     }
