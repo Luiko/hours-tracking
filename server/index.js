@@ -19,7 +19,7 @@ if (NODE_ENV != 'production') {
 }
 
 const server = new Hapi.Server({
-  address: LOCAL.valueOf()? '127.0.0.1' : '0.0.0.0',
+  address: LOCAL == true? '127.0.0.1' : '0.0.0.0',
   app: { version: 'v0.2.0' },
   autoListen: true,
   // cache: { engine: require('catbox-memory') },
