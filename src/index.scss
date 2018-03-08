@@ -16,11 +16,11 @@ header, footer {
 }
 
 header {
-  margin: 4rem 8rem;
+  margin: 4rem 2rem;
 }
 
 footer {
-  margin: 16rem 8rem 8rem;
+  margin: 16rem 2rem 8rem;
 }
 
 ul {
@@ -64,6 +64,19 @@ button, input {
   opacity: 0;
 }
 
+.separate {
+  margin-top: 11px;
+  margin-top: px2rem(11);
+}
+label.separate {
+  text-align: justify;
+}
+input.separate {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
 main {
   margin: 0 auto;
   padding: px2rem(40);
@@ -80,17 +93,13 @@ main {
     border-radius: 4px;
     outline: none;
   }
-  label {
-    margin: 0 px2rem(20);
-  }
   input {
     width: 10rem;
     height: 1.5rem;
   }
   #record {
-    input {
-      margin: 0 px2rem(20);
-    }
+    display: flex;
+    flex-wrap: wrap;
   }
   form {
     text-align: right;
@@ -101,38 +110,5 @@ main {
   @media screen
   and (orientation: landscape) {
 
-  }
-}
-
-@media only screen
-and (min-width: 320px)
-and (max-width: 480px) {
-  header {
-    margin: 6rem 0;
-  }  
-  footer {
-    margin: 14rem 0 8rem;
-  }
-  main {
-    -ms-flex-direction: column;
-    flex-direction: column;
-    text-align: left;
-    #record {
-      display: -webkit-inline-flex;
-      display: inline-flex;
-      flex-direction: column;
-      text-align: left;
-    }
-    .item {
-      flex-basis: 44%;
-    }
-    form {
-      display: flex;
-      flex-direction: column;
-      text-align: left;
-    }
-    input {
-      margin: 0 px2rem(20);
-    }
   }
 }
