@@ -1,44 +1,33 @@
-html {
-  font-size: 16px;
-}
 @function px2rem($px) {
   @return #{$px/16}rem;
 }
-body {
-  box-sizing: border-box;
-}
 
-header, footer {
-  background-color: coral;
-  padding: px2rem(10);
-  border-radius: px2rem(4);
-  text-align: center;
-}
-
-header {
-  margin: 4rem 8rem;
+main {
+  padding-bottom: 16px;
+  padding-bottom: 2rem;
 }
 
 footer {
-  margin: 16rem 8rem 8rem;
+  padding: 64px 0;
+  padding: 4rem 0;
 }
 
+h1,
 ul {
-  padding: 0;
-  li {
-    list-style-type: none;
-    padding: px2rem(7);
-    a {
-      color: darkblue;
-    }
-  }
+  margin: 0;
 }
 
-p {
-  line-height: 1.6;
+h1 {
+  padding: 22 0;
+  padding: px2rem(22) 0;
+  background: grey;
+  background: lightslategrey;
+  background: hsl(200, 30%, 50%);
+  color: white;
+  color: whitesmoke;
 }
 
-button, input {
+.reset-appearance {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
@@ -64,75 +53,21 @@ button, input {
   opacity: 0;
 }
 
-main {
-  margin: 0 auto;
-  padding: px2rem(40);
-  display: -webkit-flex;
-  display: flex;
-  flex-direction: column;
-  max-width: px2rem(400);
-  button {
-    display: -webkit-box;
-    box-sizing: border-box;
-    margin: px2rem(10) 0;
-    height: 3rem;
-    width: 6rem;
-    border-radius: 4px;
-    outline: none;
-  }
-  label {
-    margin: 0 px2rem(20);
-  }
-  input {
-    width: 10rem;
-    height: 1.5rem;
-  }
-  #record {
-    input {
-      margin: 0 px2rem(20);
-    }
-  }
-  form {
-    text-align: right;
-  }
-  p {
-    border-bottom: solid px2rem(3);
-  }
-  @media screen
-  and (orientation: landscape) {
-
-  }
+.align-content-right {
+  text-align: right;
 }
 
-@media only screen
-and (min-width: 320px)
-and (max-width: 480px) {
-  header {
-    margin: 6rem 0;
-  }  
-  footer {
-    margin: 14rem 0 8rem;
-  }
-  main {
-    -ms-flex-direction: column;
-    flex-direction: column;
-    text-align: left;
-    #record {
-      display: -webkit-inline-flex;
-      display: inline-flex;
-      flex-direction: column;
-      text-align: left;
-    }
-    .item {
-      flex-basis: 44%;
-    }
-    form {
-      display: flex;
-      flex-direction: column;
-      text-align: left;
-    }
-    input {
-      margin: 0 px2rem(20);
-    }
-  }
+.left-margin {
+  margin-left: 60%;
+}
+
+.pad-content {
+  padding-left: 64px;
+  padding-left: 4rem;
+}
+
+.separate {
+  display: inline-block;
+  margin-top: 16px;
+  margin-top: 1rem;
 }

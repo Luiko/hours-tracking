@@ -15,6 +15,37 @@ class Signup extends Component {
     this.handleInput = this.handleInput.bind(this);
   }
 
+  render() {
+    if (this.props.username) {
+      return <Redirect to="/" />
+    }
+    return (
+      <main>
+        <h2>Registarte</h2>
+        <form action="/signup" method="post" onSubmit={this.handleSubmit}>
+          <label htmlFor="email">Email</label><br/>
+          <input required type="email" id="email" name="email"
+            value={this.state.email} onInput={this.handleInput}
+          /><br/>
+          <label htmlFor="username">Nombre de Usuario</label><br/>
+          <input required type="text" id="username" name="username"
+            value={this.state.username} onInput={this.handleInput}
+          /><br/>
+          <label htmlFor="password">Constraseña</label><br/>
+          <input required type="password" id="password" name="password"
+            value={this.state.password} onInput={this.handleInput}
+          /><br/>
+          <label htmlFor="repeatpassword">Repetir Constraseña</label><br/>
+          <input required type="password" id="repeatpassword"
+            name="repeatpassword" value={this.state.repeatpassword}
+            onInput={this.handleInput}
+          /><br/>
+          <input type="submit" value="Registarte" onInput={this.handleInput}/>
+        </form>
+      </main>
+    );
+  }
+
   handleSubmit(event) {
     event.preventDefault();
     if (this.state.password !== this.state.repeatpassword) {
@@ -38,37 +69,6 @@ class Signup extends Component {
   handleInput(e) {
     const { target } = e;
     this.setState({ [target.name]: target.value });
-  }
-
-  render() {
-    if (this.props.username) {
-      return <Redirect to="/" />
-    }
-    return (
-      <main>
-        <h1>Registarte</h1>
-        <form action="/signup" method="post" onSubmit={this.handleSubmit}>
-          <label htmlFor="email">Email</label>
-          <input required type="email" id="email" name="email"
-            value={this.state.email} onInput={this.handleInput}
-          /><br/>
-          <label htmlFor="username">Nombre de Usuario</label>
-          <input required type="text" id="username" name="username"
-            value={this.state.username} onInput={this.handleInput}
-          /><br/>
-          <label htmlFor="password">Constraseña</label>
-          <input required type="password" id="password" name="password"
-            value={this.state.password} onInput={this.handleInput}
-          /><br/>
-          <label htmlFor="repeatpassword">Repetir Constraseña</label>
-          <input required type="password" id="repeatpassword"
-            name="repeatpassword" value={this.state.repeatpassword}
-            onInput={this.handleInput}
-          /><br/>
-          <input type="submit" value="Registarte" onInput={this.handleInput}/>
-        </form>
-      </main>
-    );
   }
 }
 

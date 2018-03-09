@@ -1,11 +1,6 @@
 import React, { Component } from 'react';
-import { BrowserRouter, Link, Route } from 'react-router-dom';
 import { get, post } from 'axios';
-import App from './app.jsx';
-import About from '../components/about.jsx';
-import Login from './login.jsx';
-import SingUp from './signup.jsx';
-import Welcome from '../components/welcome.jsx';
+import HoursTrackingComponent from '../components/index.jsx';
 
 const START = 'Start';
 const PAUSE = 'Pause';
@@ -57,40 +52,12 @@ class HoursTracking extends Component {
   }
 
   render() {
-    const { username } = this.state;
-    return (<BrowserRouter>
-    <div>
-      <header>
-        <nav>
-          <ul>
-            <li><Link to="/">Inicio</Link></li>
-            <li><Link to="/about">Acerca de</Link></li>
-            {!!!username && <li><Link to="/login">Iniciar Sesión</Link></li>}
-            {!!username && <li><a href="/logout">Cerrar Sesión</a></li>}
-            {!!!username && <li><Link to="/signup">Registrarte</Link></li>}
-          </ul>
-        </nav>
-      </header>
-      <div>
-        {<Welcome username={username}/>}
-        <Route exact path="/"
-          render={() => <App
-            btnName={this.state.btnName}
-            dayHours={this.state.dayHours}
-            weekHours={this.state.weekHours}
-            handleClick={this.handleClick}
-            remainingTime={this.state.remainingTime}
-            tickUpdate={this.tickUpdate}
-          />}
-        />
-        <Route path="/about" component={About}/>
-        <Route path="/login" component={Login}/>
-        <Route path="/signup" render={function () {
-          return <SingUp auth={this.auth} username={this.state.username} />
-        }.bind(this)}/>
-      </div>
-    </div>
-    </BrowserRouter>);
+    return (<HoursTrackingComponent
+      {...this.state}
+      auth={this.auth}
+      tickUpdate={this.tickUpdate}
+      handleClick={this.handleClick}
+    />);
   }
 
   auth(username) {
