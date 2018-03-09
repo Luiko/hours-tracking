@@ -1,44 +1,33 @@
-html {
-  font-size: 16px;
-}
 @function px2rem($px) {
   @return #{$px/16}rem;
 }
-body {
-  box-sizing: border-box;
-}
 
-header, footer {
-  background-color: coral;
-  padding: px2rem(10);
-  border-radius: px2rem(4);
-  text-align: center;
-}
-
-header {
-  margin: 4rem 2rem;
+main {
+  padding-bottom: 16px;
+  padding-bottom: 2rem;
 }
 
 footer {
-  margin: 16rem 2rem 8rem;
+  padding: 64px 0;
+  padding: 4rem 0;
 }
 
+h1,
 ul {
-  padding: 0;
-  li {
-    list-style-type: none;
-    padding: px2rem(7);
-    a {
-      color: darkblue;
-    }
-  }
+  margin: 0;
 }
 
-p {
-  line-height: 1.6;
+h1 {
+  padding: 22 0;
+  padding: px2rem(22) 0;
+  background: grey;
+  background: lightslategrey;
+  background: hsl(200, 30%, 50%);
+  color: white;
+  color: whitesmoke;
 }
 
-button, input {
+.reset-appearance {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
@@ -64,51 +53,21 @@ button, input {
   opacity: 0;
 }
 
+.align-content-right {
+  text-align: right;
+}
+
+.left-margin {
+  margin-left: 60%;
+}
+
+.pad-content {
+  padding-left: 64px;
+  padding-left: 4rem;
+}
+
 .separate {
-  margin-top: 11px;
-  margin-top: px2rem(11);
-}
-label.separate {
-  text-align: justify;
-}
-input.separate {
-  margin-left: auto;
-  margin-right: auto;
-  text-align: center;
-}
-
-main {
-  margin: 0 auto;
-  padding: px2rem(40);
-  display: -webkit-flex;
-  display: flex;
-  flex-direction: column;
-  max-width: px2rem(400);
-  button {
-    display: -webkit-box;
-    box-sizing: border-box;
-    margin: px2rem(10) 0;
-    height: 3rem;
-    width: 6rem;
-    border-radius: 4px;
-    outline: none;
-  }
-  input {
-    width: 10rem;
-    height: 1.5rem;
-  }
-  #record {
-    display: flex;
-    flex-wrap: wrap;
-  }
-  form {
-    text-align: right;
-  }
-  p {
-    border-bottom: solid px2rem(3);
-  }
-  @media screen
-  and (orientation: landscape) {
-
-  }
+  display: inline-block;
+  margin-top: 16px;
+  margin-top: 1rem;
 }
