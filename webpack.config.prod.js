@@ -38,11 +38,12 @@ module.exports = {
         html5: true,
         removeAttributeQuotes: true,
         removeComments: true,
-        collapseWhitespace: true
+        collapseWhitespace: true,
+        minifyCSS: true
       }
     }),
     new Webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify('produnction')
+      'process.env.NODE_ENV': JSON.stringify('production')
     }),
     new Webpack.optimize.UglifyJsPlugin()
   ]
