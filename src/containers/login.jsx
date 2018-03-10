@@ -8,13 +8,13 @@ class Login extends Component {
   render() {
     return (
       <main>
-        <h2>Iniciar Sesión</h2>
-        <form action="/login" method="post">
-          <label htmlFor="username">Nombre de Usuario</label><br/>
-          <input required type="text" id="username" name="username"/><br/>
-          <label htmlFor="password">Constraseña</label><br/>
-          <input required type="password" id="password" name="password"/><br/>
-          <input type="submit" value="Iniciar Sesión"/>
+        <h2 className="center">Iniciar Sesión</h2>
+        <form className="pad-content" action="/login" method="post">
+          <label className="separate" htmlFor="username">Nombre de Usuario</label><br/>
+          <input className="separate" required type="text" id="username" name="username"/><br/>
+          <label className="separate" htmlFor="password">Constraseña</label><br/>
+          <input className="separate" required type="password" id="password" name="password"/><br/>
+          <input className="separate left-margin" type="submit" value="Iniciar Sesión"/>
         </form>
       </main>
     );

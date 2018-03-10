@@ -6,7 +6,7 @@ class App extends Component {
   }
 
   render() {
-    return (<main>
+    return (<article className="pad-late">
       <h2 id="about">Acerca de HorasContadas</h2>
       <p>
         Aplicación web de productividad para llevar el seguimiento una sola tarea,
@@ -33,7 +33,7 @@ class App extends Component {
         Cualquier comentario, sugerencia sera bien recibida, gracias de ante mano.<br/>
         Mi <a href="https://twitter.com/Luiko0">twitter</a>.
       </p>
-    </main>);
+    </article>);
   }
 }
 

@@ -2,40 +2,29 @@
   @return #{$px/16}rem;
 }
 
-main {
-  padding-bottom: 16px;
-  padding-bottom: 2rem;
-}
+main { padding-bottom: 2rem }
+
+$background: hsl(200, 30%, 50%);
+$color: whitesmoke;
 
 footer {
-  padding: 64px 0;
   padding: 4rem 0;
+  padding-bottom: 7rem;
+  background: $background;
+  color: $color;
 }
 
 h1,
-ul {
-  margin: 0;
-}
-
-h1 {
-  padding: 22 0;
-  padding: px2rem(22) 0;
-  background: grey;
-  background: lightslategrey;
-  background: hsl(200, 30%, 50%);
-  color: white;
-  color: whitesmoke;
-}
+ul { margin: 0 }
 
 .reset-appearance {
   -webkit-appearance: none;
   -moz-appearance: none;
-  appearance: none;
   background-color: burlywood;
 }
 
 .welcome-faded {
-  padding: 1em;
+  padding: 1rem;
   position: absolute;
   color: rosybrown;
   transition-delay: 600ms;
@@ -53,21 +42,73 @@ h1 {
   opacity: 0;
 }
 
-.align-content-right {
-  text-align: right;
-}
+.center { text-align: center }
 
-.left-margin {
-  margin-left: 60%;
-}
+.main-button { margin-left: 60% }
 
-.pad-content {
-  padding-left: 64px;
-  padding-left: 4rem;
-}
+.pad-content { padding-left: 4rem }
 
 .separate {
   display: inline-block;
-  margin-top: 16px;
-  margin-top: 1rem;
+  margin-top: px2rem(12);
+}
+
+.list {
+  width: 10rem;
+  padding: 1rem 0;
+  position: relative;
+  left: 11rem;
+  list-style-type: none;
+}
+
+.list-container {
+  background: $background;
+  border-radius: 0 0 px2rem(13) 100%;
+}
+
+.header {
+  padding: px2rem(22) 0;
+  background: $background;
+  color: whitesmoke;
+}
+
+.list-item { padding: px2rem(11) }
+
+.list-item a { color: whitesmoke }
+
+@media screen
+and (min-width: 360px)
+and (max-width: 689px) {
+  .list { left: 60% }
+  .pad-content {
+    width: 320px;
+    margin: 0 auto;
+  }
+}
+
+@media screen
+and (min-width: 690px) {
+  .list { left: 80% }
+}
+
+.right-align { text-align: right }
+
+@media screen
+and (min-width: 360px) {
+  .pad-content {
+    max-width: 400px;
+    margin: 0 auto;
+  }
+}
+
+@media screen
+and (min-width: 800px) {
+  .pad-late {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+}
+
+.left-margin {
+  margin-left: 5rem;
 }

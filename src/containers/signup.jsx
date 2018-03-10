@@ -21,26 +21,26 @@ class Signup extends Component {
     }
     return (
       <main>
-        <h2>Registarte</h2>
-        <form action="/signup" method="post" onSubmit={this.handleSubmit}>
-          <label htmlFor="email">Email</label><br/>
-          <input required type="email" id="email" name="email"
+        <h2 className="center">Registarte</h2>
+        <form className="pad-content" action="/signup" method="post" onSubmit={this.handleSubmit}>
+          <label className="separate" htmlFor="email">Email</label><br/>
+          <input className="separate" required type="email" id="email" name="email"
             value={this.state.email} onInput={this.handleInput}
           /><br/>
-          <label htmlFor="username">Nombre de Usuario</label><br/>
-          <input required type="text" id="username" name="username"
+          <label className="separate" htmlFor="username">Nombre de Usuario</label><br/>
+          <input className="separate" required type="text" id="username" name="username"
             value={this.state.username} onInput={this.handleInput}
           /><br/>
-          <label htmlFor="password">Constraseña</label><br/>
-          <input required type="password" id="password" name="password"
+          <label className="separate" htmlFor="password">Constraseña</label><br/>
+          <input className="separate" required type="password" id="password" name="password"
             value={this.state.password} onInput={this.handleInput}
           /><br/>
-          <label htmlFor="repeatpassword">Repetir Constraseña</label><br/>
-          <input required type="password" id="repeatpassword"
+          <label className="separate" htmlFor="repeatpassword">Repetir Constraseña</label><br/>
+          <input className="separate" required type="password" id="repeatpassword"
             name="repeatpassword" value={this.state.repeatpassword}
             onInput={this.handleInput}
           /><br/>
-          <input type="submit" value="Registarte" onInput={this.handleInput}/>
+          <input className="separate left-margin" type="submit" value="Registarte" onInput={this.handleInput}/>
         </form>
       </main>
     );

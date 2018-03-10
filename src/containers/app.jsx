@@ -11,21 +11,21 @@ class App extends Component {
 
   render() {
     return (<main>
-      <h2>Horas Contadas</h2>
-      <button className="left-margin" aria-label="Botón principal" onClick={this.props.handleClick}>
+      <h2 className="center">Horas Contadas</h2>
+      <button className="main-button" aria-label="Botón principal" onClick={this.props.handleClick}>
         {this.props.btnName}
       </button>
       <div id="record" className="pad-content">
-        <label htmlFor="dayhours">Horas del día completadas</label><br/>
-        <input className="align-content-right" readOnly id="dayhours"
+        <label className="separate" htmlFor="dayhours">Horas del día completadas</label><br/>
+        <input className="separate right-align" readOnly id="dayhours"
           value={this.props.dayHours}/><br/>
-        <label htmlFor="weekhours">Horas de la semana completadas</label><br/>
-        <input className="align-content-right" readOnly id="weekhours"
+        <label className="separate" htmlFor="weekhours">Horas de la semana completadas</label><br/>
+        <input className="separate right-align" readOnly id="weekhours"
           value={this.props.weekHours}/><br/>
-        <label htmlFor="remainingtime">
+        <label className="separate" htmlFor="remainingtime">
           Tiempo restante de hora de trabajo
         </label><br/>
-        <input className="align-content-right" readOnly id="remainingtime"
+        <input className="separate right-align" readOnly id="remainingtime"
           value={convertStoM(this.props.remainingTime)}/><br/>
       </div>
     </main>);
