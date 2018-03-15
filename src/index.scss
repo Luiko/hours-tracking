@@ -29,6 +29,9 @@ footer {
   padding: px2rem(22) 0;
   background: $background;
   color: $color;
+  display: -webkit-flex;
+  display: flex;
+  justify-content: center;
 }
 
 //Objects
