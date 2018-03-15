@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { get, post } from 'axios';
+import { post } from 'axios';
 import HoursTrackingComponent from '../components/index.jsx';
 
 const START = 'Start';
@@ -24,8 +24,17 @@ class HoursTracking extends Component {
     this.auth = this.auth.bind(this);
   }
 
+  render() {
+    return (<HoursTrackingComponent
+      {...this.state}
+      auth={this.auth}
+      tickUpdate={this.tickUpdate}
+      handleClick={this.handleClick}
+    />);
+  }
+
   componentDidMount() {
-    get('/auth')
+    post('/auth', { clientDate: new Date() })
       .then(function (res) {
         const {
           username, dayHours, weekHours,
@@ -49,15 +58,6 @@ class HoursTracking extends Component {
         console.error(err.message);
       })
     ;
-  }
-
-  render() {
-    return (<HoursTrackingComponent
-      {...this.state}
-      auth={this.auth}
-      tickUpdate={this.tickUpdate}
-      handleClick={this.handleClick}
-    />);
   }
 
   auth(username) {
@@ -114,7 +114,7 @@ class HoursTracking extends Component {
     post('/session', { start, btnName }).then(function (res) {
       console.log(res.data);
     }, function (err) {
-      console.log(err.message);
+      console.error(err.message);
     });
   }
 

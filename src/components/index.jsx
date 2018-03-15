@@ -3,7 +3,7 @@ import { BrowserRouter, Link, Route } from 'react-router-dom';
 import App from '../containers/app.jsx';
 import About from './about.jsx';
 import Login from '../containers/login.jsx';
-import SingUp from '../containers/signup.jsx';
+import SignUp from '../containers/signup.jsx';
 import Welcome from './welcome.jsx';
 
 function HoursTracking(props) {
@@ -37,7 +37,7 @@ function HoursTracking(props) {
         <Route path="/about" component={About}/>
         <Route path="/login" component={Login}/>
         <Route path="/signup" render={function () {
-          return <SingUp auth={props.auth} username={props.username} />
+          return <SignUp auth={props.auth} username={username} />
         }}/>
       </div>
     </div>

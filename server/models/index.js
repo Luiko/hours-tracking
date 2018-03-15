@@ -67,7 +67,7 @@ exports.getDaySeconds = function (username, day) {
     });
   });
 };
-function reduceIterationToDay(iterations, date = new Date()) {
+function reduceIterationToDay(iterations, date) {
   return iterations.filter(function ({ start, end }) {
     return isOfThisDay(start, end, date);
   });

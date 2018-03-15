@@ -14,7 +14,7 @@ const {
   PORT, COOKIE_PASSWORD, CERT_PATH, PKEY_PATH, NODE_ENV, LOCAL
 } = process.env;
 let SECURE = true;
-if (NODE_ENV != 'production') {
+if (NODE_ENV !== 'production') {
   SECURE = false;
 }
 
@@ -43,7 +43,7 @@ const server = new Hapi.Server({
     encoding: 'none'
   },
   tls: SECURE?
-    { cert: fs.readSync(CERT_PATH), key: fs.readSync(PKEY_PATH) } : undefined
+    { cert: fs.readFileSync(CERT_PATH), key: fs.readFileSync(PKEY_PATH) } : undefined
 });
 
 (async function () {
@@ -97,7 +97,9 @@ const server = new Hapi.Server({
     method: 'POST',
     path: '/login',
     async handler(request, h) {
-      if (request.auth.isAuthenticated) return h.redirect('/');
+      if (request.auth.isAuthenticated) {
+        return h.redirect('/');
+      }
       try {
         var { username, password } = request.payload;
       } catch (error) {
@@ -158,7 +160,7 @@ const server = new Hapi.Server({
   });
 
   server.route({
-    method: 'GET',
+    method: 'POST',
     path: '/auth',
     options: {
       auth: {
@@ -228,7 +230,6 @@ const server = new Hapi.Server({
     },
     handler(request, h) {
       if (!request.payload) {
-
         return h.response().code(400);
       }
       const { btnName, start } = request.payload;
@@ -261,7 +262,9 @@ module.exports = server.listener;
 
 async function updateCookieState(username, request) {
   const hour = 3600;
-  const daySeconds = await getDaySeconds(username);
+  let { end, clientDate } = request.payload;
+  clientDate = clientDate || new Date(end);
+  const daySeconds = await getDaySeconds(username, clientDate);
   const weekSeconds = await getWeekSeconds(username);
   const weekHours = Math.floor(weekSeconds / hour);
   const remainingTime = hour - (weekSeconds % hour);
