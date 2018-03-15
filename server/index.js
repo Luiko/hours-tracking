@@ -203,6 +203,7 @@ const server = new Hapi.Server({
     async handler(request, h) {
       const { username } = request.auth.credentials;
       try {
+        request.cookieAuth.set('btnName', 'Continue');
         await addIteration(username, request.payload);
       } catch (err) {
         if (err.statusCode === 404) {
@@ -232,8 +233,8 @@ const server = new Hapi.Server({
       if (!request.payload) {
         return h.response().code(400);
       }
-      const { btnName, start } = request.payload;
-      request.cookieAuth.set('btnName', btnName);
+      const { start } = request.payload;
+      request.cookieAuth.set('btnName', 'Pause');
       request.cookieAuth.set('start', start);
       return 'state saved';
     }
@@ -273,6 +274,5 @@ async function updateCookieState(username, request) {
   request.cookieAuth.set('dayHours', dayHours);
   request.cookieAuth.set('weekHours', weekHours);
   request.cookieAuth.set('remainingTime', remainingTime);
-  request.cookieAuth.set('btnName', 'Continue');
   return { dayHours, weekHours, remainingTime };
 }
