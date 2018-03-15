@@ -118,6 +118,7 @@ exports.getWeekSeconds = function (username) {
       const weekIterations = user.iterations.filter(iterationToWeek);
 
       const m = moment();
+      console.log('posible bug', m.toLocaleString());
       const weekSeconds = weekIterations.reduce(iterationsToWeekSeconds, 0);
       resolve(weekSeconds);
 
