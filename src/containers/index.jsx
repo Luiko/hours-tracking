@@ -100,7 +100,6 @@ class HoursTracking extends Component {
       this.setState({ btnName: CONTINUE });
       clearTimeout(timer);
     } else if (btnName === CONTINUE) {
-      start = Date.now();
       this.saveState.call(this, PAUSE);
       this.setState({ btnName: PAUSE });
     } else {
