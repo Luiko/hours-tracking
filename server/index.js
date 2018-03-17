@@ -9,6 +9,7 @@ const {
 } = require('./models');
 require('dotenv').config();
 const fs = require('fs');
+const moment = require('moment');
 
 const {
   PORT, COOKIE_PASSWORD, CERT_PATH, PKEY_PATH, NODE_ENV, LOCAL
@@ -173,12 +174,14 @@ const server = new Hapi.Server({
       if (isAuthenticated) {
         try {
           const { credentials: { username, btnName, start } } = request.auth;
-          const { clientDate } = request.payload;
+          const { clientDate: client, diff } = request.payload;
+          const clientDate = moment(client).utcOffset(diff);
           const {
             dayHours, weekHours, remainingTime
           } = await updateCookieState(username, request, clientDate);
           console.log('credentials', request.auth.credentials);
-          request.cookieAuth.set('clientDate', clientDate);
+          request.cookieAuth.set('clientDate', client);
+          request.cookieAuth.set('diff', diff);
           if (btnName === 'Pause') {
             return { username, dayHours, weekHours, remainingTime, start };
           }
@@ -203,7 +206,7 @@ const server = new Hapi.Server({
       }
     },
     async handler(request, h) {
-      const { username, clientDate } = request.auth.credentials;
+      const { username, clientDate: client, diff } = request.auth.credentials;
       try {
         request.cookieAuth.set('btnName', 'Continue');
         await addIteration(username, request.payload);
@@ -215,6 +218,7 @@ const server = new Hapi.Server({
         console.log('add iteration failed', err);
         return h.response(err.message).code(500);
       }
+      const clientDate = moment(client).utcOffset(diff);
       await updateCookieState(username, request, clientDate);
       console.log('iteration added to ', username);
       return h.response(`iteration added to ${username}`);

@@ -34,7 +34,8 @@ class HoursTracking extends Component {
   }
 
   componentDidMount() {
-    post('/auth', { clientDate: new Date().toString() })
+    const clientDate = new Date();
+    post('/auth', { clientDate, diff: clientDate.getTimezoneOffset() * -1 })
       .then(function (res) {
         const {
           username, dayHours, weekHours,
