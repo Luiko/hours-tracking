@@ -20,7 +20,7 @@ if (NODE_ENV !== 'production') {
 
 const server = new Hapi.Server({
   address: LOCAL === 'true'? '127.0.0.1' : '0.0.0.0',
-  app: { version: 'v0.2.1' },
+  app: { version: 'v0.2.2' },
   autoListen: true,
   // cache: { engine: require('catbox-memory') },
   compression: { minBytes: 1024 },
@@ -173,10 +173,12 @@ const server = new Hapi.Server({
       if (isAuthenticated) {
         try {
           const { credentials: { username, btnName, start } } = request.auth;
+          const { clientDate } = request.payload;
           const {
             dayHours, weekHours, remainingTime
-          } = await updateCookieState(username, request);
+          } = await updateCookieState(username, request, clientDate);
           console.log('credentials', request.auth.credentials);
+          request.cookieAuth.set('clientDate', clientDate);
           if (btnName === 'Pause') {
             return { username, dayHours, weekHours, remainingTime, start };
           }
@@ -201,7 +203,7 @@ const server = new Hapi.Server({
       }
     },
     async handler(request, h) {
-      const { username } = request.auth.credentials;
+      const { username, clientDate } = request.auth.credentials;
       try {
         request.cookieAuth.set('btnName', 'Continue');
         await addIteration(username, request.payload);
@@ -213,7 +215,7 @@ const server = new Hapi.Server({
         console.log('add iteration failed', err);
         return h.response(err.message).code(500);
       }
-      await updateCookieState(username, request);
+      await updateCookieState(username, request, clientDate);
       console.log('iteration added to ', username);
       return h.response(`iteration added to ${username}`);
     }
@@ -261,12 +263,10 @@ const server = new Hapi.Server({
 
 module.exports = server.listener;
 
-async function updateCookieState(username, request) {
+async function updateCookieState(username, request, clientDate) {
   const hour = 3600;
-  let { end, clientDate } = request.payload;
-  clientDate = clientDate || new Date(end);
   const daySeconds = await getDaySeconds(username, clientDate);
-  const weekSeconds = await getWeekSeconds(username);
+  const weekSeconds = await getWeekSeconds(username, clientDate);
   const weekHours = Math.floor(weekSeconds / hour);
   const remainingTime = hour - (weekSeconds % hour);
   const remaining = (weekSeconds - daySeconds) % hour;

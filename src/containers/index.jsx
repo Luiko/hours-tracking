@@ -34,7 +34,7 @@ class HoursTracking extends Component {
   }
 
   componentDidMount() {
-    post('/auth', { clientDate: new Date() })
+    post('/auth', { clientDate: new Date().toString() })
       .then(function (res) {
         const {
           username, dayHours, weekHours,

@@ -53,7 +53,7 @@ exports.addIteration = function (username, iteration) {
   });
 };
 
-exports.getDaySeconds = function (username, day) {
+exports.getDaySeconds = function (username, clientDate) {
   return new Promise(function (resolve, reject) {
     Account.findOne({ username }, function (err, account) {
       if (err) {
@@ -61,33 +61,35 @@ exports.getDaySeconds = function (username, day) {
         reject(err);
         return;
       }
-      const dayIterations = reduceIterationToDay(account.iterations, day);
-      const secondsDay = getDaySeconds(dayIterations, day);
+      const dayIterations = reduceIterationToDay(account.iterations);
+      const secondsDay = getDaySeconds(dayIterations);
       resolve(secondsDay);
     });
   });
+  function reduceIterationToDay(iterations) {
+    return iterations.filter(function ({ start, end }) {
+      return isOfThisDay(start, end, clientDate);
+    });
+  }
+  function isOfThisDay(start, end) {
+    return moment(clientDate).isSame(start, 'day') ||
+      moment(clientDate).isSame(end, 'day');
+  }
+  function getDaySeconds(iterations) {
+    const seconds = (prev, start, end) => prev + moment(end).diff(start, 's');
+    return iterations.reduce(function (prev, { start, end }) {
+      const monthDay = moment(clientDate).date();
+      const diff = moment(clientDate).utcOffset();
+      if (moment(start).utcOffset(diff).date() < monthDay) {
+        return seconds(prev, moment(clientDate).startOf('day'), end);
+      } else if (moment(end).utcOffset(diff).date() > monthDay) {
+        return seconds(prev, start, moment(clientDate).endOf('day'));
+      }
+      return seconds(prev, start, end);
+    }, 0);
+  }
 };
-function reduceIterationToDay(iterations, date) {
-  return iterations.filter(function ({ start, end }) {
-    return isOfThisDay(start, end, date);
-  });
-}
-function isOfThisDay(start, end, date) {
-  return moment(start).isSame(date, 'day') ||
-    moment(end).isSame(date, 'day');
-};
-function getDaySeconds(iterations, date) {
-  const seconds = (prev, start, end) => prev + moment(end).diff(start, 's');
-  return iterations.reduce(function (prev, { start, end }) {
-    const monthDay = moment(date).date();
-    if (moment(start).date() < monthDay) {
-      return seconds(prev, moment(date).startOf('day'), end);
-    } else if (moment(end).date() > monthDay) {
-      return seconds(prev, start, moment(date).endOf('day'));
-    }
-    return seconds(prev, start, end);
-  }, 0);
-}
+
 
 exports.getHoursDay = async function (username, day) {
   const secondsDay = await exports.getDaySeconds(username, day);
@@ -107,7 +109,7 @@ exports.deleteUser = function (username) {
   });
 };
 
-exports.getWeekSeconds = function (username) {
+exports.getWeekSeconds = function (username, clientDate) {
   return new Promise(function (resolve, reject) {
     Account.findOne({ username }, function (err, user) {
       if (err) {
@@ -115,15 +117,14 @@ exports.getWeekSeconds = function (username) {
         reject(err);
         return;
       }
-      const weekIterations = user.iterations.filter(iterationToWeek);
 
-      const m = moment();
-      console.log('posible bug', m.toLocaleString());
+      const m = moment(clientDate);
+      const weekIterations = user.iterations.filter(iterationToWeek);
       const weekSeconds = weekIterations.reduce(iterationsToWeekSeconds, 0);
       resolve(weekSeconds);
 
       function iterationToWeek({ start, end }) {
-        const isSame = moment().isSame.bind(moment());
+        const isSame = m.isSame.bind(m);
         return isSame(start, 'day') || isSame(end, 'week');
       }
 
@@ -131,8 +132,8 @@ exports.getWeekSeconds = function (username) {
       const weekEnd = m.endOf('week');
 
       function iterationsToWeekSeconds(prev, { start, end }) {
-        const _start = moment(start).isSame(m, 'week')? start: weekStart;
-        const _end = moment(end).isSame(m, 'week')? end: weekEnd;
+        const _start = m.isSame(start, 'week')? start: weekStart;
+        const _end = m.isSame(end, 'week')? end: weekEnd;
         return prev + (moment(_end).diff(_start, 'seconds'));
       }
     });
