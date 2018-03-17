@@ -3,11 +3,21 @@ const test = require('tape');
 
 test('week seconds', async function (t) {
   t.plan(1);
-  const result = await getWeekSeconds('jeronimo');
-  t.true(Number.isSafeInteger(result), 'got seconds');
+  const msg = 'got week seconds';
+  try {
+    var result = await getWeekSeconds('jeronimo');
+  } catch (error) {
+    t.fail(msg);
+  }
+  t.true(Number.isSafeInteger(result), msg);
 });
 
 test('get users', async function (t) {
-  const result = await getUsers();
-  t.true(result instanceof Object, 'hash of users');
+  const msg = 'hash of users';
+  try {
+    var result = await getUsers();
+  } catch (error) {
+    t.fail(msg);
+  }
+  t.true(result instanceof Object, msg);
 });

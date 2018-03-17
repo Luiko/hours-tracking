@@ -16,14 +16,15 @@ test('auth', function (t) {
     .catch(t.fail)
   ;
 
+  const msg = 'get /auth unauthenticated unauthorized'
   request(app)
-    .get('/auth')
+    .post('/auth')
     .expect(401)
     .expect('false')
     .then(function () {
-      t.pass('unauthenticated unauthorized');
+      t.pass(msg);
     })
-    .catch(t.fail)
+    .catch(() => t.fail(msg))
   ;
 });
 
