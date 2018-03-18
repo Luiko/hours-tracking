@@ -187,7 +187,7 @@ const server = new Hapi.Server({
           }
           return { username, dayHours, weekHours, remainingTime };
         } catch (error) {
-          console.log(error);
+          console.error(error);
           return h.response(error.message).code(500);
         }
       }
@@ -212,10 +212,10 @@ const server = new Hapi.Server({
         await addIteration(username, request.payload);
       } catch (err) {
         if (err.statusCode === 404) {
-          console.log('add iteration failed', err);
+          console.error('add iteration failed', err);
           return h.response(err.message).code(err.statusCode);
         }
-        console.log('add iteration failed', err);
+        console.error('add iteration failed', err);
         return h.response(err.message).code(500);
       }
       const clientDate = moment(client).utcOffset(diff);

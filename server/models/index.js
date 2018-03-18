@@ -100,7 +100,7 @@ exports.deleteUser = function (username) {
   return new Promise(function (resolve, reject) {
     Account.deleteOne({ username }, function (err) {
       if (err) {
-        console.log(err.message);
+        console.error(err.message);
         reject(err);
         return;
       }
@@ -113,20 +113,25 @@ exports.getWeekSeconds = function (username, clientDate) {
   return new Promise(function (resolve, reject) {
     Account.findOne({ username }, function (err, user) {
       if (err) {
-        console.log(err.message);
+        console.error(err.message);
         reject(err);
         return;
       }
 
-      const m = moment(clientDate);
-      const weekStart = m.startOf('week');
-      const weekEnd = m.endOf('week');
-      const weekIterations = user.iterations.filter(iterationToWeek);
-      const weekSeconds = weekIterations.reduce(iterationsToWeekSeconds, 0);
-      resolve(weekSeconds);
+      try {
+        var m = moment(clientDate);
+        var weekStart = moment(clientDate).startOf('week');
+        var weekEnd = moment(clientDate).endOf('week');
+        const weekIterations = user.iterations.filter(iterationToWeek);
+        const weekSeconds = weekIterations.reduce(iterationsToWeekSeconds, 0);
+        resolve(weekSeconds);
+      } catch (err) {
+        console.error(err.message);
+        reject(err);
+      }
 
       function iterationToWeek({ start, end }) {
-        return m.isSame(start, 'day') || m.isSame(end, 'week');
+        return m.isSame(start, 'week') || m.isSame(end, 'week');
       }
 
       function iterationsToWeekSeconds(prev, { start, end }) {
