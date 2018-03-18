@@ -119,17 +119,15 @@ exports.getWeekSeconds = function (username, clientDate) {
       }
 
       const m = moment(clientDate);
+      const weekStart = m.startOf('week');
+      const weekEnd = m.endOf('week');
       const weekIterations = user.iterations.filter(iterationToWeek);
       const weekSeconds = weekIterations.reduce(iterationsToWeekSeconds, 0);
       resolve(weekSeconds);
 
       function iterationToWeek({ start, end }) {
-        const isSame = m.isSame.bind(m);
-        return isSame(start, 'day') || isSame(end, 'week');
+        return m.isSame(start, 'day') || m.isSame(end, 'week');
       }
-
-      const weekStart = m.startOf('week');
-      const weekEnd = m.endOf('week');
 
       function iterationsToWeekSeconds(prev, { start, end }) {
         const _start = m.isSame(start, 'week')? start: weekStart;
