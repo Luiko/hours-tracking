@@ -108,7 +108,7 @@ class HoursTracking extends Component {
     }
   }
 
-  saveState(btnName) {
+  saveState() {
     start = Date.now();
     this.setTimer();
     post('/session', { start }).then(function (res) {
