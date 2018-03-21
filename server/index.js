@@ -5,7 +5,6 @@ const Inert = require('inert');
 const HapiAuthCookie = require('hapi-auth-cookie');
 require('dotenv').config();
 const fs = require('fs');
-const moment = require('moment');
 const PostMethods = require('./postMethods')
 const GetMethods = require('./getMethods')
 const { getUsers } = require('./models');
@@ -58,7 +57,7 @@ const server = new Hapi.Server({
   server.auth.strategy('restricted', 'cookie', {
     cookie: 'sid',
     password: COOKIE_PASSWORD,
-    ttl: 2 * 24 * 60 * 60 * 1000,
+    ttl: 8 * 60 * 60 * 1000,
     clearInvalid: true,
     keepAlive: false,
     isSecure: SECURE,
