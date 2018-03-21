@@ -10,6 +10,7 @@ const {
 require('dotenv').config();
 const fs = require('fs');
 const moment = require('moment');
+const { version } = require('../package.json');
 
 const {
   PORT, COOKIE_PASSWORD, CERT_PATH, PKEY_PATH, NODE_ENV, LOCAL
@@ -21,7 +22,7 @@ if (NODE_ENV !== 'production') {
 
 const server = new Hapi.Server({
   address: LOCAL === 'true'? '127.0.0.1' : '0.0.0.0',
-  app: { version: 'v0.2.2' },
+  app: { version },
   autoListen: true,
   // cache: { engine: require('catbox-memory') },
   compression: { minBytes: 1024 },
@@ -44,7 +45,8 @@ const server = new Hapi.Server({
     encoding: 'none'
   },
   tls: SECURE?
-    { cert: fs.readFileSync(CERT_PATH), key: fs.readFileSync(PKEY_PATH) } : undefined
+    { cert: fs.readFileSync(CERT_PATH), key: fs.readFileSync(PKEY_PATH) }
+    : undefined
 });
 
 (async function () {
