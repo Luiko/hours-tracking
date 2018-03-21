@@ -49,10 +49,6 @@ footer {
 
 .faded {
   background-color: rgba($color: #000000, $alpha: 0.8);
-  transition-delay: 500ms;
-  transition-duration: 2s;
-  transition-property: opacity;
-  transition-timing-function: ease-in-out;
   opacity: 0;
 }
 

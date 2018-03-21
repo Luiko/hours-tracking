@@ -8,6 +8,7 @@
     "front": "webpack && node server",
     "back": "nodemon server/index.test",
     "data": "nodemon server/models/index.test",
+    "watch": "webpack -w",
     "build": "webpack --config webpack.config.prod.js"
   },
   "repository": {
