@@ -71,6 +71,8 @@ footer {
 
 //Components
 
+  //box-model
+
 .center { text-align: center }
 
 .main-button { margin-left: 60% }
@@ -118,6 +120,45 @@ and (min-width: 800px) {
 .left-margin {
   margin-left: 5rem;
 }
+
+.note {
+  $mlef: -60;
+  $pad: 30;
+  $color: hsla(200, 100%, 0%, 0.8);
+
+  margin-left: #{$mlef}px;
+  margin-left: px2rem($mlef);
+  padding: #{$pad}px;
+  padding: px2rem($pad);
+  border-radius: 6px;
+  background: coral;
+  color: $color;
+
+  &-closer {
+    background: wheat;
+    color: $color;
+    float: right;
+    line-height: 1;
+    padding: 1px 2px 3.5px 2px;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+}
+
+.close {
+  display: none;
+}
+
+.text {
+  text-align: justify;
+}
+
+  //flexbox
+
+  //grid
 
 //Utilities
 

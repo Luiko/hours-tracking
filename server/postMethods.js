@@ -38,16 +38,16 @@ exports.register = function (server) {
     method: 'POST',
     path: '/signup',
     async handler({ cookieAuth, payload }, h) {
-      if (!payload || !payload.email) {
+      if (!payload) {
         console.error('invalid payload');
         return h.response({
           message: 'invalid payload',
           statusCode: 400
         }).code(400);
       }
-      const { email, username, password } = payload;
+      const { username, password } = payload;
       try {
-        await addAccount(email, username, password);
+        await addAccount(username, password);
         cookieAuth.set({ username });
         return username;
       } catch (err) {

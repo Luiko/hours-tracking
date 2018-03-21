@@ -7,12 +7,6 @@ const schema = new Schema({
     required: true,
     unique: true
   },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-    match: /^[\w\.]+@[a-z]+\.[a-z]+$/i
-  },
   password: {
     type: String,
     required: true

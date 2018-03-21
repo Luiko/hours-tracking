@@ -1,7 +1,6 @@
 const test = require('tape');
 const request = require('supertest');
 const app = require('./index');
-const { deleteUser } = require('./models/index');
 require('dotenv').config();
 
 test('auth', function (t) {
@@ -121,44 +120,9 @@ test('post routes', function (t) {
     .send({ username: '' })
     .expect(400)
     .then(function () {
-      t.pass('bad request to post /signup email, password and username is required ');
+      t.pass('bad request to post /signup password and username is required ');
     })
     .catch(t.fail)
-  ;
-  request(app)
-    .post('/signup')
-    .send({ email: 'asdqww', username: 'sdadqw', password: 'adsasd' })
-    .expect(400)
-    .then(function () {
-      t.pass('bad request to post /signup email invalid');
-    })
-    .catch(t.fail)
-  ;
-  const email = 'asdqww@asds.sad';
-  const username = 'sdadqw';
-  const password = 'adsasd';
-  Promise.resolve()
-   .then(function () {
-    return request(app)
-      .post('/signup')
-      .send({ email, username, password })
-      .expect(200)
-      .then(function () {
-        t.pass('create new user /signup');
-      })
-      .catch((err) => t.fail('create new user ' + err.message));
-   })
-   .then(function () {
-    return request(app)
-      .post('/signup')
-      .send({ email, username, password })
-      .expect(400)
-      .then(function () {
-        t.pass('error create duplicate user /signup');
-      })
-      .catch(t.fail);
-    })
-    .then(() => deleteUser(username))
   ;
 
   request(app)

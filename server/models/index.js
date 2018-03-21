@@ -17,9 +17,9 @@ db.once('open', function () {
 const Account = mongoose.model('Account', accountSchema);
 mongoose.connect(process.env.STR_DB_CON);
 
-async function addAccount(email, username, password) {
+async function addAccount(username, password) {
   const hash = await Bcrypt.hash(password.toString(), 14);
-  const account = new Account({ username, email, password: hash });
+  const account = new Account({ username, password: hash });
   const process = await account.save();
   process.log();
 };
