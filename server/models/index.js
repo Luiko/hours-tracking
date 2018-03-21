@@ -4,8 +4,9 @@ const Bcrypt = require('bcrypt');
 const moment = require('moment');
 require('dotenv').config();
 const {
-        reduceIterationToDay, reduceDaySeconds,
-        iterationToWeek, iterationsToWeekSeconds } = require('./_index');
+  reduceIterationToDay, reduceDaySeconds,
+  isPointOf, iterationsToWeekSeconds
+} = require('./_index');
 
 const db = mongoose.connection;
 db.on('error', () => console.error('connection error'));
@@ -95,19 +96,16 @@ function getWeekSeconds(username, clientDate) {
 
       try {
         const m = moment(clientDate);
-        const weekStart = moment(clientDate).startOf('week');
-        const weekEnd = moment(clientDate).endOf('week');
-        const _iterationToWeek = function (data, index, array) {
-          return iterationToWeek(data, index, array, m);
+        const weekStart = moment(m.toDate()).startOf('week');
+        const weekEnd = moment(m.toDate()).endOf('week');
+        const IsInThisWeek = function ({ start, end }) {
+          return isPointOf('week', start, end, m);
         };
-        const _iterationsToWeekSeconds = function (data, index, array) {
-          return iterationsToWeekSeconds(
-                                    data, index, array, weekStart, weekEnd, m);
+        const toWeekSeconds = function (accum, data) {
+          return iterationsToWeekSeconds(accum, data, weekStart, weekEnd, m);
         };
-        const weekIterations = user.iterations.filter(function () {
-          return _iterationToWeek;
-        });
-        const weekSeconds = weekIterations.reduce(_iterationsToWeekSeconds, 0);
+        const weekIterations = user.iterations.filter(IsInThisWeek);
+        const weekSeconds = weekIterations.reduce(toWeekSeconds, 0);
         resolve(weekSeconds);
       } catch (err) {
         console.error(err.message);

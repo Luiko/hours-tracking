@@ -1,11 +1,12 @@
 const { getWeekSeconds, getUsers } = require('./index');
 const test = require('tape');
+const privateMethods = require('./_index');
 
 test('week seconds', async function (t) {
   t.plan(1);
   const msg = 'should return a number';
   try {
-    var result = await getWeekSeconds('jeronimo');
+    var result = await getWeekSeconds('jeronimo', new Date);
   } catch (error) {
     t.fail(msg);
   }
