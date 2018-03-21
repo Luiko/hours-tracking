@@ -3,7 +3,7 @@ const test = require('tape');
 
 test('week seconds', async function (t) {
   t.plan(1);
-  const msg = 'got week seconds';
+  const msg = 'should return a number';
   try {
     var result = await getWeekSeconds('jeronimo');
   } catch (error) {

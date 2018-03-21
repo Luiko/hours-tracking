@@ -3,6 +3,9 @@ const accountSchema = require('./account');
 const Bcrypt = require('bcrypt');
 const moment = require('moment');
 require('dotenv').config();
+const {
+        reduceIterationToDay, reduceDaySeconds,
+        iterationToWeek, iterationsToWeekSeconds } = require('./_index');
 
 const db = mongoose.connection;
 db.on('error', () => console.error('connection error'));
@@ -13,14 +16,14 @@ db.once('open', function () {
 const Account = mongoose.model('Account', accountSchema);
 mongoose.connect(process.env.STR_DB_CON);
 
-exports.addAccount = async function (email, username, password) {
+async function addAccount(email, username, password) {
   const hash = await Bcrypt.hash(password.toString(), 14);
   const account = new Account({ username, email, password: hash });
   const process = await account.save();
   process.log();
 };
 
-exports.getUsers = async function () {
+async function getUsers() {
   const users = await Account.find({}, {
     _id: 0, __v: 0,
     iterations: 0, createdAt: 0, updatedAt: 0 
@@ -31,11 +34,11 @@ exports.getUsers = async function () {
   }, {});
 };
 
-exports.closeConnection = function () {
+function closeConnection() {
   mongoose.connection.close();
 };
 
-exports.addIteration = function (username, iteration) {
+function addIteration(username, iteration) {
   return new Promise(function (resolve, reject) {
     Account.findOne({ username }, function (err, user) {
       if (err) {
@@ -53,7 +56,7 @@ exports.addIteration = function (username, iteration) {
   });
 };
 
-exports.getDaySeconds = function (username, clientDate) {
+function getDaySeconds(username, clientDate) {
   return new Promise(function (resolve, reject) {
     Account.findOne({ username }, function (err, account) {
       if (err) {
@@ -61,42 +64,14 @@ exports.getDaySeconds = function (username, clientDate) {
         reject(err);
         return;
       }
-      const dayIterations = reduceIterationToDay(account.iterations);
-      const secondsDay = getDaySeconds(dayIterations);
+      const dayIterations = reduceIterationToDay(account.iterations, clientDate);
+      const secondsDay = reduceDaySeconds(dayIterations, clientDate);
       resolve(secondsDay);
     });
   });
-  function reduceIterationToDay(iterations) {
-    return iterations.filter(function ({ start, end }) {
-      return isOfThisDay(start, end, clientDate);
-    });
-  }
-  function isOfThisDay(start, end) {
-    return moment(clientDate).isSame(start, 'day') ||
-      moment(clientDate).isSame(end, 'day');
-  }
-  function getDaySeconds(iterations) {
-    const seconds = (prev, start, end) => prev + moment(end).diff(start, 's');
-    return iterations.reduce(function (prev, { start, end }) {
-      const monthDay = moment(clientDate).date();
-      const diff = moment(clientDate).utcOffset();
-      if (moment(start).utcOffset(diff).date() < monthDay) {
-        return seconds(prev, moment(clientDate).startOf('day'), end);
-      } else if (moment(end).utcOffset(diff).date() > monthDay) {
-        return seconds(prev, start, moment(clientDate).endOf('day'));
-      }
-      return seconds(prev, start, end);
-    }, 0);
-  }
 };
 
-
-exports.getHoursDay = async function (username, day) {
-  const secondsDay = await exports.getDaySeconds(username, day);
-  return Math.floor(secondsDay / (60 * 60));
-};
-
-exports.deleteUser = function (username) {
+function deleteUser(username) {
   return new Promise(function (resolve, reject) {
     Account.deleteOne({ username }, function (err) {
       if (err) {
@@ -109,7 +84,7 @@ exports.deleteUser = function (username) {
   });
 };
 
-exports.getWeekSeconds = function (username, clientDate) {
+function getWeekSeconds(username, clientDate) {
   return new Promise(function (resolve, reject) {
     Account.findOne({ username }, function (err, user) {
       if (err) {
@@ -119,26 +94,31 @@ exports.getWeekSeconds = function (username, clientDate) {
       }
 
       try {
-        var m = moment(clientDate);
-        var weekStart = moment(clientDate).startOf('week');
-        var weekEnd = moment(clientDate).endOf('week');
-        const weekIterations = user.iterations.filter(iterationToWeek);
-        const weekSeconds = weekIterations.reduce(iterationsToWeekSeconds, 0);
+        const m = moment(clientDate);
+        const weekStart = moment(clientDate).startOf('week');
+        const weekEnd = moment(clientDate).endOf('week');
+        const _iterationToWeek = function (data, index, array) {
+          return iterationToWeek(data, index, array, m);
+        };
+        const _iterationsToWeekSeconds = function (data, index, array) {
+          return iterationsToWeekSeconds(
+                                    data, index, array, weekStart, weekEnd, m);
+        };
+        const weekIterations = user.iterations.filter(function () {
+          return _iterationToWeek;
+        });
+        const weekSeconds = weekIterations.reduce(_iterationsToWeekSeconds, 0);
         resolve(weekSeconds);
       } catch (err) {
         console.error(err.message);
         reject(err);
       }
-
-      function iterationToWeek({ start, end }) {
-        return m.isSame(start, 'week') || m.isSame(end, 'week');
-      }
-
-      function iterationsToWeekSeconds(prev, { start, end }) {
-        const _start = m.isSame(start, 'week')? start: weekStart;
-        const _end = m.isSame(end, 'week')? end: weekEnd;
-        return prev + (moment(_end).diff(_start, 'seconds'));
-      }
     });
   });
+};
+
+module.exports = {
+  addAccount, getUsers, closeConnection,
+  addIteration, getDaySeconds, deleteUser,
+  getWeekSeconds
 };
