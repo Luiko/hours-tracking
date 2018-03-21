@@ -29,6 +29,7 @@ exports.register = function (server) {
       auth: 'restricted'
     },
     handler(request, h) {
+      console.log(`user '${request.auth.credentials.username}' logged out`);
       request.cookieAuth.clear();
       return h.redirect('/');
     }
