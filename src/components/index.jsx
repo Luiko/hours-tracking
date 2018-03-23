@@ -34,7 +34,7 @@ function HoursTracking(props) {
             tickUpdate={props.tickUpdate}
           />}
         />
-        <Route path="/about" component={About}/>
+        <Route path="/about" render={() => <About version={props.version}/>}/>
         <Route path="/login" component={Login}/>
         <Route path="/signup" render={function () {
           return <SignUp auth={props.auth} username={username} />

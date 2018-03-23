@@ -67,6 +67,7 @@ exports.register = function (server) {
     },
     async handler(request, h) {
       const { isAuthenticated } = request.auth;
+      const { version } = server.settings.app;
       if (isAuthenticated) {
         try {
           const { credentials: { username, btnName, start } } = request.auth;
@@ -78,16 +79,19 @@ exports.register = function (server) {
           console.log('credentials', request.auth.credentials);
           request.cookieAuth.set('clientDate', client);
           request.cookieAuth.set('diff', diff);
+          const output = {
+            username, dayHours, weekHours, remainingTime, version
+          };
           if (btnName === 'Pause') {
-            return { username, dayHours, weekHours, remainingTime, start };
+            output.start = start;
           }
-          return { username, dayHours, weekHours, remainingTime };
+          return output;
         } catch (error) {
           console.log(error);
           return h.response(error.message).code(500);
         }
       }
-      return h.response(false).code(401);
+      return h.response(version).code(401);
     }
   });
   server.route({

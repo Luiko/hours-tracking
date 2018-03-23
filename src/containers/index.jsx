@@ -16,7 +16,8 @@ class HoursTracking extends Component {
       dayHours: 0,
       weekHours: 0,
       remainingTime: 0,
-      username: ''
+      username: '',
+      version: '0.0.0'
     };
     this.handleClick = this.handleClick.bind(this);
     this.setTimer = this.setTimer.bind(this);
@@ -39,25 +40,28 @@ class HoursTracking extends Component {
       .then(function (res) {
         const {
           username, dayHours, weekHours,
-          remainingTime, start: _start
+          remainingTime, version, start: _start,
         } = res.data;
+        const state = {
+          username, dayHours, weekHours, remainingTime, version
+        };
         if (_start) {
           start = _start;
-          this.setState({
-            username, dayHours, weekHours,
-            remainingTime: remainingTime, btnName: PAUSE
-          });
+          state.btnName = PAUSE;
+          this.setState(state);
           this.setTimer();
         } else if (username) {
-          this.setState({
-            username, dayHours, remainingTime, weekHours,
-            btnName: remainingTime && remainingTime % 3600 ? CONTINUE : START
-          });
+          state.btnName = remainingTime % 3600 ? CONTINUE : START;
+          this.setState(state);
         }
       }.bind(this))
       .catch(function (err) {
+        if (err.response.status === 401) {
+          const version = err.response.data;
+          this.setState({ version });
+        }
         console.error(err.message);
-      })
+      }.bind(this))
     ;
   }
 
@@ -133,7 +137,8 @@ class HoursTracking extends Component {
       this.setState(function (prevState) {
         const hourPassed = Math.floor((-1 * prevState.remainingTime) / aHour);
         return {
-          remainingTime: hourPassed? aHour * hourPassed + remainingTime: aHour + remainingTime,
+          remainingTime: hourPassed? aHour * hourPassed + remainingTime
+                                  : aHour + remainingTime,
           dayHours: prevState.dayHours + 1 + hourPassed,
           weekHours: prevState.weekHours + 1 + hourPassed
         };

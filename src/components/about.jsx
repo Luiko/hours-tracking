@@ -22,16 +22,16 @@ class App extends Component {
       </p>
       <h3 id="status">Estado</h3>
       <p className="text">
-        Actualmente la aplicación web se encuentra en estado <strong>Alfa</strong>;
-        es decir en una etapa temprana que puede cambiar totalmente en la próxima actualización, <em>
-        todos los datos registrados en esta etapa son temporales</em> y pueden ser reiniciados para
-        la siguiente actualización o el lanzamiento de la versión beta.
+        Actualmente la aplicación web se encuentra en la  etapa <strong>Alfa(v
+        {this.props.version})</strong>; es decir en una etapa temprana que puede
+        cambiar totalmente en la próxima actualización, <em>todos los datos registrados en
+        esta etapa son temporales</em> y pueden ser reiniciados para la siguiente actualización
+        o el lanzamiento de la versión beta.
       </p>
       <h3 id="contact">Contacto</h3>
       <p className="text">
         Si deseas contactar me <a href="mailto:luiko.luisgarcia@gmail.com">luiko.luisgarcia@gmail.com</a>.<br/>
-        Cualquier comentario, sugerencia sera bien recibida, gracias de ante mano.<br/>
-        Mi <a href="https://twitter.com/Luiko0">twitter</a>.
+        Cualquier comentario, sugerencia sera bien recibida.<br/> Mi <a href="https://twitter.com/Luiko0">twitter</a>.
       </p>
     </article>);
   }
