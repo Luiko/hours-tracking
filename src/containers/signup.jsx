@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { post } from 'axios';
 import { Redirect } from 'react-router-dom';
+import Alert from './alert.jsx';
 
 class Signup extends Component {
   constructor(props) {
@@ -8,8 +9,7 @@ class Signup extends Component {
     this.state = {
       username: '',
       password: '',
-      repeatpassword: '',
-      close: false
+      repeatpassword: ''
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleInput = this.handleInput.bind(this);
@@ -36,15 +36,7 @@ class Signup extends Component {
             name="repeatpassword" value={this.state.repeatpassword}
             onInput={this.handleInput}
           /><br/>
-          <div className={"note separate" + (!this.state.close? "" : " close")}>
-            <span className="note-closer" aria-label="boton cerrar nota"
-                  onClick={() => this.setState({ close: true })}>&#x26DD;</span>
-            <p><strong>Nota:</strong></p>
-            <p className="text">
-              Actualmente dejamos de pedir correo electronico en el registro,
-              durante el desarrollo temprano de la app.
-            </p>
-          </div>
+          <Alert close={false}/>
           <input className="separate left-margin" type="submit"
                   value="Registarte" onInput={this.handleInput}/>
         </form>
@@ -54,12 +46,11 @@ class Signup extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    const { username, password, repeatpassword } = this.state;
     if (this.state.password !== this.state.repeatpassword) {
       console.log('repeat the same password');
       return;
     }
-    post('/signup', { username, password, repeatpassword })
+    post('/signup', this.state)
       .then(function ({ data: username }) {
         this.props.auth(username);
       }.bind(this))
