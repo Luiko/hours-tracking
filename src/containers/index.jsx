@@ -17,7 +17,9 @@ class HoursTracking extends Component {
       weekHours: 0,
       remainingTime: 0,
       username: '',
-      version: '0.0.0'
+      version: '0.0.0',
+      error: '',
+      closeAlert: true
     };
     this.handleClick = this.handleClick.bind(this);
     this.setTimer = this.setTimer.bind(this);
@@ -31,6 +33,7 @@ class HoursTracking extends Component {
       auth={this.auth}
       tickUpdate={this.tickUpdate}
       handleClick={this.handleClick}
+      handleAlertClick={() => this.setState({ closeAlert: true })}
     />);
   }
 
@@ -58,15 +61,17 @@ class HoursTracking extends Component {
       .catch(function (err) {
         if (err.response.status === 401) {
           const version = err.response.data;
+          console.error(err.message);
           this.setState({ version });
+        } else {
+          console.error(err.message);
         }
-        console.error(err.message);
       }.bind(this))
     ;
   }
 
-  auth(username) {
-    this.setState({ username });
+  auth(account) {
+    this.setState(account);
   }
 
   setTimer() {
@@ -99,8 +104,12 @@ class HoursTracking extends Component {
           console.log(res.data);
         })
         .catch(function (err) {
-          console.error(err.message)
-        });
+          if (!err.response) {
+            this.setState({ error: err.message, closeAlert: false });
+          } else {
+            console.error(err.message);
+          }
+        }.bind(this))
       ;
       this.setState({ btnName: CONTINUE });
       clearTimeout(timer);
@@ -118,8 +127,12 @@ class HoursTracking extends Component {
     post('/session', { start }).then(function (res) {
       console.log(res.data);
     }, function (err) {
-      console.error(err.message);
-    });
+      if (!err.response) {
+        this.setState({ error: err.message, closeAlert: false });
+      } else {
+        console.error(err.message);
+      }
+    }.bind(this));
   }
 
   tickUpdate() {

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Alert from './alert.jsx';
 
 class App extends Component {
   constructor(props) {
@@ -27,6 +28,8 @@ class App extends Component {
         </label><br/>
         <input className="separate right-align" readOnly id="remainingtime"
           value={convertStoM(this.props.remainingTime)}/><br/>
+        <Alert close={this.props.closeAlert} type="error"
+          handleClick={this.props.handleAlertClick}>{this.props.error}</Alert>
       </div>
     </main>);
   }

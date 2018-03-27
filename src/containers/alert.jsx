@@ -3,20 +3,15 @@ import React, { Component } from 'react';
 class Alert extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      close: !!props.close
-    };
   }
   render() {
+    const { type, close, handleClick } = this.props;
     return (
-      <div className={"note separate" + (!this.state.close? "" : " close")}>
-        <span className="note-closer" aria-label="boton cerrar nota"
-              onClick={() => this.setState({ close: true })}>&#x26DD;</span>
-        <p><strong>Nota:</strong></p>
-        <p className="text">
-          Actualmente dejamos de pedir correo electronico en el registro,
-          durante el desarrollo temprano de la app.
-        </p>
+      <div className={`${type} separate ${(!close? "" : "close")}`}>
+        <span className={`${type}-closer`} aria-label="boton cerrar"
+              onClick={handleClick}>&#x26DD;</span>
+        <p className="capitalize"><strong>{type}:</strong></p>
+        <p className="text">{this.props.children}</p>
       </div>);
   }
 }

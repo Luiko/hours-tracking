@@ -5,33 +5,53 @@ const {
 const moment = require('moment');
 
 exports.register = function (server) {
-  const INDEX = server.settings.app.INDEX;
 
   server.route({
     method: 'POST',
     path: '/login',
     async handler(request, h) {
       if (request.auth.isAuthenticated) {
-        return h.redirect('/');
+        return { type: 'info', payload: 'you are already authenticated' };
       }
       try {
         var { username, password } = request.payload;
       } catch (error) {
-        return h.file(INDEX).code(400);
+        return h.response({
+          type: 'error', payload: 'write valid fields'
+        }).code(400);
       }
       if (!username || !password) {
-        return h.file(INDEX).code(400);
+        return h.response({
+          type: 'error', payload: 'write valid fields'
+        }).code(400);
       }
       const users = await getUsers();
       const user = users[username];
       if (!user) {
-          return h.file(INDEX).code(401);
+        return h.response({
+          type: 'error', payload: 'invalid username or password'
+        }).code(401);
       }
       if (await Bcrypt.compare(password, user.password)) {
         request.cookieAuth.set({ username });
-        return h.redirect('/');
+        const { clientDate: client, diff } = request.payload;
+        const clientDate = moment(client).utcOffset(diff);
+        const {
+          dayHours, weekHours, remainingTime
+        } = await updateCookieState(username, request, clientDate);
+        console.log('credentials', {
+          username, dayHours, weekHours, remainingTime, clientDate: client, diff
+        });
+        request.cookieAuth.set('clientDate', client);
+        request.cookieAuth.set('diff', diff);
+        return {
+          type: 'info', payload: 'Authenticated', username, dayHours,
+          weekHours, remainingTime
+        };
       }
-      return h.file('index.html'); //fourth auth failed
+      return h.response({
+        type: 'error', payload: 'invalid username or password'
+      }).code(401);
     }
   });
   server.route({
@@ -52,7 +72,7 @@ exports.register = function (server) {
         return username;
       } catch (err) {
         console.error('sign up failed:', err.message);
-        return h.response(err.name || err.code).code(400);
+        return h.response(err.code || err).code(400);
       }
     }
   });

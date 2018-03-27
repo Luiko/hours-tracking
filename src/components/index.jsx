@@ -8,6 +8,7 @@ import Welcome from './welcome.jsx';
 
 function HoursTracking(props) {
   const { username } = props;
+
   return (<BrowserRouter>
     <div>
       <header>
@@ -32,12 +33,15 @@ function HoursTracking(props) {
             handleClick={props.handleClick}
             remainingTime={props.remainingTime}
             tickUpdate={props.tickUpdate}
+            error={props.error}
+            closeAlert={props.closeAlert}
+            handleAlertClick={props.handleAlertClick}
           />}
         />
-        <Route path="/about" render={() => <About version={props.version}/>}/>
-        <Route path="/login" component={Login}/>
+        <Route path="/about" render={() => <About version={props.version} />} />
+        <Route path="/login" render={() => <Login auth={props.auth} />}/>
         <Route path="/signup" render={function () {
-          return <SignUp auth={props.auth} username={username} />
+          return <SignUp auth={props.auth} username={username} />;
         }}/>
       </div>
     </div>

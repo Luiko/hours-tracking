@@ -9,7 +9,10 @@ class Signup extends Component {
     this.state = {
       username: '',
       password: '',
-      repeatpassword: ''
+      repeatpassword: '',
+      error: '',
+      closeAlert: true,
+      closeAlertNote: false
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleInput = this.handleInput.bind(this);
@@ -36,7 +39,14 @@ class Signup extends Component {
             name="repeatpassword" value={this.state.repeatpassword}
             onInput={this.handleInput}
           /><br/>
-          <Alert close={false}/>
+          <Alert close={this.state.closeAlert} type="error"
+            handleClick={() => this.setState({ closeAlert: true })}>
+                {this.state.error}
+          </Alert>
+          <Alert close={this.state.closeAlertNote} type="note"
+            handleClick={() => this.setState({ closeAlertNote: true })}>
+            Actualmente dejamos de pedir correo electrónico en el registro.
+          </Alert>
           <input className="separate left-margin" type="submit"
                   value="Registarte" onInput={this.handleInput}/>
         </form>
@@ -52,15 +62,19 @@ class Signup extends Component {
     }
     post('/signup', this.state)
       .then(function ({ data: username }) {
-        this.props.auth(username);
+        this.props.auth({ username });
       }.bind(this))
       .catch(function (err) {
-        if (err.response.data === 11000) {
-          console.error('duplicated key: we already have the same username')
+        if (err.response && err.response.data === 11000) {
+          this.setState({
+            error: 'duplicated key: we already have the same username', closeAlert: false
+          });
         } else {
-          console.error(err);
+          this.setState({
+            error: err.message, closeAlert: false
+          });
         }
-      })
+      }.bind(this))
     ;
   }
 

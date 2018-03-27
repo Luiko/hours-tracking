@@ -121,7 +121,7 @@ and (min-width: 800px) {
   margin-left: 5rem;
 }
 
-.note {
+.type {
   $mlef: -60;
   $pad: 30;
   $color: hsla(200, 100%, 0%, 0.8);
@@ -131,21 +131,46 @@ and (min-width: 800px) {
   padding: #{$pad}px;
   padding: px2rem($pad);
   border-radius: 6px;
+}
+
+.closer {
+  background: wheat;
+  float: right;
+  line-height: 1;
+  padding: 1px 2px 3.5px 2px;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.note {
+  @extend .type;
   background: coral;
-  color: $color;
 
   &-closer {
-    background: wheat;
-    color: $color;
-    float: right;
-    line-height: 1;
-    padding: 1px 2px 3.5px 2px;
-
-    &:hover {
-      cursor: pointer;
-    }
+    @extend .closer;
   }
+}
 
+.error {
+  @extend .type;
+  background: hsl(355, 84%, 42%);
+  color: wheat;
+
+  &-closer {
+    @extend .closer;
+    background: unset;
+  }
+}
+
+.info {
+  @extend .type;
+  background: rgb(77, 224, 224);
+
+  &-closer {
+    @extend .closer;
+  }
 }
 
 .close {
@@ -154,6 +179,10 @@ and (min-width: 800px) {
 
 .text {
   text-align: justify;
+}
+
+.capitalize {
+  text-transform: capitalize;
 }
 
   //flexbox

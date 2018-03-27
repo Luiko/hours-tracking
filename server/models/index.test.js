@@ -1,6 +1,5 @@
 const { getWeekSeconds, getUsers } = require('./index');
 const test = require('tape');
-const privateMethods = require('./_index');
 
 test('week seconds', async function (t) {
   t.plan(1);
