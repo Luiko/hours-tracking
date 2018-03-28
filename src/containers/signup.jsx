@@ -57,7 +57,9 @@ class Signup extends Component {
   handleSubmit(event) {
     event.preventDefault();
     if (this.state.password !== this.state.repeatpassword) {
-      console.log('repeat the same password');
+      this.setState({
+        error: 'repeat the same password', closeAlert: false
+      });
       return;
     }
     post('/signup', this.state)
