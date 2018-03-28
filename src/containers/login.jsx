@@ -7,7 +7,9 @@ import { START, CONTINUE } from './index.jsx';
 class Login extends Component {
   constructor(props) {
     super(props);
-    this.state = { username: '', password: '', closeAlert: true, auth: false, error: "" };
+    this.state = {
+      username: '', password: '', closeAlert: true, auth: false, error: ""
+    };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleInput = this.handleInput.bind(this);
   }
@@ -27,7 +29,10 @@ class Login extends Component {
                 value={this.state.username} name="username" onInput={this.handleInput}/><br/>
           <label className="separate" htmlFor="password">Constraseña</label><br/>
           <input className="separate" required type="password"
-                value={this.state.password} name="password" onInput={this.handleInput}/><br/>
+                value={this.state.password} name="password"
+                onInput={this.handleInput}
+                ref={(input) => { this.textInput = input; }}
+          /><br/>
           <Alert type='error' close={close}
             handleClick={() => this.setState({ closeAlert: true })}>{error}</Alert>
           <input className="separate left-margin" type="submit" value="Iniciar Sesión"/>
@@ -56,19 +61,21 @@ class Login extends Component {
         throw 'this should not happend 0';
       }.bind(this))
       .catch(function (err) {
+        this.textInput.focus();
         if (err.response) {
           const { data } = err.response;
           if (data && data.type === 'error') {
             const { payload } = data;
-            this.setState({ error: payload, closeAlert: false });
+            this.setState({ error: payload, closeAlert: false, password: '' });
             return;
           }
         } else {
-          this.setState({ error: err.message, closeAlert: false });
+          this.setState({ error: err.message, closeAlert: false, password: '' });
           return;
         }
         throw 'this should not happend 1';
-      }.bind(this));
+      }.bind(this))
+    ;
   }
 
   handleInput(ev) {
