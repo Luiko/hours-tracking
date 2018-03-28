@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { post } from 'axios';
 import HoursTrackingComponent from '../components/index.jsx';
 
-const START = 'Start';
+export const START = 'Start';
 const PAUSE = 'Pause';
-const CONTINUE = 'Continue';
+export const CONTINUE = 'Continue';
 let timer;
 let start;
 

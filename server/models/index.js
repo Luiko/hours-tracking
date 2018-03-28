@@ -26,8 +26,7 @@ async function addAccount(username, password) {
 
 async function getUsers() {
   const users = await Account.find({}, {
-    _id: 0, __v: 0,
-    iterations: 0, createdAt: 0, updatedAt: 0 
+    _id: 0, username: 1, password: 1
   });
   return users.reduce(function (prev, curr) {
     prev[curr.username] = curr;
