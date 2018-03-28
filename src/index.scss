@@ -123,7 +123,7 @@ and (min-width: 800px) {
 
 .type {
   $mlef: -60;
-  $pad: 30;
+  $pad: 20;
   $color: hsla(200, 100%, 0%, 0.8);
 
   margin-left: #{$mlef}px;
@@ -131,6 +131,11 @@ and (min-width: 800px) {
   padding: #{$pad}px;
   padding: px2rem($pad);
   border-radius: 6px;
+
+  display: -webkit-flex;
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
 }
 
 .closer {
@@ -138,6 +143,8 @@ and (min-width: 800px) {
   float: right;
   line-height: 1;
   padding: 1px 2px 3.5px 2px;
+
+  align-self: flex-end;
 
   &:hover {
     cursor: pointer;
@@ -179,13 +186,17 @@ and (min-width: 800px) {
 
 .text {
   text-align: justify;
+  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
 }
 
 .capitalize {
   text-transform: capitalize;
 }
 
-  //flexbox
+.flat {
+  margin-top: 0;
+  margin-bottom: 0;
+}
 
   //grid
 
