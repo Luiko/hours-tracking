@@ -27,7 +27,8 @@ class Signup extends Component {
         <h2 className="center">Registarte</h2>
         <form className="pad-content" action="/signup" method="post" onSubmit={this.handleSubmit}>
           <label className="separate" htmlFor="username">Nombre de Usuario</label><br/>
-          <input className="separate" required type="text" id="username" name="username"
+          <input className="separate" required type="text" id="username"
+            name="username" ref={(input) => {this.firstTextInput = input}}
             value={this.state.username} onInput={this.handleInput}
           /><br/>
           <label className="separate" htmlFor="password">Constraseña</label><br/>
@@ -52,6 +53,10 @@ class Signup extends Component {
         </form>
       </main>
     );
+  }
+
+  componentDidMount() {
+    this.firstTextInput.focus();
   }
 
   handleSubmit(event) {

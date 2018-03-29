@@ -26,7 +26,10 @@ class Login extends Component {
           onSubmit={this.handleSubmit}>
           <label className="separate" htmlFor="username">Nombre de Usuario</label><br/>
           <input className="separate" required type="text"
-                value={this.state.username} name="username" onInput={this.handleInput}/><br/>
+                value={this.state.username} name="username"
+                onInput={this.handleInput}
+                ref={(input) => {this.firstTextInput = input}}
+          /><br/>
           <label className="separate" htmlFor="password">Constraseña</label><br/>
           <input className="separate" required type="password"
                 value={this.state.password} name="password"
@@ -39,6 +42,10 @@ class Login extends Component {
         </form>
       </main>
     );
+  }
+
+  componentDidMount() {
+    this.firstTextInput.focus();
   }
 
   handleSubmit(ev) {
