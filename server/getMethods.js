@@ -31,7 +31,7 @@ exports.register = function (server) {
     handler(request, h) {
       console.log(`user '${request.auth.credentials.username}' logged out`);
       request.cookieAuth.clear();
-      return h.redirect('/');
+      return h.redirect('/login');
     }
   });
   server.route({
