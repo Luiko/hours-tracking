@@ -66,6 +66,12 @@ exports.register = function (server) {
         }).code(400);
       }
       const { username, password } = payload;
+      if (!username || !password) {
+        return h.response({
+          type: 'error',
+          payload: 'invalid field'
+        }).code(400);
+      }
       try {
         await addAccount(username, password);
         cookieAuth.set({ username });

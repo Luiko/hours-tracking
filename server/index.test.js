@@ -2,6 +2,7 @@ const test = require('tape');
 const request = require('supertest');
 const app = require('./index');
 require('dotenv').config();
+const { version } = require('../package.json');
 
 test('auth', function (t) {
   t.plan(2);
@@ -19,7 +20,7 @@ test('auth', function (t) {
   request(app)
     .post('/auth')
     .expect(401)
-    .expect('false')
+    .expect(version)
     .then(function () {
       t.pass(msg);
     })
@@ -70,32 +71,35 @@ test('post routes', function (t) {
     })
     .catch(t.fail)
   ;
+  const msg0 = 'unauthorized(false user) post /login';
   request(app)
     .post('/login')
     .send({ username: 'asd', password: 'saosao' })
     .expect(401)
     .then(function () {
-      t.pass('unauthorized(false user) post /login');
+      t.pass(msg0);
     })
-    .catch(t.fail)
+    .catch(() => t.fail(msg0))
   ;
+  const msg1 = 'fail auth, post /login';
   request(app)
     .post('/login')
     .send({ username: 'loco', password: 'passport' })
-    .expect(200)
+    .expect(401)
     .then(function () {
-      t.pass('fail auth, post /login');
+      t.pass(msg1);
     })
-    .catch(t.fail)
+    .catch(() => t.fail(msg1))
   ;
+  const msg2 = 'found/authenticated, post /login';
   request(app)
     .post('/login')
     .send({ username: 'loco', password: 'password' })
-    .expect(302)
+    .expect(200)
     .then(function () {
-      t.pass('found/authenticated, post /login');
+      t.pass(msg2);
     })
-    .catch(t.fail)
+    .catch(() => t.fail(msg2))
   ;
 
   request(app)
