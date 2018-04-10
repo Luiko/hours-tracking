@@ -13,14 +13,19 @@ class App extends Component {
   render() {
     return (<main>
       <h2 className="center">Horas Contadas</h2>
-      <button className="main-button" aria-label="Botón principal" onClick={this.props.handleClick}>
+      <button className="main-button sans" aria-label="Botón principal"
+                                      onClick={this.props.handleClick}>
         {this.props.btnName}
       </button>
       <div id="record" className="pad-content">
-        <label className="separate" htmlFor="dayhours">Horas del día completadas</label><br/>
+        <label className="separate" htmlFor="dayhours">
+          Horas del día completadas
+        </label><br/>
         <input className="separate right-align" readOnly id="dayhours"
           value={this.props.dayHours}/><br/>
-        <label className="separate" htmlFor="weekhours">Horas de la semana completadas</label><br/>
+        <label className="separate" htmlFor="weekhours">
+          Horas de la semana completadas
+        </label><br/>
         <input className="separate right-align" readOnly id="weekhours"
           value={this.props.weekHours}/><br/>
         <label className="separate" htmlFor="remainingtime">
