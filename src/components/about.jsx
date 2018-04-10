@@ -30,11 +30,12 @@ class App extends Component {
       </p>
       <h3 id="contact">Contacto</h3>
       <p className="text">
-        Si deseas contactar me <a href="mailto:luiko.luisgarcia@gmail.com" title="correo electrónico"
-        >luiko.luisgarcia@gmail.com</a><br/>
-        Cualquier comentario, sugerencia sera bien recibida.<br/>Mi <a href="https://twitter.com/Luiko0"
-        title="red social de contacto">twitter </a>
-        Mi <a href="https://github.com/Luiko" title="red social de creadores">GitHub</a>
+        Si deseas contactar me <a href="mailto:luiko.luisgarcia@gmail.com"
+        title="correo electrónico">luiko.luisgarcia@gmail.com</a><br/>
+        Cualquier comentario, sugerencia sera bien recibida.<br/>Mi <a
+        href="https://twitter.com/Luiko0" title="red social de contacto">twitter
+        </a>. Mi <a href="https://github.com/Luiko" title="red social de creadores">
+        GitHub</a>.
       </p>
     </article>);
   }
