@@ -139,10 +139,10 @@ and (min-width: 800px) {
 }
 
 .closer {
-  background: wheat;
+  background: transparent;
   float: right;
   line-height: 1;
-  padding: 1px 2px 3.5px 2px;
+  border: solid thin pink;
 
   align-self: flex-end;
 
