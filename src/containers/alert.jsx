@@ -9,7 +9,7 @@ class Alert extends Component {
     return (
       <div className={`${type} separate ${(!close? "" : "close")}`}>
         <span className={`${type}-closer`} aria-label="boton cerrar"
-              onClick={handleClick}>&#x26DD;</span>
+              onClick={handleClick}>❎</span>
         <p className="capitalize flat"><strong>{type}:</strong></p>
         <p className="text">{this.props.children}</p>
       </div>);
