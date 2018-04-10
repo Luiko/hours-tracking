@@ -185,8 +185,9 @@ and (min-width: 800px) {
 }
 
 .text {
-  text-align: justify;
   font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  -ms-text-justify: inter-character;
+  text-justify: inter-character;
 }
 
 .capitalize {
