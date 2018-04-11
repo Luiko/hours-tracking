@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Alert from './alert.jsx';
 import { post } from 'axios';
 import { Redirect } from 'react-router-dom';
-import { START, CONTINUE } from './index.jsx';
+import { START, CONTINUE, BTN } from '../locales/main-button';
 
 class Login extends Component {
   constructor(props) {
@@ -60,7 +60,7 @@ class Login extends Component {
         if (response.data.type === 'info') {
           const { username, dayHours, weekHours, remainingTime } = response.data;
           const state = { username, dayHours, weekHours, remainingTime };
-          state.btnName = remainingTime % 3600 ? CONTINUE : START;
+          state.btnName = remainingTime % 3600 ? BTN(CONTINUE) : BTN(START);
           this.props.auth(state);
           this.setState({ auth: true });
           return;
