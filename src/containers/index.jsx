@@ -69,6 +69,9 @@ class HoursTracking extends Component {
   }
 
   auth(account) {
+    if (timer) {
+      clearTimeout(timer);
+    }
     this.setState(account);
   }
 
