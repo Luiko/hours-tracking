@@ -1,26 +1,8 @@
 import React, { Component } from 'react';
 import { post } from 'axios';
 import HoursTrackingComponent from '../components/index.jsx';
+import { START, PAUSE, CONTINUE, BTN } from '../locales/main-button';
 
-export const START = 'Start';
-const PAUSE = 'Pause';
-export const CONTINUE = 'Continue';
-const LANGUAGE = 'es';
-const btnNames = {
-  [START]: {
-    en: 'Start',
-    es: 'Iniciar'
-  },
-  [PAUSE]: {
-    en: 'Pause',
-    es: 'Pausar'
-  },
-  [CONTINUE]: {
-    en: 'Continue',
-    es: 'Continuar'
-  }
-}
-const BTN = (NAME) => btnNames[NAME][LANGUAGE];
 let timer;
 let start;
 
