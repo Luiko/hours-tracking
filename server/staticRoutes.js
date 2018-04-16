@@ -39,6 +39,11 @@ exports.register = function (server) {
     path: '/signup',
     handler
   });
+  server.route({
+    method: 'GET',
+    path: '/configuration',
+    handler
+  });
 
   server.route({
     method: 'GET',

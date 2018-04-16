@@ -1,8 +1,7 @@
 const Bcrypt = require('bcrypt');
-const {
-  getUsers, addAccount, addIteration, getDaySeconds, getWeekSeconds
-} = require('./models');
+const { getUsers, addAccount } = require('../models');
 const moment = require('moment');
+const updateCookieState = require('../lib/updateCookieState');
 
 exports.register = function (server) {
 
@@ -122,36 +121,6 @@ exports.register = function (server) {
   });
   server.route({
     method: 'POST',
-    path: '/iterations',
-    options: {
-      auth: 'restricted',
-      plugins: {
-        'hapi-auth-cookie': {
-          redirectTo: false
-        }
-      }
-    },
-    async handler(request, h) {
-      const { username, clientDate: client, diff } = request.auth.credentials;
-      try {
-        request.cookieAuth.set('btnName', 'Continue');
-        await addIteration(username, request.payload);
-      } catch (err) {
-        if (err.statusCode === 404) {
-          console.log('add iteration failed', err);
-          return h.response(err.message).code(err.statusCode);
-        }
-        console.log('add iteration failed', err);
-        return h.response(err.message).code(500);
-      }
-      const clientDate = moment(client).utcOffset(diff);
-      await updateCookieState(username, request, clientDate);
-      console.log('iteration added to ', username);
-      return h.response(`iteration added to ${username}`);
-    }
-  });
-  server.route({
-    method: 'POST',
     path: '/session',
     options: {
       auth: 'restricted',
@@ -171,20 +140,6 @@ exports.register = function (server) {
       return 'state saved';
     }
   });
-
-  async function updateCookieState(username, request, clientDate) {
-    const hour = 3600;
-    const daySeconds = await getDaySeconds(username, clientDate);
-    const weekSeconds = await getWeekSeconds(username, clientDate);
-    const weekHours = Math.floor(weekSeconds / hour);
-    const remainingTime = hour - (weekSeconds % hour);
-    const remaining = (weekSeconds - daySeconds) % hour;
-    const dayHours = Math.floor((daySeconds + remaining) / hour);
-    request.cookieAuth.set('dayHours', dayHours);
-    request.cookieAuth.set('weekHours', weekHours);
-    request.cookieAuth.set('remainingTime', remainingTime);
-    return { dayHours, weekHours, remainingTime };
-  }
 };
 
-exports.name = 'postMethods';
+exports.name = 'main';
