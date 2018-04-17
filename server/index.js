@@ -17,6 +17,10 @@ const {
 let SECURE = true;
 if (NODE_ENV !== 'production') {
   SECURE = false;
+  process.on('unhandledRejection', (err) => {
+      console.log(err);
+      process.exit(1);
+  });
 }
 
 const server = new Hapi.Server({
