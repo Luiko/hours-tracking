@@ -1,5 +1,5 @@
 const Bcrypt = require('bcrypt');
-const { addIteration } = require('../models');
+const { addIteration, getUsers, changePassword } = require('../models');
 const moment = require('moment');
 const updateCookieState = require('../lib/updateCookieState');
 
@@ -36,13 +36,34 @@ exports.register = function (server) {
     }
   });
   server.route({
-    method: 'POST',
+    method: 'PUT',
     path: '/password',
     options: {
       auth: 'restricted'
     },
-    handler() {
-      return 'password changed';
+    async handler(request, h) {
+      try {
+        const { username } = request.auth.credentials;
+        const { password, newPassword } = request.payload;
+        const users = await getUsers();
+        const user = users[username];
+        if (!user) {
+          return h.response({
+            type: 'error', payload: 'invalid username'
+          }).code(500);
+        }
+        if (await Bcrypt.compare(password, user.password)) {
+          await changePassword(username, newPassword);
+          return {
+            type: 'info', payload: 'password changed'
+          };
+        }
+        return h.response({
+          type: 'error', payload: 'invalid actual password'
+        }).code(400);
+      } catch (error) {
+        return h.response({ type: 'error', payload: error.message }).code(500);
+      }
     }
   });
 };

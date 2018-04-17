@@ -58,4 +58,4 @@ exports.register = function (server) {
   });
 };
 
-exports.name = 'getMethods';
+exports.name = 'staticRoutes';

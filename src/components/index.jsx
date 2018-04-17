@@ -5,6 +5,7 @@ import About from './about.jsx';
 import Login from '../containers/login.jsx';
 import SignUp from '../containers/signup.jsx';
 import Welcome from './welcome.jsx';
+import Configuration from '../containers/configuration.jsx';
 
 function HoursTracking(props) {
   const { username } = props;
@@ -20,6 +21,7 @@ function HoursTracking(props) {
             {!!!username && <li className="list-item"><Link to="/login">Iniciar Sesión</Link></li>}
             {!!username && <li className="list-item"><a href="/logout">Cerrar Sesión</a></li>}
             {!!!username && <li className="list-item"><Link to="/signup">Registrarte</Link></li>}
+            {!!username && <li className="list-item"><Link to="/configuration">Ajustes</Link></li>}
           </ul>
         </nav>
       </header>
@@ -43,6 +45,7 @@ function HoursTracking(props) {
         <Route path="/signup" render={function () {
           return <SignUp auth={props.auth} username={username} />;
         }}/>
+        <Route path="/configuration" component={Configuration}/>
       </div>
     </div>
     </BrowserRouter>);

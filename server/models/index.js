@@ -114,8 +114,14 @@ function getWeekSeconds(username, clientDate) {
   });
 };
 
+async function changePassword(username, newPassword) {
+  const user = await Account.findOne({ username });
+  user.password = await Bcrypt.hash(newPassword.toString(), 14);
+  await user.save();
+}
+
 module.exports = {
   addAccount, getUsers, closeConnection,
   addIteration, getDaySeconds, deleteUser,
-  getWeekSeconds
+  getWeekSeconds, changePassword
 };
