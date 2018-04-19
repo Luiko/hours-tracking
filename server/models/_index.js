@@ -5,6 +5,7 @@ function reduceIterationToDay(iterations, clientDate) {
     return isPointOf('day', start, end, clientDate);
   });
 }
+
 function reduceDaySeconds(iterations, clientDate) {
   const seconds = (prev, start, end) => prev + moment(end).diff(start, 's');
   return iterations.reduce(function (prev, { start, end }) {

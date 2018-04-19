@@ -9,12 +9,7 @@ exports.register = function (server) {
     method: 'POST',
     path: '/iterations',
     options: {
-      auth: 'restricted',
-      plugins: {
-        'hapi-auth-cookie': {
-          redirectTo: false
-        }
-      }
+      auth: 'restricted'
     },
     async handler(request, h) {
       const { username, clientDate: client, diff } = request.auth.credentials;

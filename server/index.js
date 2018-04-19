@@ -17,10 +17,11 @@ const {
 let SECURE = true;
 if (NODE_ENV !== 'production') {
   SECURE = false;
-  process.on('unhandledRejection', (err) => {
-      console.log(err);
-      process.exit(1);
-  });
+  /* need secure working in production */
+  // process.on('unhandledRejection', (err) => {
+  //     console.log(err);
+  //     process.exit(1);
+  // });
 }
 
 const server = new Hapi.Server({
@@ -66,8 +67,6 @@ const server = new Hapi.Server({
     clearInvalid: true,
     keepAlive: false,
     isSecure: SECURE,
-    redirectTo: '/login',
-    redirectOnTry: 'false',
     requestDecoratorName: 'cookieAuth',
     async validateFunc(request, { username }) {
       const users = await getUsers();
