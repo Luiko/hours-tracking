@@ -33,13 +33,14 @@ test('get routes', function (t) {
   testGetRoute('about', t);
   testGetRoute('signup', t);
   testGetRoute('login', t);
+  const msg = 'restricted way to /logout';
   request(app)
     .get('/logout')
-    .expect(302)
+    .expect(401)
     .then(function () {
-      t.pass('restricted way to /logout');
+      t.pass(msg);
     })
-    .catch(t.fail)
+    .catch((err) => t.fail(msg + '\n' + err.message))
   ;
 });
 function testGetRoute(route, t) {
