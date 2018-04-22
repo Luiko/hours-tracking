@@ -47,8 +47,18 @@ function HoursTracking(props) {
         }}/>
         <Route path="/configuration" component={Configuration}/>
       </div>
+      <footer>
+        <p class="center">
+          2018 Copyright &copy; Luis Carlos Garcia Barajas🇲🇽
+        </p>
+        <p class="center">
+          Horas-Contadas web app is under <a
+            href="https://github.com/Luiko/hours-tracking/blob/master/LICENSE"
+            title="Licencia de la app web">MIT License</a>
+        </p>
+      </footer>
     </div>
-    </BrowserRouter>);
+  </BrowserRouter>);
 }
 
 export default HoursTracking;
