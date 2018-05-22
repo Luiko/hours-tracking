@@ -29,7 +29,7 @@ test('auth', function (t) {
 });
 
 test('get routes', function (t) {
-  t.plan(4);
+  t.plan(5);
   testGetRoute('about', t);
   testGetRoute('signup', t);
   testGetRoute('login', t);
@@ -42,17 +42,26 @@ test('get routes', function (t) {
     })
     .catch((err) => t.fail(msg + '\n' + err.message))
   ;
-});
-function testGetRoute(route, t) {
+  const msg2 = 'get /configuration should be unauthenticated';
   request(app)
-    .get('/' + route)
-    .expect(200)
+    .get('/configuration')
+    .expect(401)
     .then(function () {
-      t.pass('free way to /' + route);
+      t.pass(msg2);
     })
-    .catch((err) => t.fail('fail free way to / ' + err.message))
+    .catch((err) => t.fail(msg2 + '\n' + err.message))
   ;
-}
+  function testGetRoute(route, t) {
+    request(app)
+      .get('/' + route)
+      .expect(200)
+      .then(function () {
+        t.pass('free way to /' + route);
+      })
+      .catch((err) => t.fail('fail free way to / ' + err.message))
+    ;
+  }
+});
 
 test('post routes', function (t) {
   request(app)
@@ -180,8 +189,4 @@ test('post routes', function (t) {
       t.pass(msg);
     })
   ;
-});
-
-test('temp cookie', function () {
-
 });

@@ -1,5 +1,10 @@
-const { getWeekSeconds, getDaySeconds, getUsers } = require('./index');
+const {
+  getWeekSeconds, getDaySeconds, getUsers,
+  getWeekStats, connect } = require('./index')
+;
 const test = require('tape');
+
+connect();
 
 test('seconds', async function (t) {
   t.plan(2);
@@ -20,6 +25,7 @@ test('seconds', async function (t) {
 });
 
 test('get users', async function (t) {
+  t.plan(1);
   const msg = 'should return a hash of users';
   try {
     var result = await getUsers();
@@ -27,4 +33,19 @@ test('get users', async function (t) {
     t.fail(msg);
   }
   t.true(result instanceof Object, msg);
+});
+
+
+test('get weeks', async function (t) {
+  t.plan(2);
+  const msg = 'should return an object';
+  const week = await getWeekStats('jeronimo', new Date);
+  t.equal(typeof week, 'object', msg);
+  const weekDays = [
+    'sunday', 'monday', 'tuesday', 'wednesday',
+    'thursday', 'friday', 'saturday'
+  ];
+  t.deepEqual(Object.keys(week), weekDays,
+    'should contain week days as attributes')
+  ;
 });

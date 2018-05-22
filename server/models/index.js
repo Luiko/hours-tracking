@@ -18,7 +18,9 @@ db.once('open', function () {
 });
 
 const Account = mongoose.model('Account', accountSchema);
-mongoose.connect(process.env.STR_DB_CON);
+function connect() {
+  mongoose.connect(process.env.STR_DB_CON);
+}
 
 function closeConnection() {
   mongoose.connection.close();
@@ -51,9 +53,61 @@ async function getWeekSeconds(username, clientDate) {
     return err;
   }
 }
+async function getWeekStats(username, date) {
+  const [ { iterations } ] = await Account.aggregate([
+    { $match: { username } },
+    {
+      $project: {
+        _id: 0,
+        iterations: {
+          $filter: {
+            input: "$iterations",
+            as: "iteration",
+            cond: {
+              $eq: [
+                { $week: new Date() },
+                { $week: "$$iteration.start" }
+              ]
+            }
+          }
+        }
+      }
+    },
+    { $project: { iterations: { _id: 0 } } }
+  ]);
+
+  const getmilis = (iter) => (new Date(iter.end).getTime()) - (new Date(iter.start).getTime());
+  const weekDaysWithMilis = iterations.reduce(function (prev, iter) {
+    const day = moment(iter.start).format('dddd').toLowerCase();
+    prev[day] += getmilis(iter);
+    return prev;
+  }, {
+    sunday: 0, monday: 0, tuesday: 0, wednesday: 0,
+    thursday: 0, friday: 0, saturday: 0 })
+  ;
+  const days = Object.keys(weekDaysWithMilis);
+  const week = {};
+  let remaining = 0;
+  const hour = 60 * 60 * 1000;
+  for (let i = 0; i < days.length; i++) {
+    const dayname = days[i];
+    if (remaining > 0 || weekDaysWithMilis[dayname] !== 0) {
+      const nextRemaining = weekDaysWithMilis[dayname] % hour;
+      week[dayname] = weekDaysWithMilis[dayname] + remaining;
+      week[dayname] = Math.floor(week[dayname] / hour);
+      remaining = nextRemaining;
+    } else {
+      week[dayname] = 0;
+    }
+  }
+  console.log('week', weekDaysWithMilis);
+  console.log('week', week);
+  return week;
+}
 
 module.exports = {
   addAccount, getUsers, closeConnection,
   addIteration, getDaySeconds, deleteUser,
-  getWeekSeconds, changePassword
+  getWeekSeconds, changePassword, getWeekStats,
+  connect
 };

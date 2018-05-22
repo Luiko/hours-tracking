@@ -44,6 +44,11 @@ exports.register = function (server) {
     path: '/configuration',
     handler
   });
+  server.route({
+    method: 'GET',
+    path: '/stats',
+    handler
+  });
 
   server.route({
     method: 'GET',

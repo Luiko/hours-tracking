@@ -207,6 +207,15 @@ and (min-width: 800px) {
 .sans {
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
+
+.background {
+  opacity: 0.5;
+  z-index: -1;
+}
+
+.mark {
+  z-index: 10;
+}
   //grid
 
 //Utilities

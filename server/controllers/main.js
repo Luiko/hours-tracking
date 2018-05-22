@@ -1,10 +1,11 @@
 const Bcrypt = require('bcrypt');
-const { getUsers, addAccount } = require('../models');
+const { getUsers, addAccount, getWeekStats, connect } = require('../models');
 const moment = require('moment');
 const updateCookieState = require('../lib/updateCookieState');
 
 exports.register = function (server) {
 
+  connect();
   server.route({
     method: 'POST',
     path: '/login',
@@ -123,12 +124,7 @@ exports.register = function (server) {
     method: 'POST',
     path: '/session',
     options: {
-      auth: 'restricted',
-      plugins: {
-        'hapi-auth-cookie': {
-          redirectTo: false
-        }
-      }
+      auth: 'restricted'
     },
     handler(request, h) {
       if (!request.payload) {
@@ -140,6 +136,17 @@ exports.register = function (server) {
       return 'state saved';
     }
   });
+  server.route({
+    method: 'GET',
+    path: '/stats/week',
+    options: {
+      auth: 'restricted'
+    },
+    handler(request) {
+      const { username, clientDate, diff } = request.auth.credentials;
+      return getWeekStats(username, clientDate, diff);
+    }
+  })
 };
 
 exports.name = 'main';

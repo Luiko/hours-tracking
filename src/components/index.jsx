@@ -6,6 +6,7 @@ import Login from '../containers/login.jsx';
 import SignUp from '../containers/signup.jsx';
 import Welcome from './welcome.jsx';
 import Configuration from '../containers/configuration.jsx';
+import Stats from '../containers/stats.jsx';
 
 function HoursTracking(props) {
   const { username } = props;
@@ -22,11 +23,12 @@ function HoursTracking(props) {
             {!!username && <li className="list-item"><a href="/logout">Cerrar Sesión</a></li>}
             {!!!username && <li className="list-item"><Link to="/signup">Registrarte</Link></li>}
             {!!username && <li className="list-item"><Link to="/configuration">Ajustes</Link></li>}
+            {!!username && <li className="list-item"><Link to="/stats">Gráficas</Link></li>}
           </ul>
         </nav>
       </header>
       <div>
-        {<Welcome username={username}/>}
+        <Welcome username={username}/>
         <Route exact path="/"
           render={() => <App
             btnName={props.btnName}
@@ -46,12 +48,13 @@ function HoursTracking(props) {
           return <SignUp auth={props.auth} username={username} />;
         }}/>
         <Route path="/configuration" component={Configuration}/>
+        <Route path="/stats" component={Stats}/>
       </div>
       <footer>
-        <p class="center">
+        <p className="center">
           2018 Copyright &copy; Luis Carlos Garcia Barajas🇲🇽
         </p>
-        <p class="center">
+        <p className="center">
           Horas-Contadas web app is under <a
             href="https://github.com/Luiko/hours-tracking/blob/master/LICENSE"
             title="Licencia de la app web">MIT License</a>
