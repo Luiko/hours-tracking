@@ -100,8 +100,6 @@ async function getWeekStats(username, date) {
       week[dayname] = 0;
     }
   }
-  console.log('week', weekDaysWithMilis);
-  console.log('week', week);
   return week;
 }
 
