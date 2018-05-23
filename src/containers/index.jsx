@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { post } from 'axios';
-import HoursTrackingComponent from '../components/index.jsx';
+import HoursTrackingComponent from '../components/index';
 import { START, PAUSE, CONTINUE, BTN } from '../locales/main-button';
 
 let timer;
@@ -17,7 +17,8 @@ class HoursTracking extends Component {
       username: '',
       version: '0.0.0',
       error: '',
-      closeAlert: true
+      closeAlert: true,
+      load: false
     };
     this.handleClick = this.handleClick.bind(this);
     this.setTimer = this.setTimer.bind(this);
@@ -65,6 +66,9 @@ class HoursTracking extends Component {
           console.error(err.message);
         }
       }.bind(this))
+      .then(() => {
+        this.setState({ load: true });
+      })
     ;
   }
 

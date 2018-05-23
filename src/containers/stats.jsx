@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { get } from 'axios';
-import Axis from './axis.jsx';
+import Axis from './axis';
 
 const x = 40;
 const y = 40;
@@ -47,10 +47,8 @@ class Stats extends Component {
   componentDidMount() {
     get('/stats/week')
       .then(({ data }) => {
-        console.log('get /stats/week success', data);
         const getMax = (max, key) => Math.max(max, data[key]);
         max = Object.keys(data).reduce(getMax, 0);
-        console.log('max', max);
         multiple = max? length / max: 0;
         this.setState({ data });
       })

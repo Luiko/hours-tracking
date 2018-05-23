@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { post } from 'axios';
 import { Redirect } from 'react-router-dom';
-import Alert from './alert.jsx';
+import Alert from './alert';
 
 class Signup extends Component {
   constructor(props) {

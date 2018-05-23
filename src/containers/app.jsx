@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Alert from './alert.jsx';
+import Alert from './alert';
 
 class App extends Component {
   constructor(props) {

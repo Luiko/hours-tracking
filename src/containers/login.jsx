@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Alert from './alert.jsx';
+import Alert from './alert';
 import { post } from 'axios';
 import { Redirect } from 'react-router-dom';
 import { START, CONTINUE, BTN } from '../locales/main-button';

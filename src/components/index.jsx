@@ -1,12 +1,12 @@
 import React from 'react';
 import { BrowserRouter, Link, Route } from 'react-router-dom';
-import App from '../containers/app.jsx';
-import About from './about.jsx';
-import Login from '../containers/login.jsx';
-import SignUp from '../containers/signup.jsx';
-import Welcome from './welcome.jsx';
-import Configuration from '../containers/configuration.jsx';
-import Stats from '../containers/stats.jsx';
+import About from './about';
+import Login from '../containers/login';
+import SignUp from '../containers/signup';
+import Welcome from './welcome';
+import Configuration from '../containers/configuration';
+import Stats from '../containers/stats';
+import Home from '../containers/home';
 
 function HoursTracking(props) {
   const { username } = props;
@@ -30,7 +30,9 @@ function HoursTracking(props) {
       <div>
         <Welcome username={username}/>
         <Route exact path="/"
-          render={() => <App
+          render={() => <Home
+            isAuthenticated={!!username}
+            load={props.load}
             btnName={props.btnName}
             dayHours={props.dayHours}
             weekHours={props.weekHours}
