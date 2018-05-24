@@ -32,6 +32,7 @@
     "axios": "^0.17.1",
     "bcrypt": "^2.0.1",
     "dotenv": "^4.0.0",
+    "fast-deep-equal": "^2.0.1",
     "hapi": "^17.3.1",
     "hapi-auth-cookie": "^8.1.0",
     "inert": "^5.1.0",
