@@ -22,7 +22,6 @@ class HoursTracking extends Component {
     };
     this.handleClick = this.handleClick.bind(this);
     this.setTimer = this.setTimer.bind(this);
-    this.tickUpdate = this.tickUpdate.bind(this);
     this.auth = this.auth.bind(this);
   }
 
@@ -30,7 +29,6 @@ class HoursTracking extends Component {
     return (<HoursTrackingComponent
       {...this.state}
       auth={this.auth}
-      tickUpdate={this.tickUpdate}
       handleClick={this.handleClick}
       handleAlertClick={() => this.setState({ closeAlert: true })}
     />);
@@ -93,6 +91,28 @@ class HoursTracking extends Component {
             remainingTime: prevState.remainingTime - decrement
           };
         });
+      } else {
+        const { remainingTime } = this.state;
+        const aHour = 60 * 60;
+        if (remainingTime === 0) {
+          this.setState(function (prevState) {
+            return {
+              remainingTime: aHour,
+              dayHours: prevState.dayHours + 1,
+              weekHours: prevState.weekHours + 1
+            };
+          });
+        } else if (remainingTime < 0) {
+          this.setState(function (prevState) {
+            const hourPassed = Math.floor((-1 * prevState.remainingTime) / aHour);
+            return {
+              remainingTime: hourPassed? aHour * hourPassed + remainingTime
+                                      : aHour + remainingTime,
+              dayHours: prevState.dayHours + 1 + hourPassed,
+              weekHours: prevState.weekHours + 1 + hourPassed
+            };
+          });
+        }
       }
       timer = setTimeout(interval.bind(this, now), time);
     }
@@ -138,30 +158,6 @@ class HoursTracking extends Component {
         console.error(err.message);
       }
     }.bind(this));
-  }
-
-  tickUpdate() {
-    const { btnName, remainingTime } = this.state;
-    const aHour = 60 * 60;
-    if (btnName === BTN(PAUSE) && remainingTime === 0) {
-      this.setState(function (prevState) {
-        return {
-          remainingTime: aHour,
-          dayHours: prevState.dayHours + 1,
-          weekHours: prevState.weekHours + 1
-        };
-      });
-    } else if (btnName === BTN(PAUSE) && remainingTime < 0) {
-      this.setState(function (prevState) {
-        const hourPassed = Math.floor((-1 * prevState.remainingTime) / aHour);
-        return {
-          remainingTime: hourPassed? aHour * hourPassed + remainingTime
-                                  : aHour + remainingTime,
-          dayHours: prevState.dayHours + 1 + hourPassed,
-          weekHours: prevState.weekHours + 1 + hourPassed
-        };
-      });
-    }
   }
 }
 

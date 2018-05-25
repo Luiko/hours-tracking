@@ -2,7 +2,7 @@ import React from 'react';
 import App from './app';
 import Home from '../components/home';
 
-class HomeContainer extends React.Component {
+class Main extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -22,4 +22,4 @@ class HomeContainer extends React.Component {
   }
 }
 
-export default HomeContainer;
+export default Main;

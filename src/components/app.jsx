@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import Alert from '../components/alert';
+import Alert from './alert';
 
 class App extends Component {
   constructor(props) {
     super(props);
   }
   render() {
+    console.log('render');
     return (<main>
       <h2 className="center">Horas Contadas</h2>
       <button className="main-button sans" aria-label="Botón principal"
@@ -32,12 +33,6 @@ class App extends Component {
           handleClick={this.props.handleAlertClick}>{this.props.error}</Alert>
       </div>
     </main>);
-  }
-  componentDidMount() {
-    this.props.tickUpdate();
-  }
-  componentDidUpdate() {
-    this.props.tickUpdate();
   }
 }
 

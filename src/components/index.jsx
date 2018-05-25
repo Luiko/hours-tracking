@@ -6,7 +6,7 @@ import SignUp from '../containers/signup';
 import Welcome from './welcome';
 import Configuration from '../containers/configuration';
 import Stats from '../containers/stats';
-import Home from '../containers/home';
+import Home from './main';
 
 function HoursTracking(props) {
   const { username } = props;
@@ -38,7 +38,6 @@ function HoursTracking(props) {
             weekHours={props.weekHours}
             handleClick={props.handleClick}
             remainingTime={props.remainingTime}
-            tickUpdate={props.tickUpdate}
             error={props.error}
             closeAlert={props.closeAlert}
             handleAlertClick={props.handleAlertClick}
