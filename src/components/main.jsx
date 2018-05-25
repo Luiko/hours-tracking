@@ -1,8 +1,9 @@
 import React from 'react';
 import App from './app';
 import Home from '../components/home';
+import PropTypes from 'prop-types';
 
-class Main extends React.Component {
+class HomeContainer extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -22,4 +23,9 @@ class Main extends React.Component {
   }
 }
 
-export default Main;
+HomeContainer.propTypes = {
+  load: PropTypes.bool.isRequired,
+  isAuthenticated: PropTypes.bool.isRequired
+};
+
+export default HomeContainer;

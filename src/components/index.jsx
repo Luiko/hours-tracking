@@ -7,6 +7,7 @@ import Welcome from './welcome';
 import Configuration from '../containers/configuration';
 import Stats from '../containers/stats';
 import Home from './main';
+import PropTypes from 'prop-types';
 
 function HoursTracking(props) {
   const { username } = props;
@@ -64,5 +65,20 @@ function HoursTracking(props) {
     </div>
   </BrowserRouter>);
 }
+
+HoursTracking.propTypes = {
+  username: PropTypes.string.isRequired,
+  load: PropTypes.bool.isRequired,
+  btnName: PropTypes.string.isRequired,
+  dayHours: PropTypes.number.isRequired,
+  weekHours: PropTypes.number.isRequired,
+  handleClick: PropTypes.func.isRequired,
+  remainingTime: PropTypes.number.isRequired,
+  error: PropTypes.string,
+  closeAlert: PropTypes.bool.isRequired,
+  handleAlertClick: PropTypes.func.isRequired,
+  version: PropTypes.string.isRequired,
+  auth: PropTypes.func.isRequired
+};
 
 export default HoursTracking;

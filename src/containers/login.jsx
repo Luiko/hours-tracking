@@ -3,6 +3,7 @@ import Alert from '../components/alert';
 import { post } from 'axios';
 import { Redirect } from 'react-router-dom';
 import { START, CONTINUE, BTN } from '../locales/main-button';
+import PropTypes from 'prop-types';
 
 class Login extends Component {
   constructor(props) {
@@ -89,5 +90,9 @@ class Login extends Component {
     this.setState({ [ev.target.name]: ev.target.value });
   }
 }
+
+Login.propTypes = {
+  auth: PropTypes.func.isRequired
+};
 
 export default Login;

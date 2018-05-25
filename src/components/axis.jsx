@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 class Axis extends Component {
   constructor(props) {
@@ -26,5 +27,13 @@ class Axis extends Component {
     return <g></g>;
   }
 }
+
+Axis.propTypes = {
+  x: PropTypes.number.isRequired,
+  y: PropTypes.number.isRequired,
+  length: PropTypes.number.isRequired,
+  side: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired
+};
 
 export default Axis;

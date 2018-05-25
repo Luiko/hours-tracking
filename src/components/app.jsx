@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import Alert from './alert';
+import PropTypes from 'prop-types';
 
 class App extends Component {
   constructor(props) {
     super(props);
   }
   render() {
-    console.log('render');
     return (<main>
       <h2 className="center">Horas Contadas</h2>
       <button className="main-button sans" aria-label="Botón principal"
@@ -35,6 +35,16 @@ class App extends Component {
     </main>);
   }
 }
+
+App.propTypes = {
+  handleClick: PropTypes.func.isRequired,
+  btnName: PropTypes.string.isRequired,
+  dayHours: PropTypes.number.isRequired,
+  weekHours: PropTypes.number.isRequired,
+  remainingTime: PropTypes.number.isRequired,
+  closeAlert: PropTypes.bool.isRequired,
+  handleAlertClick: PropTypes.func.isRequired,
+};
 
 export default App;
 

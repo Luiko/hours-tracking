@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-class App extends Component {
+class About extends Component {
   constructor(props) {
     super(props);
   }
@@ -41,4 +41,12 @@ class App extends Component {
   }
 }
 
-export default App;
+About.propTypes = {
+  version(props, name) {
+    if (!/^\d\.\d\.\d$/.test(props[name])) {
+      return new Error('prop do not match with version format');
+    }
+  }
+};
+
+export default About;

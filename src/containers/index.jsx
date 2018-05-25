@@ -6,7 +6,7 @@ import { START, PAUSE, CONTINUE, BTN } from '../locales/main-button';
 let timer;
 let start;
 
-class HoursTracking extends Component {
+class HoursTrackingContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -161,4 +161,4 @@ class HoursTracking extends Component {
   }
 }
 
-export default HoursTracking;
+export default HoursTrackingContainer;

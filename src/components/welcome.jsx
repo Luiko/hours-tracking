@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 function Welcome({ username }) {
   if (!!username) {
@@ -9,5 +10,9 @@ function Welcome({ username }) {
     return <div className="welcome-faded"></div>;
   }
 }
+
+Welcome.propTypes = {
+  username: PropTypes.string
+};
 
 export default Welcome;

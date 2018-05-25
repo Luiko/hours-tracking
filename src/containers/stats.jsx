@@ -3,6 +3,7 @@ import { get } from 'axios';
 import Axis from '../components/axis';
 import Alert from '../components/alert';
 import deepEqual from 'fast-deep-equal';
+import PropTypes from 'prop-types';
 
 const x = 40;
 const y = 35;
@@ -115,5 +116,9 @@ class Stats extends Component {
     return false;
   }
 }
+
+Stats.propTypes = {
+  dayHours: PropTypes.number.isRequired
+};
 
 export default Stats;

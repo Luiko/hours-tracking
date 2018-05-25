@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { post } from 'axios';
 import { Redirect } from 'react-router-dom';
 import Alert from '../components/alert';
+import PropTypes from 'prop-types';
 
 class Signup extends Component {
   constructor(props) {
@@ -90,5 +91,10 @@ class Signup extends Component {
     this.setState({ [target.name]: target.value });
   }
 }
+
+Signup.propTypes = {
+  username: PropTypes.string,
+  auth: PropTypes.func.isRequired
+};
 
 export default Signup;
