@@ -5,7 +5,7 @@ import Alert from '../components/alert';
 import deepEqual from 'fast-deep-equal';
 
 const x = 40;
-const y = 40;
+const y = 35;
 const length = 290;
 let max;
 let multiple;
@@ -17,7 +17,6 @@ class Stats extends Component {
   }
   render() {
     const { week, days } = this.state;
-    const today = new Date().getDate();
     return (<main className="center">
       {/* <?xml version="1.0" standalone="no"?> */}
       <h2 className="svg-fix">Horas de la semana</h2>
@@ -37,9 +36,7 @@ class Stats extends Component {
                 x={x}
                 y={(y * 2) + (y * i)}
                 height={10}
-                width={(today === days[i]?
-                  this.props.dayHours
-                  : week[d]) * multiple}/>
+                width={week[d] * multiple}/>
             </g>);
           })
         }
@@ -73,7 +70,8 @@ class Stats extends Component {
       .catch((error) => {
         const { message, response } = error;
         if (response && response.status === 500) {
-          this.setState({ alertClose: false,
+          this.setState({
+            alertClose: false,
             error: "Can't retrieve data, something happened." }
           );
           return;
@@ -81,6 +79,32 @@ class Stats extends Component {
         this.setState({ alertClose: false, error: message });
       })
     ;
+  }
+  componentDidUpdate() {
+    const today = new Date().getDate();
+    const { week, days } = this.state;
+    const { dayHours } = this.props;
+    const nweek = {};
+    let update = false;
+    Object.entries(week).forEach((el, i) => {
+      if (days[i] === today) {
+        if (max < dayHours) {
+          max = dayHours;
+          update = true;
+        }
+        if (el[1] < dayHours) {
+          nweek[el[0]] = dayHours;
+          update = true;
+        } else {
+          nweek[el[0]] = el[1];
+        }
+      } else {
+        nweek[el[0]] = el[1];
+      }
+    });
+    if (update) {
+      this.setState({ week: nweek });
+    }
   }
   shouldComponentUpdate(nextprops, nextstate) {
     if (!deepEqual(this.state, nextstate)

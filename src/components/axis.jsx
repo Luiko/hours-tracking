@@ -12,7 +12,7 @@ class Axis extends Component {
         <line x1={x} y1={y}
           x2={x}
           y2={y + length} stroke="black" />
-        <text x={length / -2} y={y - 5} transform="rotate(-90)">{name}</text>
+        <text x={length / -2} y={y} transform="rotate(-90)">{name}</text>
       </g>);
     }
     if (side === 'horizontal') {
