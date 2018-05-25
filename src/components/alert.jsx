@@ -5,9 +5,12 @@ class Alert extends Component {
     super(props);
   }
   render() {
-    const { type, close, handleClick } = this.props;
+    const { type, close, handleClick, className } = this.props;
+    const cname = className? className + ' ' : '';
+    const setclose = close? ' close' : '';
     return (
-      <div className={`${type} separate ${(!close? "" : "close")}`}>
+      <div
+        className={`${cname}${type} separate${setclose}`}>
         <span className={`${type}-closer`} aria-label="boton cerrar"
               onClick={handleClick}>❎</span>
         <p className="capitalize flat"><strong>{type}:</strong></p>

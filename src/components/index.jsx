@@ -50,7 +50,7 @@ function HoursTracking(props) {
           return <SignUp auth={props.auth} username={username} />;
         }}/>
         <Route path="/configuration" component={Configuration}/>
-        <Route path="/stats" component={Stats}/>
+        <Route path="/stats" render={()=><Stats dayHours={props.dayHours}/>}/>
       </div>
       <footer>
         <p className="center">

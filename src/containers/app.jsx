@@ -1,15 +1,10 @@
 import React, { Component } from 'react';
-import Alert from './alert';
+import Alert from '../components/alert';
 
 class App extends Component {
   constructor(props) {
     super(props);
   }
-
-  componentDidUpdate() {
-    this.props.tickUpdate();
-  }
-
   render() {
     return (<main>
       <h2 className="center">Horas Contadas</h2>
@@ -17,7 +12,7 @@ class App extends Component {
                                       onClick={this.props.handleClick}>
         {this.props.btnName}
       </button>
-      <div id="record" className="pad-content">
+      <div id="record" className="pad-container">
         <label className="separate" htmlFor="dayhours">
           Horas del día completadas
         </label><br/>
@@ -37,6 +32,12 @@ class App extends Component {
           handleClick={this.props.handleAlertClick}>{this.props.error}</Alert>
       </div>
     </main>);
+  }
+  componentDidMount() {
+    this.props.tickUpdate();
+  }
+  componentDidUpdate() {
+    this.props.tickUpdate();
   }
 }
 

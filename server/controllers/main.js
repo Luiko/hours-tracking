@@ -142,9 +142,9 @@ exports.register = function (server) {
     options: {
       auth: 'restricted'
     },
-    handler(request) {
-      const { username, clientDate, diff } = request.auth.credentials;
-      return getWeekStats(username, clientDate, diff);
+    async handler(request) {
+      const { username, clientDate } = request.auth.credentials;
+      return getWeekStats(username, clientDate);
     }
   })
 };

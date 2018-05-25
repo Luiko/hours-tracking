@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { post } from 'axios';
 import { Redirect } from 'react-router-dom';
-import Alert from './alert';
+import Alert from '../components/alert';
 
 class Signup extends Component {
   constructor(props) {
@@ -25,7 +25,7 @@ class Signup extends Component {
     return (
       <main>
         <h2 className="center">Registarte</h2>
-        <form className="pad-content" action="/signup" method="post" onSubmit={this.handleSubmit}>
+        <form className="pad-container" action="/signup" method="post" onSubmit={this.handleSubmit}>
           <label className="separate" htmlFor="username">Nombre de Usuario</label><br/>
           <input className="separate" required type="text" id="username"
             name="username" ref={(input) => {this.firstTextInput = input}}

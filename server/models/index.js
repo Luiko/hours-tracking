@@ -65,7 +65,7 @@ async function getWeekStats(username, date) {
             as: "iteration",
             cond: {
               $eq: [
-                { $week: new Date() },
+                { $week: moment(date).toDate() },
                 { $week: "$$iteration.start" }
               ]
             }
@@ -89,18 +89,25 @@ async function getWeekStats(username, date) {
   const week = {};
   let remaining = 0;
   const hour = 60 * 60 * 1000;
-  for (let i = 0; i < days.length; i++) {
+  for (let i = 0; i < 7; i++) {
     const dayname = days[i];
     if (remaining > 0 || weekDaysWithMilis[dayname] !== 0) {
-      const nextRemaining = weekDaysWithMilis[dayname] % hour;
       week[dayname] = weekDaysWithMilis[dayname] + remaining;
+      const nextRemaining = week[dayname] % hour;
       week[dayname] = Math.floor(week[dayname] / hour);
       remaining = nextRemaining;
     } else {
       week[dayname] = 0;
     }
   }
-  return week;
+
+  const numberdays = [];
+  let relativeday = moment(date).startOf('week');
+  while (numberdays.length < 7) {
+    numberdays.push(relativeday.date());
+    relativeday = relativeday.add(1, 'day');
+  }
+  return [ week, numberdays];
 }
 
 module.exports = {

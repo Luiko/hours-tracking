@@ -3,16 +3,10 @@ import React, { Component } from 'react';
 class Axis extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      x: this.props.x || 0,
-      y: this.props.y || 0,
-      length: this.props.length || 0,
-      side: this.props.side || 'vertical', //or horizontal
-      name: '' || this.props.name
-    };
   }
   render() {
-    const { x, y, length, side, name } = this.state;
+    const { x, y, length, side, name } = this.props;
+
     if (side === 'vertical') {
       return (<g>
         <line x1={x} y1={y}
@@ -21,7 +15,7 @@ class Axis extends Component {
         <text x={length / -2} y={y - 5} transform="rotate(-90)">{name}</text>
       </g>);
     }
-    if (side === 'horizontal'){
+    if (side === 'horizontal') {
       return (<g>
         <line x1={x} y1={y}
           x2={x + length}

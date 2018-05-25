@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Alert from "./alert";
+import Alert from "../components/alert";
 import { put } from 'axios';
 
 class Configuration extends Component {
@@ -20,7 +20,7 @@ class Configuration extends Component {
   render() {
     return (<main>
       <h2 className="center">Ajustes</h2>
-      <form className="pad-content" action="" onSubmit={this.handleSubmit}>
+      <form className="pad-container" action="" onSubmit={this.handleSubmit}>
         <fieldset>
           <legend>Cambiar Contraseña</legend>
           <label className="separate" htmlFor="password">

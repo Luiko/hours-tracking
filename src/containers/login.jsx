@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Alert from './alert';
+import Alert from '../components/alert';
 import { post } from 'axios';
 import { Redirect } from 'react-router-dom';
 import { START, CONTINUE, BTN } from '../locales/main-button';
@@ -22,7 +22,7 @@ class Login extends Component {
     return (
       <main>
         <h2 className="center">Iniciar Sesión</h2>
-        <form className="pad-content" action="/login" method="post"
+        <form className="pad-container" action="/login" method="post"
           onSubmit={this.handleSubmit}>
           <label className="separate" htmlFor="username">Nombre de Usuario</label><br/>
           <input className="separate" required type="text"
