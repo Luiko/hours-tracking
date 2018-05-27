@@ -37,15 +37,18 @@ test('get users', async function (t) {
 
 
 test('get weeks', async function (t) {
-  t.plan(2);
-  const msg = 'should return an object';
-  const week = await getWeekStats('jeronimo', new Date);
-  t.equal(typeof week, 'object', msg);
+  t.plan(3);
+  const data = await getWeekStats('jeronimo', new Date);
+  t.assert(Array.isArray(data), 'should return an array');
+  const [ week, days ] = data;
   const weekDays = [
     'sunday', 'monday', 'tuesday', 'wednesday',
     'thursday', 'friday', 'saturday'
   ];
   t.deepEqual(Object.keys(week), weekDays,
     'should contain week days as attributes')
+  ;
+  t.assert(Array.isArray(days),
+    'should contain also and array with the week days numbers')
   ;
 });

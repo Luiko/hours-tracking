@@ -54,6 +54,7 @@ async function getWeekSeconds(username, clientDate) {
   }
 }
 async function getWeekStats(username, date) {
+  const _date = moment(date).toDate();
   const [ { iterations } ] = await Account.aggregate([
     { $match: { username } },
     {
@@ -65,7 +66,13 @@ async function getWeekStats(username, date) {
             as: "iteration",
             cond: {
               $eq: [
-                { $week: moment(date).toDate() },
+                {
+                  $week: new Date(
+                    _date.getFullYear(),
+                    _date.getMonth(),
+                    _date.getDate(),
+                  )
+                },
                 { $week: "$$iteration.start" }
               ]
             }

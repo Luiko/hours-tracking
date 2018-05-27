@@ -2,6 +2,7 @@ const Bcrypt = require('bcrypt');
 const { getUsers, addAccount, getWeekStats, connect } = require('../models');
 const moment = require('moment');
 const updateCookieState = require('../lib/updateCookieState');
+const Joi = require('joi');
 
 exports.register = function (server) {
 
@@ -9,6 +10,31 @@ exports.register = function (server) {
   server.route({
     method: 'POST',
     path: '/login',
+    options: {
+      validate: {
+        payload: Joi.object({
+          username: Joi.string().required(),
+          password: Joi.string().required(),
+          date: Joi.date().required(),
+          diff: Joi.number().required()
+        }).required()
+      },
+      response: {
+        schema: Joi.object({
+          type: Joi.string().required(),
+          username: Joi.string().required(),
+          dayHours: Joi.number().required(),
+          weekHours: Joi.number().required(),
+          remainingTime: Joi.number().required()
+        }).required(),
+        status: {
+          401: Joi.object({
+            type: Joi.string().required(),
+            payload: Joi.strict().required()
+          }).required()
+        }
+      }
+    },
     async handler(request, h) {
       if (request.auth.isAuthenticated) {
         return { type: 'info', payload: 'you are already authenticated' };
@@ -34,18 +60,18 @@ exports.register = function (server) {
       }
       if (await Bcrypt.compare(password, user.password)) {
         request.cookieAuth.set({ username });
-        const { clientDate: client, diff } = request.payload;
-        const clientDate = moment(client).utcOffset(diff);
+        const { date, diff } = request.payload;
+        const clientDate = moment(date).utcOffset(diff);
         const {
           dayHours, weekHours, remainingTime
         } = await updateCookieState(username, request, clientDate);
         console.log('credentials', {
-          username, dayHours, weekHours, remainingTime, clientDate: client, diff
+          username, dayHours, weekHours, remainingTime, clientDate: date, diff
         });
-        request.cookieAuth.set('clientDate', client);
+        request.cookieAuth.set('clientDate', date);
         request.cookieAuth.set('diff', diff);
         return {
-          type: 'info', payload: 'Authenticated', username, dayHours,
+          type: 'info', username, dayHours,
           weekHours, remainingTime
         };
       }
@@ -86,6 +112,24 @@ exports.register = function (server) {
     method: 'POST',
     path: '/auth',
     options: {
+      validate: {
+        payload: Joi.object({
+          date: Joi.date().required(),
+          diff: Joi.number().required()
+        }).required()
+      },
+      response: {
+        schema: Joi.object({
+          username: Joi.string().required(),
+          dayHours: Joi.number().required(),
+          weekHours: Joi.number().required(),
+          remainingTime: Joi.number().required(),
+          version: Joi.string().regex(/^\d+\.\d+\.\d+\.$/).required()
+        }).required(),
+        status: {
+          401: Joi.string().required()
+        }
+      },
       auth: {
         strategy: 'restricted',
         mode: 'try'
@@ -97,13 +141,13 @@ exports.register = function (server) {
       if (isAuthenticated) {
         try {
           const { credentials: { username, btnName, start } } = request.auth;
-          const { clientDate: client, diff } = request.payload;
-          const clientDate = moment(client).utcOffset(diff);
+          const { date, diff } = request.payload;
+          const clientDate = moment(date).utcOffset(diff);
           const {
             dayHours, weekHours, remainingTime
           } = await updateCookieState(username, request, clientDate);
           console.log('credentials', request.auth.credentials);
-          request.cookieAuth.set('clientDate', client);
+          request.cookieAuth.set('clientDate', date);
           request.cookieAuth.set('diff', diff);
           const output = {
             username, dayHours, weekHours, remainingTime, version

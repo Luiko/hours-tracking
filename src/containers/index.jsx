@@ -35,8 +35,8 @@ class HoursTrackingContainer extends Component {
   }
 
   componentDidMount() {
-    const clientDate = new Date();
-    post('/auth', { clientDate, diff: clientDate.getTimezoneOffset() * -1 })
+    const date = new Date();
+    post('/auth', { date, diff: date.getTimezoneOffset() * -1 })
       .then(function (res) {
         const {
           username, dayHours, weekHours,

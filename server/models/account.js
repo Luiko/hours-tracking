@@ -5,7 +5,7 @@ const Bcrypt = require('bcrypt');
 const Account = mongoose.model('Account', accountSchema);
 
 async function addAccount(username, password) {
-  const hash = await Bcrypt.hash(password.toString(), 14);
+  const hash = await Bcrypt.hash(password, 14);
   const account = new Account({ username, password: hash });
   const process = await account.save();
   process.log();
@@ -25,7 +25,7 @@ async function deleteUser(username) {
 
 async function changePassword(username, newPassword) {
   const user = await Account.findOne({ username });
-  user.password = await Bcrypt.hash(newPassword.toString(), 14);
+  user.password = await Bcrypt.hash(newPassword, 14);
   await user.save();
 }
 

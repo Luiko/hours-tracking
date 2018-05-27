@@ -52,10 +52,10 @@ class Login extends Component {
   handleSubmit(ev) {
     ev.preventDefault();
     const { username, password } = this.state;
-    const clientDate = new Date();
+    const date = new Date();
     post('/login', {
-      username, password, clientDate,
-      diff: clientDate.getTimezoneOffset() * -1
+      username, password, date,
+      diff: date.getTimezoneOffset() * -1
     })
       .then(function (response) {
         if (response.data.type === 'info') {

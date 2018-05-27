@@ -16,9 +16,12 @@ test('auth', function (t) {
     .catch(t.fail)
   ;
 
-  const msg = 'get /auth unauthenticated unauthorized'
+  const date = new Date();
+  const diff = 0;
+  const msg = 'post /auth unauthenticated unauthorized'
   request(app)
     .post('/auth')
+    .send({ date, diff })
     .expect(401)
     .expect(version)
     .then(function () {
@@ -63,7 +66,10 @@ test('get routes', function (t) {
   }
 });
 
-test('post routes', function (t) {
+test('post /login route', function (t) {
+  t.plan(7);
+  const date = new Date();
+  const diff = 0;
   request(app)
     .post('/login')
     .expect(400)
@@ -74,17 +80,38 @@ test('post routes', function (t) {
   ;
   request(app)
     .post('/login')
-    .send({ username: '', password: '' })
+    .send({ username: '', password: '', date, diff })
     .expect(400)
     .then(function () {
       t.pass('bad request to post /login 2');
     })
     .catch(t.fail)
   ;
+  const msg = 'username should be a string';
+  request(app)
+    .post('/login')
+    .send({ username: 123, password: 'aas', date, diff })
+    .expect(400)
+    .then(function () {
+      t.pass(msg);
+    })
+    .catch(() => t.fail(msg))
+  ;
+
+  const msg3 = 'password should be a string';
+  request(app)
+    .post('/login')
+    .send({ username: 'qwewe', password: 123, date, diff })
+    .expect(400)
+    .then(function () {
+      t.pass(msg3);
+    })
+    .catch(() => t.fail(msg3))
+  ;
   const msg0 = 'unauthorized(false user) post /login';
   request(app)
     .post('/login')
-    .send({ username: 'asd', password: 'saosao' })
+    .send({ username: 'asd', password: 'saosao', date, diff })
     .expect(401)
     .then(function () {
       t.pass(msg0);
@@ -94,7 +121,7 @@ test('post routes', function (t) {
   const msg1 = 'fail auth, post /login';
   request(app)
     .post('/login')
-    .send({ username: 'loco', password: 'passport' })
+    .send({ username: 'loco', password: 'passport', date, diff })
     .expect(401)
     .then(function () {
       t.pass(msg1);
@@ -104,13 +131,17 @@ test('post routes', function (t) {
   const msg2 = 'found/authenticated, post /login';
   request(app)
     .post('/login')
-    .send({ username: 'loco', password: 'password' })
+    .send({ username: 'loco', password: 'password', date, diff })
     .expect(200)
     .then(function () {
       t.pass(msg2);
     })
     .catch(() => t.fail(msg2))
   ;
+});
+
+test('post /signup route',function (t) {
+  t.plan(3);
 
   request(app)
     .post('/signup')
@@ -139,6 +170,11 @@ test('post routes', function (t) {
     .catch(t.fail)
   ;
 
+});
+
+test('post /iterations', function (t) {
+  t.plan(3);
+
   request(app)
     .post('/iterations')
     .expect(401)
@@ -165,7 +201,9 @@ test('post routes', function (t) {
     })
     .catch(t.fail)
   ;
+});
 
+test('post /session route', function (t) {
   request(app)
     .post('/session')
     .expect(401, function (err) {
