@@ -88,19 +88,20 @@ class Stats extends Component {
     const nweek = {};
     let update = false;
     Object.entries(week).forEach((el, i) => {
+      const [key, value] = el;
       if (days[i] === today) {
         if (max < dayHours) {
           max = dayHours;
           update = true;
         }
-        if (el[1] < dayHours) {
-          nweek[el[0]] = dayHours;
+        if (value < dayHours) {
+          nweek[key] = dayHours;
           update = true;
         } else {
-          nweek[el[0]] = el[1];
+          nweek[key] = value;
         }
       } else {
-        nweek[el[0]] = el[1];
+        nweek[key] = value;
       }
     });
     if (update) {
