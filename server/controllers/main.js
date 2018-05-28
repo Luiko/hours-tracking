@@ -83,28 +83,26 @@ exports.register = function (server) {
   server.route({
     method: 'POST',
     path: '/signup',
+    options: {
+      validate: {
+        payload: Joi.object({
+          username: Joi.string().required(),
+          password: Joi.string().required()
+        }).required()
+      },
+      response: {
+        schema: Joi.string().required()
+      }
+    },
     async handler({ cookieAuth, payload }, h) {
-      if (!payload) {
-        console.error('invalid payload');
-        return h.response({
-          message: 'invalid payload',
-          statusCode: 400
-        }).code(400);
-      }
       const { username, password } = payload;
-      if (!username || !password) {
-        return h.response({
-          type: 'error',
-          payload: 'invalid field'
-        }).code(400);
-      }
       try {
         await addAccount(username, password);
         cookieAuth.set({ username });
         return username;
       } catch (err) {
         console.error('sign up failed:', err.message);
-        return h.response(err.code || err).code(400);
+        return h.response(err.code || err).code(500);
       }
     }
   });

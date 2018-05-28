@@ -68,15 +68,23 @@ class Signup extends Component {
       });
       return;
     }
-    post('/signup', this.state)
+    const { username, password } = this.state;
+    post('/signup', { username, password })
       .then(function ({ data: username }) {
         this.props.auth({ username });
       }.bind(this))
       .catch(function (err) {
-        if (err.response && err.response.data === 11000) {
-          this.setState({
-            error: 'duplicated key: we already have the same username', closeAlert: false
-          });
+        if (err.response) {
+          if (err.response.data === 11000) {
+            this.setState({
+              error: 'duplicated key: we already have the same username',
+              closeAlert: false
+            });
+          } else {
+            this.setState({
+              error: err.response.data.message, closeAlert: false
+            });
+          }
         } else {
           this.setState({
             error: err.message, closeAlert: false

@@ -1,7 +1,8 @@
 const Bcrypt = require('bcrypt');
-const { addIteration, getUsers, changePassword } = require('../models');
+const { addIteration, getUsers, changePassword, deleteUser } = require('../models');
 const moment = require('moment');
 const updateCookieState = require('../lib/updateCookieState');
+const Joi = require('joi');
 
 exports.register = function (server) {
 
@@ -61,6 +62,23 @@ exports.register = function (server) {
       }
     }
   });
+  server.route({
+    method: 'DELETE',
+    path: '/',
+    options: {
+      validate: {
+        payload: Joi.object({
+          username: Joi.string().required(),
+          password: Joi.string().required()
+        }).required()
+      }
+    },
+    async handler(request, h) {
+      const { username, password } = request.payload;
+      await deleteUser(username, password);
+      return h.response();
+    }
+  })
 };
 
 exports.name = 'account';

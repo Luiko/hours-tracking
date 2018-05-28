@@ -7,8 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon server/",
     "front": "webpack && node server",
-    "back": "nodemon server/index.test",
-    "data": "nodemon server/models/index.test",
+    "back": "nodemon server/index.test --watch server",
+    "data": "nodemon server/models/index.test --watch server/models",
     "watch": "webpack -w",
     "build": "webpack --config webpack.config.prod.js"
   },

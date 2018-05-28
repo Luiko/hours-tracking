@@ -19,8 +19,12 @@ async function getUsers() {
   }, {});
 };
 
-async function deleteUser(username) {
-  await Account.deleteOne({ username });
+async function deleteUser(username, password) {
+  const user = await Account.findOne({ username }, { password: 1 });
+  if (await Bcrypt.compare(password, user.password)) {
+    await Account.deleteOne({ username });
+    console.info('account', username, 'deleted');
+  }
 };
 
 async function changePassword(username, newPassword) {

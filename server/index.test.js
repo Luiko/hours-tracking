@@ -140,8 +140,8 @@ test('post /login route', function (t) {
   ;
 });
 
-test('post /signup route',function (t) {
-  t.plan(3);
+test('post /signup route', async function (t) {
+  t.plan(5);
 
   request(app)
     .post('/signup')
@@ -169,7 +169,25 @@ test('post /signup route',function (t) {
     })
     .catch(t.fail)
   ;
-
+  const tempUser = 'dsseewe1313dasdwqe3';
+  const password = 'adsqwwwq';
+  const msg = 'should register new user';
+  await request(app)
+    .post('/signup')
+    .send({ username: tempUser, password })
+    .expect(200)
+    .then(() => t.pass(msg))
+    .catch(() => t.fail(msg))
+  ;
+  {
+  const msg = 'should delete new user';
+  request(app)
+    .delete('/')
+    .send({ username: tempUser, password })
+    .expect(200)
+    .then(() => t.pass(msg))
+    .catch(() => t.fail(msg))
+  }
 });
 
 test('post /iterations', function (t) {
