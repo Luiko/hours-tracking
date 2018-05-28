@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { post } from 'axios';
+import axios, { post } from 'axios';
 import HoursTrackingComponent from '../components/index';
 import { START, PAUSE, CONTINUE, BTN } from '../locales/main-button';
 
@@ -149,7 +149,10 @@ class HoursTrackingContainer extends Component {
   saveState() {
     start = Date.now();
     this.setTimer();
-    post('/session', { start }).then(function (res) {
+    axios({
+      method: 'post', url: '/session', data: start,
+      headers: { 'Content-Type': 'text/plain' }
+    }).then(function (res) {
       console.log(res.data);
     }, function (err) {
       if (!err.response) {

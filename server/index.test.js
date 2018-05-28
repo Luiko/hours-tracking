@@ -221,7 +221,7 @@ test('post /iterations', function (t) {
   ;
 });
 
-test('post /session route', function (t) {
+test('post /session route', async function (t) {
   request(app)
     .post('/session')
     .expect(401, function (err) {
@@ -244,5 +244,20 @@ test('post /session route', function (t) {
       }
       t.pass(msg);
     })
+  ;
+  const agent = request.agent(app);
+  await agent
+    .post('/login')
+    .send({
+      username: 'algo', password: 'algo', date: new Date, diff: 0
+  });
+  const msg = 'should start a session';
+  agent
+    .post('/session')
+    .set('Content-type', 'text/plain')
+    .send(Date.now().toString())
+    .expect(200)
+    .then(() => t.pass(msg))
+    .catch(() => t.fail(msg))
   ;
 });
