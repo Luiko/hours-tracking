@@ -27,7 +27,16 @@ exports.register = function (server) {
     method: 'POST',
     path: '/iterations',
     options: {
-      auth: 'restricted'
+      auth: 'restricted',
+      validate: {
+        payload: Joi.object({
+          start: Joi.date().timestamp().required(),
+          end: Joi.date().timestamp().required()
+        }).required()
+      },
+      response: {
+        schema: Joi.string().required()
+      }
     },
     async handler(request, h) {
       const { username, clientDate: client, diff } = request.auth.credentials;
@@ -35,10 +44,6 @@ exports.register = function (server) {
         request.cookieAuth.set('btnName', 'Continue');
         await addIteration(username, request.payload);
       } catch (err) {
-        if (err.statusCode === 404) {
-          console.log('add iteration failed', err);
-          return h.response(err.message).code(err.statusCode);
-        }
         console.log('add iteration failed', err);
         return h.response(err.message).code(500);
       }

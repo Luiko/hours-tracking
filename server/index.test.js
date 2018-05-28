@@ -4,8 +4,16 @@ const app = require('./index');
 require('dotenv').config();
 const { version } = require('../package.json');
 
-test('auth', function (t) {
-  t.plan(2);
+const agent = request.agent(app);
+const user = 'algo';
+const login = agent
+  .post('/login')
+  .send({
+    username: user, password: user, date: new Date, diff: 0
+});
+
+test('auth', async function (t) {
+  t.plan(5);
   request(app)
     .get('/')
     .expect(200)
@@ -29,6 +37,28 @@ test('auth', function (t) {
     })
     .catch(() => t.fail(msg))
   ;
+  await login;
+  {const msg = 'should fail, bad request';
+  agent
+    .post('/auth')
+    .send({ diff: 'adsa' })
+    .expect(400)
+    .then(function () {
+      t.pass(msg);
+    })
+    .catch((error) => t.fail(msg + '. ' + error.message))
+  ;}
+  {const msg = 'should pass auth';
+  agent
+    .post('/auth')
+    .send({ date, diff })
+    .expect(200)
+    .then(function (res) {
+      t.pass(msg);
+      t.equal(res.body.version, version, 'should receive version app');
+    })
+    .catch((error) => t.fail(msg + '. ' + error.message))
+  ;}
 });
 
 test('get routes', function (t) {
@@ -190,8 +220,44 @@ test('post /signup route', async function (t) {
   }
 });
 
-test('post /iterations', function (t) {
+test('post /session route', async function (t) {
   t.plan(3);
+  request(app)
+    .post('/session')
+    .expect(401, function (err) {
+      const msg = 'should fail post /session with empty payload';
+      if (err) {
+        t.fail(msg + ': ' + err.message);
+        return;
+      }
+      t.pass(msg);
+    })
+  ;
+  request(app)
+    .post('/session')
+    .send({ btnName: 'PAUSE', start: Date.now() - 3600 })
+    .expect(401, function (err) {
+      const msg = 'should fail post /session without auth';
+      if (err) {
+        t.fail(msg + ': ' + err.message);
+        return;
+      }
+      t.pass(msg);
+    })
+  ;
+  const msg = 'should start a session';
+  agent
+    .post('/session')
+    .set('Content-type', 'text/plain')
+    .send(Date.now().toString())
+    .expect(200)
+    .then(() => t.pass(msg))
+    .catch(() => t.fail(msg))
+  ;
+});
+
+test('post /iterations', function (t) {
+  t.plan(6);
 
   request(app)
     .post('/iterations')
@@ -219,45 +285,27 @@ test('post /iterations', function (t) {
     })
     .catch(t.fail)
   ;
-});
 
-test('post /session route', async function (t) {
-  request(app)
-    .post('/session')
-    .expect(401, function (err) {
-      const msg = 'should fail post /session with empty payload';
-      if (err) {
-        t.fail(msg + ': ' + err.message);
-        return;
-      }
-      t.pass(msg);
-    })
-  ;
-  request(app)
-    .post('/session')
-    .send({ btnName: 'PAUSE', start: Date.now() - 3600 })
-    .expect(401, function (err) {
-      const msg = 'should fail post /session without auth';
-      if (err) {
-        t.fail(msg + ': ' + err.message);
-        return;
-      }
-      t.pass(msg);
-    })
-  ;
-  const agent = request.agent(app);
-  await agent
-    .post('/login')
-    .send({
-      username: 'algo', password: 'algo', date: new Date, diff: 0
-  });
-  const msg = 'should start a session';
+  {const msg = 'should fail, bad request';
   agent
-    .post('/session')
-    .set('Content-type', 'text/plain')
-    .send(Date.now().toString())
-    .expect(200)
+    .post('/iterations')
+    .send({})
+    .expect(400)
     .then(() => t.pass(msg))
-    .catch(() => t.fail(msg))
-  ;
+    .catch(err => t.fail(msg + '. ' + err.message))
+  ;}
+
+  {const msg = 'should pass';
+  const timestamp = Date.now();
+  agent
+    .post('/iterations')
+    .send({ start: timestamp - 2000, end: timestamp + 2000  })
+    .expect(200)
+    .then((res) => {
+      t.pass(msg);
+      t.equal(typeof res.text, 'string', 'should reply with message');
+      console.log(res.text);
+    })
+    .catch(err => t.fail(msg + '. ' + err.message))
+  ;}
 });
