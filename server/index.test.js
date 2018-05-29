@@ -374,11 +374,43 @@ test('post /password', function (t) {
       .then((res) => {
         t.pass(msg);
         t.deepEqual(
-          { type: 'info', payload: 'password changed' },
           res.body,
+          { type: 'info', payload: 'password changed' },
           'should send info message'
         );
       })
       .catch((err) => t.fail(msg + '. ' + err.message))
     ;}
   });
+
+test('get /stats/week', function (t) {
+  const msg = 'should be restricted';
+  request(app)
+    .get('/stats/week')
+    .expect(401)
+    .then(() => t.pass(msg))
+    .catch((err) => t.fail(msg + '. ' + err.message))
+  ;
+  {const msg = 'should pass';
+  agent
+    .get('/stats/week')
+    .expect(200)
+    .then((res) => {
+      t.pass(msg);
+      t.assert(Array.isArray(res.body), 'should return an array');
+      const [week, daysnumber] = res.body;
+      t.deepEqual(
+        Object.keys(week),
+        [
+          'sunday', 'monday', 'tuesday',
+          'wednesday', 'thursday', 'friday', 'saturday'
+        ],
+        'should return object with days name as attributes'
+      );
+      t.assert(Array.isArray(daysnumber),
+        'should contain an array of numbers')
+      ;
+    })
+    .catch((err) => t.fail(msg + '. ' + err.message))
+  ;}
+});

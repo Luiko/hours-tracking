@@ -108,13 +108,13 @@ async function getWeekStats(username, date) {
     }
   }
 
-  const numberdays = [];
+  const daysnumber = [];
   let relativeday = moment(date).startOf('week');
-  while (numberdays.length < 7) {
-    numberdays.push(relativeday.date());
+  while (daysnumber.length < 7) {
+    daysnumber.push(relativeday.date());
     relativeday = relativeday.add(1, 'day');
   }
-  return [ week, numberdays];
+  return [week, daysnumber];
 }
 
 module.exports = {

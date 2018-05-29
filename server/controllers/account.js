@@ -226,7 +226,21 @@ exports.register = function (server) {
     method: 'GET',
     path: '/stats/week',
     options: {
-      auth: 'restricted'
+      auth: 'restricted',
+      response: {
+        schema: Joi.array().items(
+          Joi.object({
+            sunday: Joi.number().required(),
+            monday: Joi.number().required(),
+            tuesday: Joi.number().required(),
+            wednesday: Joi.number().required(),
+            thursday: Joi.number().required(),
+            friday: Joi.number().required(),
+            saturday: Joi.number().required()
+          }).required(),
+          Joi.array().items(Joi.number().required()).length(7).required()
+        ).length(2).required()
+      }
     },
     async handler(request) {
       const { username, clientDate } = request.auth.credentials;
