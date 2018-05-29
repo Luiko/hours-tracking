@@ -12,14 +12,14 @@ const login = agent
     username: user, password: user, date: new Date, diff: 0
 });
 
-test('auth', async function (t) {
+test('/auth route', async function (t) {
   t.plan(5);
   request(app)
     .get('/')
     .expect(200)
     .then(
       () => t.pass('server up and running'),
-      (err) => t.fail('server failded \n' + err)
+      (err) => t.fail('server failded. ' + err)
     )
     .catch(t.fail)
   ;
@@ -61,11 +61,11 @@ test('auth', async function (t) {
   ;}
 });
 
-test('get routes', function (t) {
-  t.plan(5);
-  testGetRoute('about', t);
-  testGetRoute('signup', t);
-  testGetRoute('login', t);
+test('statics routes', function (t) {
+  t.plan(6);
+  testPublicRoute('about', t);
+  testPublicRoute('signup', t);
+  testPublicRoute('login', t);
   const msg = 'restricted way to /logout';
   request(app)
     .get('/logout')
@@ -73,18 +73,27 @@ test('get routes', function (t) {
     .then(function () {
       t.pass(msg);
     })
-    .catch((err) => t.fail(msg + '\n' + err.message))
+    .catch((err) => t.fail(msg + '. ' + err.message))
   ;
-  const msg2 = 'get /configuration should be unauthenticated';
+  {const msg = 'get /configuration should be restricted';
   request(app)
     .get('/configuration')
     .expect(401)
     .then(function () {
-      t.pass(msg2);
+      t.pass(msg);
     })
-    .catch((err) => t.fail(msg2 + '\n' + err.message))
-  ;
-  function testGetRoute(route, t) {
+    .catch((err) => t.fail(msg + '. ' + err.message))
+  ;}
+  {const msg = 'get /stats should be restricted';
+  request(app)
+    .get('/stats')
+    .expect(401)
+    .then(function () {
+      t.pass(msg);
+    })
+    .catch((err) => t.fail(msg + '. ' + err.message))
+  ;}
+  function testPublicRoute(route, t) {
     request(app)
       .get('/' + route)
       .expect(200)
@@ -128,46 +137,46 @@ test('post /login route', function (t) {
     .catch(() => t.fail(msg))
   ;
 
-  const msg3 = 'password should be a string';
+  {const msg = 'password should be a string';
   request(app)
     .post('/login')
     .send({ username: 'qwewe', password: 123, date, diff })
     .expect(400)
     .then(function () {
-      t.pass(msg3);
+      t.pass(msg);
     })
-    .catch(() => t.fail(msg3))
-  ;
-  const msg0 = 'unauthorized(false user) post /login';
+    .catch(() => t.fail(msg))
+  ;}
+  {const msg = 'unauthorized(false user) post /login';
   request(app)
     .post('/login')
     .send({ username: 'asd', password: 'saosao', date, diff })
     .expect(401)
     .then(function () {
-      t.pass(msg0);
+      t.pass(msg);
     })
-    .catch(() => t.fail(msg0))
-  ;
-  const msg1 = 'fail auth, post /login';
+    .catch(() => t.fail(msg))
+  ;}
+  {const msg = 'fail auth, post /login';
   request(app)
     .post('/login')
     .send({ username: 'loco', password: 'passport', date, diff })
     .expect(401)
     .then(function () {
-      t.pass(msg1);
+      t.pass(msg);
     })
-    .catch(() => t.fail(msg1))
-  ;
-  const msg2 = 'found/authenticated, post /login';
+    .catch(() => t.fail(msg))
+  ;}
+  {const msg = 'found/authenticated, post /login';
   request(app)
     .post('/login')
     .send({ username: 'loco', password: 'password', date, diff })
     .expect(200)
     .then(function () {
-      t.pass(msg2);
+      t.pass(msg);
     })
-    .catch(() => t.fail(msg2))
-  ;
+    .catch(() => t.fail(msg))
+  ;}
 });
 
 test('post /signup route', async function (t) {
@@ -202,22 +211,29 @@ test('post /signup route', async function (t) {
   const tempUser = 'dsseewe1313dasdwqe3';
   const password = 'adsqwwwq';
   const msg = 'should register new user';
-  await request(app)
+  const agent = request.agent(app);
+  await agent
     .post('/signup')
     .send({ username: tempUser, password })
     .expect(200)
     .then(() => t.pass(msg))
-    .catch(() => t.fail(msg))
+    .catch((err) => {
+      t.fail(msg + '. ' + err.message)
+      const date = new Date();
+      const diff = 0;
+      return agent.post('/login').send({
+        username: tempUser, password, date, diff
+      });
+    })
   ;
-  {
-  const msg = 'should delete new user';
-  request(app)
+  {const msg = 'should delete new user';
+  agent
     .delete('/')
     .send({ username: tempUser, password })
     .expect(200)
     .then(() => t.pass(msg))
-    .catch(() => t.fail(msg))
-  }
+    .catch((err) => t.fail(msg + '. ' + err.message))
+  ;}
 });
 
 test('post /session route', async function (t) {

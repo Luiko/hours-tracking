@@ -50,6 +50,9 @@ exports.register = function (server) {
   server.route({
     method: 'GET',
     path: '/stats',
+    options: {
+      auth: 'restricted'
+    },
     handler
   });
 

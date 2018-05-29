@@ -98,11 +98,11 @@ exports.register = function (server) {
         schema: Joi.string().required()
       }
     },
-    async handler({ cookieAuth, payload }, h) {
-      const { username, password } = payload;
+    async handler(request, h) {
+      const { username, password } = request.payload;
       try {
         await addAccount(username, password);
-        cookieAuth.set({ username });
+        request.cookieAuth.set({ username });
         return username;
       } catch (err) {
         console.error('sign up failed:', err.message);
@@ -201,6 +201,7 @@ exports.register = function (server) {
     method: 'DELETE',
     path: '/',
     options: {
+      auth: 'restricted',
       validate: {
         payload: Joi.object({
           username: Joi.string().required(),
