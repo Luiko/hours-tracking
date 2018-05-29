@@ -170,7 +170,19 @@ exports.register = function (server) {
     method: 'PUT',
     path: '/password',
     options: {
-      auth: 'restricted'
+      auth: 'restricted',
+      validate: {
+        payload: Joi.object({
+          password: Joi.string().required(),
+          newPassword: Joi.string().required()
+        }).required()
+      },
+      response: {
+        schema: Joi.object({
+          type: Joi.string().required(),
+          payload: Joi.string().required()
+        }).required()
+      }
     },
     async handler(request, h) {
       try {
@@ -178,11 +190,6 @@ exports.register = function (server) {
         const { password, newPassword } = request.payload;
         const users = await getUsers();
         const user = users[username];
-        if (!user) {
-          return h.response({
-            type: 'error', payload: 'invalid username'
-          }).code(500);
-        }
         if (await Bcrypt.compare(password, user.password)) {
           await changePassword(username, newPassword);
           return {

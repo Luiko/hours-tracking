@@ -179,8 +179,8 @@ test('post /login route', function (t) {
   ;}
 });
 
-test('post /signup route', async function (t) {
-  t.plan(5);
+test('post /signup and delete / routes', async function (t) {
+  t.plan(6);
 
   request(app)
     .post('/signup')
@@ -226,6 +226,14 @@ test('post /signup route', async function (t) {
       });
     })
   ;
+  {const msg = 'delete / should be restricted';
+  request(app)
+    .delete('/')
+    .send({ username: tempUser, password })
+    .expect(401)
+    .then(() => t.pass(msg))
+    .catch((err) => t.fail(msg + '. ' + err.message))
+  ;}
   {const msg = 'should delete new user';
   agent
     .delete('/')
@@ -325,3 +333,52 @@ test('post /iterations', function (t) {
     .catch(err => t.fail(msg + '. ' + err.message))
   ;}
 });
+
+test('post /password', function (t) {
+  t.plan(6);
+  const msg = 'should be restricted';
+  request(app)
+    .put('/password')
+    .expect(401)
+    .then(() => t.pass(msg))
+    .catch((err) => t.fail(msg + '. ' + err.message))
+    ;
+    {const msg = 'should fail, bad request';
+    agent
+      .put('/password')
+      .expect(400)
+      .then(() => t.pass(msg))
+      .catch((err) => t.fail(msg + '. ' + err.message))
+    ;}
+    {const msg = 'should fail, bad request too much payload data';
+    agent
+      .put('/password')
+      .send({ password: 'cato', newPassword: 'coto', username: user })
+      .expect(400)
+      .then(() => t.pass(msg))
+      .catch((err) => t.fail(msg + '. ' + err.message))
+    ;}
+    {const msg = 'should fail, invalid current password';
+    agent
+      .put('/password')
+      .send({ password: 'cato', newPassword: 'coto' })
+      .expect(400)
+      .then(() => t.pass(msg))
+      .catch((err) => t.fail(msg + '. ' + err.message))
+    ;}
+    {const msg = 'should pass, valid request';
+    agent
+      .put('/password')
+      .send({ password: user, newPassword: user })
+      .expect(200)
+      .then((res) => {
+        t.pass(msg);
+        t.deepEqual(
+          { type: 'info', payload: 'password changed' },
+          res.body,
+          'should send info message'
+        );
+      })
+      .catch((err) => t.fail(msg + '. ' + err.message))
+    ;}
+  });
