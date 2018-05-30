@@ -8,6 +8,11 @@ exports.register = function (server) {
       auth: {
         strategy: 'restricted',
         mode: 'try'
+      },
+      plugins: {
+        'hapi-auth-cookie': {
+          redirectTo: false
+        }
       }
     },
     handler
@@ -20,7 +25,23 @@ exports.register = function (server) {
   server.route({
     method: 'GET',
     path: '/login',
-    handler
+    options: {
+      auth: {
+        strategy: 'restricted',
+        mode: 'try'
+      },
+      plugins: {
+        'hapi-auth-cookie': {
+          redirectTo: false
+        }
+      }
+    },
+    handler(request, h) {
+      if (request.auth.isAuthenticated) {
+        return h.redirect('/');
+      }
+      return h.file(server.settings.app.INDEX);
+    }
   });
   server.route({
     method: 'GET',

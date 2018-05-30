@@ -68,6 +68,7 @@ const server = new Hapi.Server({
     keepAlive: false,
     isSecure: SECURE,
     requestDecoratorName: 'cookieAuth',
+    redirectTo: '/login',
     async validateFunc(request, { username }) {
       const users = await getUsers();
       const user = users[username];

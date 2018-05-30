@@ -342,48 +342,49 @@ test('post /password', function (t) {
     .expect(401)
     .then(() => t.pass(msg))
     .catch((err) => t.fail(msg + '. ' + err.message))
-    ;
-    {const msg = 'should fail, bad request';
-    agent
-      .put('/password')
-      .expect(400)
-      .then(() => t.pass(msg))
-      .catch((err) => t.fail(msg + '. ' + err.message))
-    ;}
-    {const msg = 'should fail, bad request too much payload data';
-    agent
-      .put('/password')
-      .send({ password: 'cato', newPassword: 'coto', username: user })
-      .expect(400)
-      .then(() => t.pass(msg))
-      .catch((err) => t.fail(msg + '. ' + err.message))
-    ;}
-    {const msg = 'should fail, invalid current password';
-    agent
-      .put('/password')
-      .send({ password: 'cato', newPassword: 'coto' })
-      .expect(400)
-      .then(() => t.pass(msg))
-      .catch((err) => t.fail(msg + '. ' + err.message))
-    ;}
-    {const msg = 'should pass, valid request';
-    agent
-      .put('/password')
-      .send({ password: user, newPassword: user })
-      .expect(200)
-      .then((res) => {
-        t.pass(msg);
-        t.deepEqual(
-          res.body,
-          { type: 'info', payload: 'password changed' },
-          'should send info message'
-        );
-      })
-      .catch((err) => t.fail(msg + '. ' + err.message))
-    ;}
-  });
+  ;
+  {const msg = 'should fail, bad request';
+  agent
+    .put('/password')
+    .expect(400)
+    .then(() => t.pass(msg))
+    .catch((err) => t.fail(msg + '. ' + err.message))
+  ;}
+  {const msg = 'should fail, bad request too much payload data';
+  agent
+    .put('/password')
+    .send({ password: 'cato', newPassword: 'coto', username: user })
+    .expect(400)
+    .then(() => t.pass(msg))
+    .catch((err) => t.fail(msg + '. ' + err.message))
+  ;}
+  {const msg = 'should fail, invalid current password';
+  agent
+    .put('/password')
+    .send({ password: 'cato', newPassword: 'coto' })
+    .expect(400)
+    .then(() => t.pass(msg))
+    .catch((err) => t.fail(msg + '. ' + err.message))
+  ;}
+  {const msg = 'should pass, valid request';
+  agent
+    .put('/password')
+    .send({ password: user, newPassword: user })
+    .expect(200)
+    .then((res) => {
+      t.pass(msg);
+      t.deepEqual(
+        res.body,
+        { type: 'info', payload: 'password changed' },
+        'should send info message'
+      );
+    })
+    .catch((err) => t.fail(msg + '. ' + err.message))
+  ;}
+});
 
 test('get /stats/week', function (t) {
+  t.plan(5);
   const msg = 'should be restricted';
   request(app)
     .get('/stats/week')
@@ -412,5 +413,30 @@ test('get /stats/week', function (t) {
       ;
     })
     .catch((err) => t.fail(msg + '. ' + err.message))
+  ;}
+});
+
+test('get /logout', async function (t) {
+  t.plan(3);
+  const msg = 'should be restricted';
+  request(app)
+    .get('/logout')
+    .expect(401)
+    .then(() => t.pass(msg))
+    .catch((error) => t.fail(msg + '. ' + error.message))
+  ;
+  {const msg = 'should log out';
+  await agent
+    .get('/logout')
+    .expect(302)
+    .then(() => t.pass(msg))
+    .catch((error) => t.fail(msg + '. ' + error.message))
+  ;}
+  {const msg = 'should fail, restricted again';
+  agent
+    .get('/logout')
+    .expect(401)
+    .then(() => t.pass(msg))
+    .catch((error) => t.fail(msg + '. ' + error.message))
   ;}
 });
