@@ -10,10 +10,15 @@ exports.register = function (server) {
     options: {
       auth: 'restricted',
       validate: {
-        payload: Joi.date().timestamp().required()
+        payload: Joi.number().unit('milliseconds').required()
       },
       response: {
         schema: Joi.string().required()
+      },
+      plugins: {
+        'hapi-auth-cookie': {
+          redirectTo: false
+        }
       }
     },
     handler(request) {
@@ -36,6 +41,11 @@ exports.register = function (server) {
       },
       response: {
         schema: Joi.string().required()
+      },
+      plugins: {
+        'hapi-auth-cookie': {
+          redirectTo: false
+        }
       }
     },
     async handler(request, h) {

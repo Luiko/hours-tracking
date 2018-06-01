@@ -69,11 +69,9 @@ exports.register = function (server) {
         const {
           dayHours, weekHours, remainingTime
         } = await updateCookieState(username, request, clientDate);
-        console.log('credentials', {
-          username, dayHours, weekHours, remainingTime, clientDate: date, diff
-        });
         request.cookieAuth.set('clientDate', date);
         request.cookieAuth.set('diff', diff);
+        console.log('credentials', request.auth.credentials);
         return {
           type: 'info', username, dayHours,
           weekHours, remainingTime
@@ -126,15 +124,21 @@ exports.register = function (server) {
           dayHours: Joi.number().required(),
           weekHours: Joi.number().required(),
           remainingTime: Joi.number().required(),
-          version: Joi.string().regex(/^\d+\.\d+\.\d+$/).required()
+          version: Joi.string().regex(/^\d+\.\d+\.\d+$/).required(),
+          start: Joi.number().unit('milliseconds')
         }).required(),
         status: {
-          401: Joi.string().required()
+          401: Joi.string().regex(/^\d+\.\d+\.\d+$/).required()
         }
       },
       auth: {
         strategy: 'restricted',
         mode: 'try'
+      },
+      plugins: {
+        'hapi-auth-cookie': {
+          redirectTo: false
+        }
       }
     },
     async handler(request, h) {
@@ -148,9 +152,9 @@ exports.register = function (server) {
           const {
             dayHours, weekHours, remainingTime
           } = await updateCookieState(username, request, clientDate);
-          console.log('credentials', request.auth.credentials);
           request.cookieAuth.set('clientDate', date);
           request.cookieAuth.set('diff', diff);
+          console.log('credentials', request.auth.credentials);
           const output = {
             username, dayHours, weekHours, remainingTime, version
           };
@@ -182,6 +186,11 @@ exports.register = function (server) {
           type: Joi.string().required(),
           payload: Joi.string().required()
         }).required()
+      },
+      plugins: {
+        'hapi-auth-cookie': {
+          redirectTo: false
+        }
       }
     },
     async handler(request, h) {
@@ -214,6 +223,11 @@ exports.register = function (server) {
           username: Joi.string().required(),
           password: Joi.string().required()
         }).required()
+      },
+      plugins: {
+        'hapi-auth-cookie': {
+          redirectTo: false
+        }
       }
     },
     async handler(request, h) {
@@ -240,6 +254,11 @@ exports.register = function (server) {
           }).required(),
           Joi.array().items(Joi.number().required()).length(7).required()
         ).length(2).required()
+      },
+      plugins: {
+        'hapi-auth-cookie': {
+          redirectTo: false
+        }
       }
     },
     async handler(request) {

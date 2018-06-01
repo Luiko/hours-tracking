@@ -35,7 +35,7 @@ test('/auth route', async function (t) {
     .then(function () {
       t.pass(msg);
     })
-    .catch(() => t.fail(msg))
+    .catch((err) => t.fail(msg + '. ' + err.message))
   ;
   await login;
   {const msg = 'should fail, bad request';
@@ -62,23 +62,14 @@ test('/auth route', async function (t) {
 });
 
 test('statics routes', function (t) {
-  t.plan(6);
+  t.plan(5);
   testPublicRoute('about', t);
   testPublicRoute('signup', t);
   testPublicRoute('login', t);
-  const msg = 'restricted way to /logout';
-  request(app)
-    .get('/logout')
-    .expect(401)
-    .then(function () {
-      t.pass(msg);
-    })
-    .catch((err) => t.fail(msg + '. ' + err.message))
-  ;
   {const msg = 'get /configuration should be restricted';
   request(app)
     .get('/configuration')
-    .expect(401)
+    .expect(302)
     .then(function () {
       t.pass(msg);
     })
@@ -87,7 +78,7 @@ test('statics routes', function (t) {
   {const msg = 'get /stats should be restricted';
   request(app)
     .get('/stats')
-    .expect(401)
+    .expect(302)
     .then(function () {
       t.pass(msg);
     })
@@ -421,7 +412,7 @@ test('get /logout', async function (t) {
   const msg = 'should be restricted';
   request(app)
     .get('/logout')
-    .expect(401)
+    .expect(302)
     .then(() => t.pass(msg))
     .catch((error) => t.fail(msg + '. ' + error.message))
   ;
@@ -435,7 +426,7 @@ test('get /logout', async function (t) {
   {const msg = 'should fail, restricted again';
   agent
     .get('/logout')
-    .expect(401)
+    .expect(302)
     .then(() => t.pass(msg))
     .catch((error) => t.fail(msg + '. ' + error.message))
   ;}
