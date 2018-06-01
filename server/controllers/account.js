@@ -262,8 +262,9 @@ exports.register = function (server) {
       }
     },
     async handler(request) {
-      const { username, clientDate } = request.auth.credentials;
-      return getWeekStats(username, clientDate);
+      const { username, clientDate, diff } = request.auth.credentials;
+      const date = moment(clientDate).utcOffset(diff, false);
+      return getWeekStats(username, date);
     }
   });
 };

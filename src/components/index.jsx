@@ -15,7 +15,7 @@ function HoursTracking(props) {
   return (<BrowserRouter>
     <div>
       <header>
-        <h1 className="header">Mejora tu productividad con un botón</h1>
+        <h1 className="header">Mantén tu productividad con un botón</h1>
         <nav className="list-container">
           <ul className="list">
             <li className="list-item"><Link to="/">Inicio</Link></li>
