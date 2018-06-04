@@ -87,6 +87,9 @@ class Stats extends Component {
     const { dayHours } = this.props;
     const nweek = {};
     let update = false;
+    if (!week) {
+      return;
+    }
     Object.entries(week).forEach((el, i) => {
       const [key, value] = el;
       if (days[i] === today) {

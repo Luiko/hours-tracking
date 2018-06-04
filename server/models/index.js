@@ -73,7 +73,7 @@ async function getWeekStats(username, date) {
   const weekdays = Object.keys(weekDaysWithMilis);
   let iterableday = moment(date).diff(moment(date).startOf('week'), 'day');
   let counter = 0;
-  while (iterableday > 0) {
+  while (iterableday >= 0) {
     const day = moment(date).subtract(iterableday, 'days');
     const dayIterations = reduceIterationToDay(iterations, day);
     weekDaysWithMilis[weekdays[counter]] = dayIterations.reduce(
