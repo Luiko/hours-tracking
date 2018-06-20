@@ -68,7 +68,8 @@ class Configuration extends Component {
     put('/password', { password, newPassword })
       .then((response) => {
         this.setState({
-          type: 'info', content: response.data.payload, closeAlert: false
+          type: 'info', content: response.data.payload, closeAlert: false,
+          password: '', newPassword: '', repeatNewPassword: ''
         });
       })
       .catch(({ message, response }) => {

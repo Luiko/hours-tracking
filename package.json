@@ -5,7 +5,7 @@
   "main": "server/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon server/",
+    "dev": "nodemon server/ --watch server",
     "front": "webpack && node server",
     "back": "nodemon server/index.test --watch server",
     "data": "nodemon server/models/index.test --watch server/models",
