@@ -8,6 +8,7 @@ const fs = require('fs');
 const StaticRoutes = require('./staticRoutes');
 const AccountController = require('./controllers/account');
 const IterationController = require('./controllers/iteration');
+const AdminAPI = require('./controllers/admin');
 const { getUsers } = require('./models');
 const { version } = require('../package.json');
 
@@ -77,7 +78,9 @@ const server = new Hapi.Server({
   });
 
   try {
-    await server.register([StaticRoutes, AccountController, IterationController]);
+    await server.register([
+      StaticRoutes, AccountController, IterationController, AdminAPI
+    ]);
     await server.start();
   } catch (error) {
     console.error(error);
