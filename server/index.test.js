@@ -407,6 +407,8 @@ test('get /stats/week', function (t) {
   ;}
 });
 
+const admin = request.agent(app);
+
 test('post /api/dayhours', async function (t) {
   t.plan(5);
   const msg = 'should be restricted';
@@ -429,7 +431,6 @@ test('post /api/dayhours', async function (t) {
    .then(() => t.pass(msg))
    .catch((error) => t.fail(msg + '. ' + error.message))
   ;}
-  const admin = request.agent(app);
   await admin.post('/login').send({
     username: process.env.ADMIN, password: '1231', date: new Date, diff: 0
   });
@@ -444,6 +445,34 @@ test('post /api/dayhours', async function (t) {
    .expect(200)
    .type('text/plain')
    .send(Date.now().toString())
+   .then(() => t.pass(msg))
+   .catch((error) => t.fail(msg + '. ' + error.message))
+  ;}
+});
+
+test('get /api/dayhours/{time}', function (t) {
+  t.plan(4);
+  const msg = 'should be restricted';
+  request(app).get(`/api/dayhours/${Date.now()}`)
+   .expect(401)
+   .then(() => t.pass(msg))
+   .catch((error) => t.fail(msg + '. ' + error.message))
+  ;
+  {const msg = 'should be unauthorized';
+  agent.get(`/api/dayhours/${Date.now()}`)
+   .expect(401)
+   .then(() => t.pass(msg))
+   .catch((error) => t.fail(msg + '. ' + error.message))
+  ;}
+  {const msg = 'should fail with authorization, bad request';
+  admin.get(`/api/dayhours/ddqw123`)
+   .expect(400)
+   .then(() => t.pass(msg))
+   .catch((error) => t.fail(msg + '. ' + error.message))
+  ;}
+  {const msg = 'should be ok';
+  admin.get(`/api/dayhours/${Date.now()}`)
+   .expect(200)
    .then(() => t.pass(msg))
    .catch((error) => t.fail(msg + '. ' + error.message))
   ;}
