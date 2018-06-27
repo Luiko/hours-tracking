@@ -3,7 +3,7 @@ const moment = require('moment');
 const Joi = require('joi')
 
 exports.register = function (server) {
-  const hour = 1000 * 60 * 60;
+  const hour = 60 * 60;
   server.route({
     path: '/api/dayhours',
     method: 'POST',
