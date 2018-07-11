@@ -10,8 +10,8 @@ const {
   addAccount, getUsers, deleteUser, changePassword
 } = require('./account');
 const { addIteration } = require('./iteration');
-
 const db = mongoose.connection;
+
 db.on('error', () => console.error('connection error'));
 db.once('open', function () {
   console.log('mongoose connection');
@@ -39,8 +39,8 @@ async function getWeekSeconds(username, clientDate) {
     const m = moment(clientDate);
     const weekStart = moment(m.toDate()).startOf('week');
     const weekEnd = moment(m.toDate()).endOf('week');
-    const IsInThisWeek = function ({ start, end }) {
-      return isPointOf('week', start, end, m);
+    const IsInThisWeek = function ({ start }) {
+      return isPointOf('week', start, m);
     };
     const toWeekSeconds = function (accum, data) {
       return iterationsToWeekSeconds(accum, data, weekStart, weekEnd, m);
@@ -53,6 +53,7 @@ async function getWeekSeconds(username, clientDate) {
     return err;
   }
 }
+
 async function getWeekStats(username, date) {
   const daysnumber = [];
   let relativeday = moment(date).startOf('week');
@@ -71,16 +72,16 @@ async function getWeekStats(username, date) {
     'wednesday': 0, 'thursday': 0, 'friday': 0, 'saturday': 0
   };
   const weekdays = Object.keys(weekDaysWithMilis);
-  let iterableday = moment(date).diff(moment(date).startOf('week'), 'day');
+  let daysLeft = moment(date).diff(moment(date).startOf('week'), 'day');
   let counter = 0;
-  while (iterableday >= 0) {
-    const day = moment(date).subtract(iterableday, 'days');
+  while (daysLeft >= 0) {
+    const day = moment(date).subtract(daysLeft, 'days');
     const dayIterations = reduceIterationToDay(iterations, day);
     weekDaysWithMilis[weekdays[counter]] = dayIterations.reduce(
       (total, iteration) => total + getmilis(iteration),
       0
     );
-    iterableday--;
+    daysLeft--;
     counter++;
   };
 
