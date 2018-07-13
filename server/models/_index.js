@@ -1,8 +1,8 @@
 const moment = require('moment');
 
-function reduceIterationToDay(iterations, clientDate) {
+function reduceIterationTo(format, iterations, clientDate) {
   return iterations.filter(function ({ start }) {
-    return isPointOf('day', start, clientDate);
+    return isPointOf(format, start, clientDate);
   });
 }
 
@@ -31,7 +31,8 @@ function iterationsToWeekSeconds(prev, { start, end }, weekStart, weekEnd, m) {
 }
 
 module.exports = {
-  reduceIterationToDay,
+  reduceIterationToDay: reduceIterationTo.bind(null, 'day'),
+  reduceIterationToWeek: reduceIterationTo.bind(null, 'week'),
   isPointOf,
   reduceDaySeconds: reduceDayTo.bind(null, 's'),
   reduceDayMillis: reduceDayTo.bind(null, 'x'),

@@ -1,4 +1,4 @@
-const { getDaySeconds} = require('../models');
+const { getWeekStats } = require('../models');
 const moment = require('moment');
 const Joi = require('joi')
 
@@ -11,8 +11,8 @@ exports.register = function (server) {
       const { username, diff } = request.auth.credentials;
       if (username === process.env.ADMIN) {
         const date = moment(request.payload).utcOffset(diff, false);
-        const ms = await getDaySeconds(username, date);
-        return ms? Math.floor(ms / hour) : 0; 
+        const [week] = await getWeekStats(username, date);
+        return week[moment(date).format('dddd').toLowerCase()];
       }
       return h.response('').code(401);
     },
@@ -34,8 +34,8 @@ exports.register = function (server) {
       const { username, diff } = request.auth.credentials;
       if (username === process.env.ADMIN) {
         const date = moment(request.params.time).utcOffset(diff, false);
-        const ms = await getDaySeconds(username, date);
-        return ms? Math.floor(ms / hour) : 0;
+        const [week] = await getWeekStats(username, date);
+        return week[moment(date).format('dddd').toLowerCase()];
       }
       return h.response('').code(401);
     },
