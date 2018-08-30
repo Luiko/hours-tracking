@@ -4,9 +4,9 @@ function Home() {
   return (<main className="pad-late">
     <h2 id="home">Características</h2>
     <ul className="text">
-      <li>Tomar el tiempo de trabajo con un botón, y no las interrupciones.</li>
-      <li>Registrar progreso semanal.</li>
-      <li>Ver gráficas de mi progreso.</li>
+      <li>Manejar el tiempo de productividad con un solo botón.</li>
+      <li>Guardar tu progreso.</li>
+      <li>Ver estadísticas gráficas de tu rutina.</li>
     </ul>
   </main>);
 }
