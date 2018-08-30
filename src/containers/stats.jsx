@@ -81,44 +81,6 @@ class Stats extends Component {
       })
     ;
   }
-  componentDidUpdate() {
-    const today = new Date().getDate();
-    const { week, days } = this.state;
-    const { dayHours } = this.props;
-    const nweek = {};
-    let update = false;
-    if (!week) {
-      return;
-    }
-    Object.entries(week).forEach((el, i) => {
-      const [key, value] = el;
-      if (days[i] === today) {
-        if (max < dayHours) {
-          max = dayHours;
-          update = true;
-        }
-        if (value < dayHours) {
-          nweek[key] = dayHours;
-          update = true;
-        } else {
-          nweek[key] = value;
-        }
-      } else {
-        nweek[key] = value;
-      }
-    });
-    if (update) {
-      this.setState({ week: nweek });
-    }
-  }
-  shouldComponentUpdate(nextprops, nextstate) {
-    if (!deepEqual(this.state, nextstate)
-      || this.props.dayHours != nextprops.dayHours) {
-
-      return true;
-    }
-    return false;
-  }
 }
 
 Stats.propTypes = {
