@@ -478,6 +478,52 @@ test('get /api/dayhours/{time}', function (t) {
   ;}
 });
 
+test('get /api/dayhours/{date*3}', function (t) {
+  t.plan(7);
+  const msg = 'should be restricted';
+  request(app).get('/api/dayhours/2018/8/12')
+   .expect(401)
+   .then(() => t.pass(msg))
+   .catch((error) => t.fail(msg + '. ' + error.message))
+  ;
+  {const msg = 'should fail, bad implementation with month';
+  request(app).get('/api/dayhours/2018//12')
+   .expect(404)
+   .then(() => t.pass(msg))
+   .catch((error) => t.fail(msg + '. ' + error.message))
+  ;}
+  {const msg = 'should fail, bad implementation without day';
+  request(app).get('/api/dayhours/2018/8')
+   .expect(404)
+   .then(() => t.pass(msg))
+   .catch((error) => t.fail(msg + '. ' + error.message))
+  ;}
+  {const msg = 'should be unauthorized';
+  agent.get(`/api/dayhours/2018/12/31`)
+  .expect(401)
+  .then(() => t.pass(msg))
+  .catch((error) => t.fail(msg + '. ' + error.message))
+  ;}
+  {const msg = 'should fail with authorization, bad request';
+  admin.get(`/api/dayhours/asad/0/0`)
+  .expect(400)
+  .then(() => t.pass(msg))
+  .catch((error) => t.fail(msg + '. ' + error.message))
+  ;}
+  {const msg = 'should be ok';
+  admin.get(`/api/dayhours/2017/8/12`)
+  .expect(200)
+  .then(() => t.pass(msg))
+  .catch((error) => t.fail(msg + '. ' + error.message))
+  ;}
+  {const msg = 'should fail, bad implementation with 0 year';
+  admin.get('/api/dayhours/0/22/12')
+   .expect(400)
+   .then(() => t.pass(msg))
+   .catch((error) => t.fail(msg + '. ' + error.message))
+  ;}
+});
+
 test('get /logout', async function (t) {
   t.plan(3);
   const msg = 'should be restricted';
