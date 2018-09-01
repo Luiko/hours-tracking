@@ -19,7 +19,7 @@ db.once('open', function () {
 
 const Account = mongoose.model('Account', accountSchema);
 function connect() {
-  mongoose.connect(process.env.STR_DB_CON);
+  mongoose.connect(process.env.STR_DB_CON, { useNewUrlParser: true });
 }
 
 function closeConnection() {
