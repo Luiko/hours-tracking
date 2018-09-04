@@ -66,7 +66,7 @@ const server = new Hapi.Server({
     password: COOKIE_PASSWORD,
     ttl: 8 * 60 * 60 * 1000,
     clearInvalid: true,
-    keepAlive: false,
+    keepAlive: true,
     isSecure: SECURE,
     requestDecoratorName: 'cookieAuth',
     redirectTo: '/login',
