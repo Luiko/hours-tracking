@@ -44,13 +44,17 @@ function HoursTracking(props) {
             handleAlertClick={props.handleAlertClick}
           />}
         />
-        <Route path="/about" render={() => <About version={props.version} />} />
+        <Route path="/about" render={
+          () => <About version={props.version} />}
+        />
         <Route path="/login" render={() => <Login auth={props.auth} />}/>
         <Route path="/signup" render={function () {
           return <SignUp auth={props.auth} username={username} />;
         }}/>
         <Route path="/configuration" component={Configuration}/>
-        <Route path="/stats" render={()=><Stats dayHours={props.dayHours}/>}/>
+        <Route path="/stats" render={
+          () => <Stats auth={props.auth} dayHours={props.dayHours}/>
+        }/>
       </div>
       <footer>
         <p className="center">

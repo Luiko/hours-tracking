@@ -53,6 +53,7 @@ class Login extends Component {
     ev.preventDefault();
     const { username, password } = this.state;
     const date = new Date();
+    this.setState({ closeAlert: true, error: "" }); //reset alert
     post('/login', {
       username, password, date,
       diff: date.getTimezoneOffset() * -1

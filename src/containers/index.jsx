@@ -5,21 +5,22 @@ import { START, PAUSE, CONTINUE, BTN } from '../locales/main-button';
 
 let timer;
 let start;
+const initialState = {
+  btnName: BTN(START),
+  dayHours: 0,
+  weekHours: 0,
+  remainingTime: 0,
+  username: '',
+  version: '0.0.0',
+  error: '',
+  closeAlert: true,
+  load: false
+};
 
 class HoursTrackingContainer extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      btnName: BTN(START),
-      dayHours: 0,
-      weekHours: 0,
-      remainingTime: 0,
-      username: '',
-      version: '0.0.0',
-      error: '',
-      closeAlert: true,
-      load: false
-    };
+    this.state = Object.assign({}, initialState);
     this.handleClick = this.handleClick.bind(this);
     this.setTimer = this.setTimer.bind(this);
     this.auth = this.auth.bind(this);
@@ -71,6 +72,10 @@ class HoursTrackingContainer extends Component {
   }
 
   auth(account) {
+    if (account === null) {
+      this.setState(Object.assign({}, initialState, { load: true }));
+      return;
+    }
     if (timer) {
       clearTimeout(timer);
     }
@@ -124,6 +129,7 @@ class HoursTrackingContainer extends Component {
       this.saveState.call(this);
       this.setState({ btnName: BTN(PAUSE), remainingTime: 3600 });
     } else if (btnName === BTN(PAUSE)) {
+      this.setState({ closeAlert: true, error: "" }); //reset alert
       post('/iterations', { start, end: Date.now() })
         .then(function (res) {
           console.log(res.data);
@@ -131,6 +137,8 @@ class HoursTrackingContainer extends Component {
         .catch(function (err) {
           if (!err.response) {
             this.setState({ error: err.message, closeAlert: false });
+          } else if (err.response && err.response.status === 401) {
+            this.setState({ closeAlert: false, error: "Unauthenticated Session" });
           } else {
             console.error(err.message);
           }
@@ -148,6 +156,7 @@ class HoursTrackingContainer extends Component {
 
   saveState() {
     start = Date.now();
+    this.setState({ closeAlert: true, error: "" }); //reset alert
     this.setTimer();
     axios({
       method: 'post', url: '/session', data: start,
@@ -157,7 +166,9 @@ class HoursTrackingContainer extends Component {
     }, function (err) {
       if (!err.response) {
         this.setState({ error: err.message, closeAlert: false });
-      } else {
+      } else if (err.response && err.response.status === 401) {
+        this.setState({ closeAlert: false, error: "Unauthenticated Session" });
+      } {
         console.error(err.message);
       }
     }.bind(this));

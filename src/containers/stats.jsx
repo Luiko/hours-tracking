@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { get } from 'axios';
 import Axis from '../components/axis';
 import Alert from '../components/alert';
-import deepEqual from 'fast-deep-equal';
+import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 const x = 40;
@@ -18,6 +18,9 @@ class Stats extends Component {
   }
   render() {
     const { week, days } = this.state;
+    if (this.state.error === "Unauthenticated Session") {
+      return <Redirect to="/login" />;
+    }
     return (<main className="center">
       {/* <?xml version="1.0" standalone="no"?> */}
       <h2 className="svg-fix">Horas de la semana</h2>
@@ -75,6 +78,11 @@ class Stats extends Component {
             alertClose: false,
             error: "Can't retrieve data, something happened." }
           );
+          return;
+        }
+        if (response && response.status === 401) {
+          this.props.auth(null);
+          this.setState({ error: "Unauthenticated Session" });
           return;
         }
         this.setState({ alertClose: false, error: message });

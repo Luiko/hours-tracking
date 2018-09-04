@@ -69,6 +69,7 @@ class Signup extends Component {
       return;
     }
     const { username, password } = this.state;
+    this.setState({ closeAlert: true, error: "" }); //reset alert
     post('/signup', { username, password })
       .then(function ({ data: username }) {
         this.props.auth({ username });
