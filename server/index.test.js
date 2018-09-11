@@ -407,6 +407,35 @@ test('get /stats/week', function (t) {
   ;}
 });
 
+test('get /stats/month', function (t) {
+  t.plan(6);
+  const msg = 'should be restricted';
+  request(app)
+    .get('/stats/month')
+    .expect(401)
+    .then(() => t.pass(msg))
+    .catch((err) => t.fail(msg + '. ' + err.message))
+  ;
+  {const msg = 'should pass';
+  agent
+    .get('/stats/month')
+    .expect(200)
+    .then((res) => {
+      t.pass(msg);
+      t.assert(Array.isArray(res.body), 'should return an array');
+      const [month, monthDays] = res.body;
+      t.assert(Array.isArray(month), 'should retrieve an array of week');
+      t.equal(
+        Object.prototype, month[0].__proto__, 'weeks should be objects'
+      );
+      t.assert(
+        Number.isSafeInteger(monthDays), 'should retrive number of month days'
+      );
+    })
+    .catch((err) => t.fail(msg + '. ' + err.message))
+  ;}
+});
+
 const admin = request.agent(app);
 
 test('post /api/dayhours', async function (t) {

@@ -1,7 +1,7 @@
 const Bcrypt = require('bcrypt');
 const {
   getUsers, changePassword, deleteUser,
-  addAccount, getWeekStats, connect } = require('../models')
+  addAccount, getWeekStats, getMonthStats, connect } = require('../models')
 ;
 const moment = require('moment');
 const updateCookieState = require('../lib/updateCookieState');
@@ -265,6 +265,38 @@ exports.register = function (server) {
       const { username, clientDate, diff } = request.auth.credentials;
       const date = moment(clientDate).utcOffset(diff, false);
       return getWeekStats(username, date);
+    }
+  });
+  server.route({
+    method: 'GET',
+    path: '/stats/month',
+    options: {
+      auth: 'restricted',
+      response: {
+        schema: Joi.array().items(
+          Joi.array().max(6).items(
+            Joi.object({
+              sunday: Joi.number(),
+              monday: Joi.number(),
+              tuesday: Joi.number(),
+              wednesday: Joi.number(),
+              thursday: Joi.number(),
+              friday: Joi.number(),
+              saturday: Joi.number()
+          }).required()).required(),
+          Joi.number().min(28).max(31).required()
+        ).length(2).required()
+      },
+      plugins: {
+        'hapi-auth-cookie': {
+          redirectTo: false
+        }
+      }
+    },
+    async handler(request) {
+      const { username, clientDate, diff } = request.auth.credentials;
+      const date = moment(clientDate).utcOffset(diff, false);
+      return getMonthStats(username, date);
     }
   });
 };
