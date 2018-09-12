@@ -27,16 +27,16 @@ class Configuration extends Component {
                 Contraseña Anterior</label><br/>
           <input className="separate" id="password" type="password"
             ref={(input) => {this.password = input;}}
-            onInput={this.handleInput} value={this.state.password}/><br/>
+            onChange={this.handleInput} value={this.state.password}/><br/>
           <label className="separate" htmlFor="newPassword">
                 Nueva Contraseña</label><br/>
           <input className="separate" id="newPassword" type="password"
             ref={(input) => {this.newPassword = input;}}
-            onInput={this.handleInput} value={this.state.newPassword}/><br/>
+            onChange={this.handleInput} value={this.state.newPassword}/><br/>
           <label className="separate" htmlFor="repeatNewPassword">
                 Repetir Nueva Contraseña</label><br/>
           <input className="separate" id="repeatNewPassword" type="password"
-            onInput={this.handleInput}
+            onChange={this.handleInput}
             value={this.state.repeatNewPassword}/><br/>
           <input className="separate" type="submit" value="Cambiar"/>
         </fieldset>
