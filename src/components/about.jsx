@@ -33,9 +33,10 @@ class About extends React.PureComponent {
         Si deseas contactar me <a href="mailto:luiko.luisgarcia@gmail.com"
         title="correo electrónico">luiko.luisgarcia@gmail.com</a>.<br/>
         Cualquier comentario, sugerencia sera bien recibida.<br/><a
-        href="https://twitter.com/Luiko0" title="red social de contacto">twitter
-        </a>. <a href="https://github.com/Luiko" title="red social de creadores">
-        GitHub</a>.
+        className="twitter-icon" href="https://twitter.com/Luiko0"
+        title="red social de contacto">twitter
+        </a>. <a href="https://github.com/Luiko" title="red social de creadores"
+        className="github-icon">GitHub</a>.
       </p>
     </article>);
   }

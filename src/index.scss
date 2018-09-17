@@ -230,11 +230,33 @@ and (min-width: 800px) {
   margin-left: -7%;
 }
 
-//stats component
+  //about component
+@mixin icon($url, $size) {
+  background: url($url);
+  background-repeat: repeat;
+  background-size: auto auto;
+  background-repeat: no-repeat;
+  background-size: $size;
+  display: inline-block;
+  width: 2rem;
+  height: 2rem;
+  content: '';
+}
+.twitter-icon {
+  &::before {
+    @include icon('./assets/twit-apple-touch-icon-192x192.png', 2.4rem);
+  }
+}
+.github-icon {
+  &::before {
+    @include icon('./assets/git-fluidicon.png', 2.1rem);
+  }
+}
+
+  //stats component
 .monthTextLabel {
   font-size: var(--monthTextSize);
 }
-  //grid
 
 //Utilities
 
