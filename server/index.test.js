@@ -408,7 +408,7 @@ test('get /stats/week', function (t) {
 });
 
 test('get /stats/month', function (t) {
-  t.plan(6);
+  t.plan(4);
   const msg = 'should be restricted';
   request(app)
     .get('/stats/month')
@@ -422,14 +422,10 @@ test('get /stats/month', function (t) {
     .expect(200)
     .then((res) => {
       t.pass(msg);
-      t.assert(Array.isArray(res.body), 'should return an array');
-      const [month, monthDays] = res.body;
+      const { body: month } = res;
       t.assert(Array.isArray(month), 'should retrieve an array of week');
       t.equal(
         Object.prototype, month[0].__proto__, 'weeks should be objects'
-      );
-      t.assert(
-        Number.isSafeInteger(monthDays), 'should retrive number of month days'
       );
     })
     .catch((err) => t.fail(msg + '. ' + err.message))

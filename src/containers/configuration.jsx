@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Alert from "../components/alert";
 import { put } from 'axios';
 
-class Configuration extends Component {
+class Configuration extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {

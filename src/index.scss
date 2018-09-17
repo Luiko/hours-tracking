@@ -2,6 +2,9 @@
 
 $background: hsl(200, 30%, 50%);
 $color: whitesmoke;
+:root {
+  --monthTextSize: 1rem;
+}
 
 //Tools
 
@@ -225,6 +228,11 @@ and (min-width: 800px) {
 
 .svg-fix {
   margin-left: -7%;
+}
+
+//stats component
+.monthTextLabel {
+  font-size: var(--monthTextSize);
 }
   //grid
 

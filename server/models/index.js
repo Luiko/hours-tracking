@@ -104,8 +104,6 @@ async function getWeekStats(username, date) {
 }
 
 async function getMonthStats(username, date) {
-  const monthDays = moment(date).daysInMonth();
-
   const user = await Account.findOne({ username }, { iterations: 1 });
   const iterations = [...user.iterations];
   const getmilis = (iter) => (
@@ -171,7 +169,7 @@ async function getMonthStats(username, date) {
     month.push(week);
   }
   
-  return [month, monthDays];
+  return month;
 }
 
 module.exports = {

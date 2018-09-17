@@ -11,7 +11,7 @@ class WeekHours extends React.Component {
 		super(props);
 	}
 	render() {
-    const { week, days, max, multiple } = this.props;
+    const { week, days, max, divider } = this.props;
 		return (<div>
 			<h2 className="svg-fix">Horas de la semana</h2>
 			<svg version="1.1" baseProfile="full" width="400" height="400"
@@ -22,27 +22,25 @@ class WeekHours extends React.Component {
 				{
 					week &&
 					Object.keys(week).map((d, i) => {
+						const _y = (y * 2) + (y * i);
 						return (<g key={d}>
-							<text className="background" x={x} y={(y * 2) + (y * i) - 5}>
+							<text className="background" x={x} y={_y - 5}>
 								{d} {days[i]}
 							</text>
-							<rect
-								x={x}
-								y={(y * 2) + (y * i)}
-								height={10}
-								width={week[d] * multiple} />
+							<rect x={x} y={_y} height={10} width={week[d] * divider} />
 						</g>);
 					})
 				}
 				{
 					week &&
-					(new Array(max + 1)).fill(0).map((_, i) => (<g
-						key={'number' + i} className="mark" fill="gray">
-
-						<text x={multiple * i + x + 2} y={y + length - 5} >{i}</text>
-						<line x1={multiple * i + x} y1={y + length}
-							x2={multiple * i + x} y2={y + length - 10} stroke="gray" />
-					</g>))
+					(new Array(max + 1)).fill(0).map((_, i) => {
+						const _x = divider * i + x;
+						return (<g key={'number' + i} className="mark" fill="gray">
+							<text x={_x + 2} y={y + length - 5} >{i}</text>
+							<line x1={_x} y1={y + length}
+								x2={_x} y2={y + length - 10} stroke="gray" />
+						</g>);
+					})
 				}
 			</svg>
 		</div>);
@@ -61,7 +59,7 @@ WeekHours.propTypes = {
 	}),
 	days: PropTypes.arrayOf(PropTypes.number.isRequired),
 	max: PropTypes.number,
-	multiple: PropTypes.number
+	divider: PropTypes.number
 };
 
 export default WeekHours;

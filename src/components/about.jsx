@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-class About extends Component {
+class About extends React.PureComponent {
   constructor(props) {
     super(props);
   }
@@ -32,9 +32,9 @@ class About extends Component {
       <p className="text">
         Si deseas contactar me <a href="mailto:luiko.luisgarcia@gmail.com"
         title="correo electrónico">luiko.luisgarcia@gmail.com</a>.<br/>
-        Cualquier comentario, sugerencia sera bien recibida.<br/>Mi <a
+        Cualquier comentario, sugerencia sera bien recibida.<br/><a
         href="https://twitter.com/Luiko0" title="red social de contacto">twitter
-        </a>. Mi <a href="https://github.com/Luiko" title="red social de creadores">
+        </a>. <a href="https://github.com/Luiko" title="red social de creadores">
         GitHub</a>.
       </p>
     </article>);

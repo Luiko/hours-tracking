@@ -273,19 +273,16 @@ exports.register = function (server) {
     options: {
       auth: 'restricted',
       response: {
-        schema: Joi.array().items(
-          Joi.array().max(6).items(
-            Joi.object({
-              sunday: Joi.number(),
-              monday: Joi.number(),
-              tuesday: Joi.number(),
-              wednesday: Joi.number(),
-              thursday: Joi.number(),
-              friday: Joi.number(),
-              saturday: Joi.number()
-          }).required()).required(),
-          Joi.number().min(28).max(31).required()
-        ).length(2).required()
+        schema: Joi.array().max(6).items(
+          Joi.object({
+            sunday: Joi.number(),
+            monday: Joi.number(),
+            tuesday: Joi.number(),
+            wednesday: Joi.number(),
+            thursday: Joi.number(),
+            friday: Joi.number(),
+            saturday: Joi.number()
+        }).required()).required()
       },
       plugins: {
         'hapi-auth-cookie': {
