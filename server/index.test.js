@@ -2,7 +2,8 @@ const test = require('tape');
 const request = require('supertest');
 const app = require('./index');
 require('dotenv').config();
-const { version } = require('../package.json');
+const { version } = require('../package');
+const { hour } = require('./penv');
 
 const agent = request.agent(app);
 const user = 'algo';
@@ -250,7 +251,7 @@ test('post /session route', async function (t) {
   ;
   request(app)
     .post('/session')
-    .send({ btnName: 'PAUSE', start: Date.now() - 3600 })
+    .send({ btnName: 'PAUSE', start: Date.now() - hour })
     .expect(401, function (err) {
       const msg = 'should fail post /session without auth';
       if (err) {

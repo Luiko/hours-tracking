@@ -17,17 +17,20 @@ class App extends Component {
         <label className="separate" htmlFor="dayhours">
           Horas del día completadas
         </label><br/>
-        <input className="separate right-align" readOnly id="dayhours"
+        <input className="textbox separate right-align" readOnly
+          id="dayhours"
           value={this.props.dayHours}/><br/>
         <label className="separate" htmlFor="weekhours">
           Horas de la semana completadas
         </label><br/>
-        <input className="separate right-align" readOnly id="weekhours"
+        <input className="textbox separate right-align" readOnly
+          id="weekhours"
           value={this.props.weekHours}/><br/>
         <label className="separate" htmlFor="remainingtime">
           Tiempo restante de hora de trabajo
         </label><br/>
-        <input className="separate right-align" readOnly id="remainingtime"
+        <input className="textbox separate right-align" readOnly
+          id="remainingtime"
           value={convertStoM(this.props.remainingTime)}/><br/>
         <Alert close={this.props.closeAlert} type="error"
           handleClick={this.props.handleAlertClick}>{this.props.error}</Alert>

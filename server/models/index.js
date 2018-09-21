@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const accountSchema = require('./schemas/account');
 const moment = require('moment');
+const { hour } = require('../penv');
+
 require('dotenv').config();
 const {
   reduceIterationToDay, reduceDaySeconds,
@@ -87,13 +89,13 @@ async function getWeekStats(username, date) {
 
   const week = {};
   let remaining = 0;
-  const hour = 60 * 60 * 1000;
+  const _hour = hour * 1000;
   for (let i = 0; i < 7; i++) {
     const dayname = weekdays[i];
     if (remaining > 0 || weekDaysWithMillis[dayname] !== 0) {
       week[dayname] = weekDaysWithMillis[dayname] + remaining;
-      const nextRemaining = week[dayname] % hour;
-      week[dayname] = Math.floor(week[dayname] / hour);
+      const nextRemaining = week[dayname] % _hour;
+      week[dayname] = Math.floor(week[dayname] / _hour);
       remaining = nextRemaining;
     } else {
       week[dayname] = 0;
@@ -155,12 +157,12 @@ async function getMonthStats(username, date) {
 
     const week = {};
     let remaining = 0;
-    const hour = 60 * 60 * 1000;
+    const _hour = hour * 1000;
     weekdays.forEach(dayname => {
       if (remaining > 0 || weekDaysWithMillis[dayname] !== 0) {
         week[dayname] = weekDaysWithMillis[dayname] + remaining;
-        const nextRemaining = week[dayname] % hour;
-        week[dayname] = Math.floor(week[dayname] / hour);
+        const nextRemaining = week[dayname] % _hour;
+        week[dayname] = Math.floor(week[dayname] / _hour);
         remaining = nextRemaining;
       } else {
         week[dayname] = 0;

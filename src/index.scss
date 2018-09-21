@@ -123,6 +123,13 @@ and (min-width: 360px) {
 }
 
 @media screen
+and (max-width: 380px) {
+  .pad-container {
+    padding-left: 0;
+  }
+}
+
+@media screen
 and (min-width: 800px) {
   .pad-late {
     max-width: 800px;
@@ -230,7 +237,14 @@ and (min-width: 800px) {
   margin-left: -7%;
 }
 
+  //app component
+
+.textbox {
+  width: 17rem;
+}
+
   //about component
+
 @mixin icon($url, $size) {
   background: url($url);
   background-repeat: repeat;
@@ -254,6 +268,7 @@ and (min-width: 800px) {
 }
 
   //stats component
+
 .monthTextLabel {
   font-size: var(--monthTextSize);
 }

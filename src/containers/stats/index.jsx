@@ -60,7 +60,6 @@ class Stats extends React.PureComponent {
     ;
     get('/stats/month')
       .then(({ data: month }) => {
-        console.log(month);
         const getMaxOfMonth = (max, week) => Math.max(
           reduceObjectToMax(week, getMaxOfWeek.bind(null, week)), max);
         const max = month.reduce(getMaxOfMonth, 0);

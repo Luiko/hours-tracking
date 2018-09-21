@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios, { post } from 'axios';
-import HoursTrackingComponent from '../components/index';
+import BrowserRouter from '../components/index';
 import { START, PAUSE, CONTINUE, BTN } from '../locales/main-button';
 
 let timer;
@@ -16,6 +16,8 @@ const initialState = {
   closeAlert: true,
   load: false
 };
+ 
+export const hour = 3600;
 
 class HoursTrackingContainer extends Component {
   constructor(props) {
@@ -27,7 +29,7 @@ class HoursTrackingContainer extends Component {
   }
 
   render() {
-    return (<HoursTrackingComponent
+    return (<BrowserRouter
       {...this.state}
       auth={this.auth}
       handleClick={this.handleClick}
@@ -52,7 +54,7 @@ class HoursTrackingContainer extends Component {
           this.setState(state);
           this.setTimer();
         } else if (username) {
-          state.btnName = remainingTime % 3600 ? BTN(CONTINUE) : BTN(START);
+          state.btnName = remainingTime % hour ? BTN(CONTINUE) : BTN(START);
           this.setState(state);
         }
       }.bind(this))
@@ -83,13 +85,14 @@ class HoursTrackingContainer extends Component {
   }
 
   setTimer() {
-    timer = setTimeout(interval.bind(this, start), 1000);
+    const second = 1000;
+    timer = setTimeout(interval.bind(this, start), second);
     function interval(cycle) {
       const now = Date.now();
       const diff = now - cycle;
       const totalms = now - start;
-      const time = 1000 - (totalms % 1000);
-      const decrement = Math.round(diff / 1000);
+      const time = second - (totalms % second);
+      const decrement = Math.round(diff / second);
       if (this.state.remainingTime > 0) {
         this.setState(function (prevState) {
           return {
@@ -98,23 +101,21 @@ class HoursTrackingContainer extends Component {
         });
       } else {
         const { remainingTime } = this.state;
-        const aHour = 60 * 60;
         if (remainingTime === 0) {
           this.setState(function (prevState) {
             return {
-              remainingTime: aHour,
-              dayHours: prevState.dayHours + 1,
-              weekHours: prevState.weekHours + 1
+              remainingTime: hour,
+              dayHours: 1 + prevState.dayHours,
+              weekHours: 1 + prevState.weekHours
             };
           });
         } else if (remainingTime < 0) {
           this.setState(function (prevState) {
-            const hourPassed = Math.floor((-1 * prevState.remainingTime) / aHour);
+            const hourPassed = -Math.floor((prevState.remainingTime) / hour);
             return {
-              remainingTime: hourPassed? aHour * hourPassed + remainingTime
-                                      : aHour + remainingTime,
-              dayHours: prevState.dayHours + 1 + hourPassed,
-              weekHours: prevState.weekHours + 1 + hourPassed
+              remainingTime: hour * hourPassed + prevState.remainingTime,
+              dayHours: prevState.dayHours + hourPassed,
+              weekHours: prevState.weekHours + hourPassed
             };
           });
         }
@@ -126,8 +127,8 @@ class HoursTrackingContainer extends Component {
   handleClick() {
     const { btnName } = this.state;
     if (btnName === BTN(START)) {
+      this.setState({ btnName: BTN(PAUSE), remainingTime: hour });
       this.saveState.call(this);
-      this.setState({ btnName: BTN(PAUSE), remainingTime: 3600 });
     } else if (btnName === BTN(PAUSE)) {
       this.setState({ closeAlert: true, error: "" }); //reset alert
       post('/iterations', { start, end: Date.now() })

@@ -1,7 +1,7 @@
 const { getDaySeconds, getWeekSeconds } = require('../models');
+const { hour } = require('../penv');
 
 module.exports = async function updateCookieState(username, request, clientDate) {
-  const hour = 3600;
   const daySeconds = await getDaySeconds(username, clientDate);
   const weekSeconds = await getWeekSeconds(username, clientDate);
   const weekHours = Math.floor(weekSeconds / hour);
