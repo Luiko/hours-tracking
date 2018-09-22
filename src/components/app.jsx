@@ -9,11 +9,11 @@ class App extends Component {
   render() {
     return (<main>
       <h2 className="center">Horas Contadas</h2>
-      <button className="main-button sans" aria-label="Botón principal"
-                                      onClick={this.props.handleClick}>
-        {this.props.btnName}
-      </button>
       <div id="record" className="pad-container">
+        <button className="main-button sans" aria-label="Botón principal"
+                                        onClick={this.props.handleClick}>
+          {this.props.btnName}
+        </button>
         <label className="separate" htmlFor="dayhours">
           Horas del día completadas
         </label><br/>

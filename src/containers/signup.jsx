@@ -30,16 +30,16 @@ class Signup extends Component {
         <h2 className="center">Registarte</h2>
         <form className="pad-container" action="/signup" method="post" onSubmit={this.handleSubmit}>
           <label className="separate" htmlFor="username">Nombre de Usuario</label><br/>
-          <input className="separate" required type="text" id="username"
+          <input className="textbox separate" required type="text" id="username"
             name="username" ref={(input) => {this.firstTextInput = input}}
             value={this.state.username} onChange={this.handleInput}
           /><br/>
           <label className="separate" htmlFor="password">Constraseña</label><br/>
-          <input className="separate" required type="password" id="password" name="password"
+          <input className="textbox separate" required type="password" id="password" name="password"
             value={this.state.password} onChange={this.handleInput}
           /><br/>
           <label className="separate" htmlFor="repeatpassword">Repetir Constraseña</label><br/>
-          <input className="separate" required type="password" id="repeatpassword"
+          <input className="textbox separate" required type="password" id="repeatpassword"
             name="repeatpassword" value={this.state.repeatpassword}
             onChange={this.handleInput}
           /><br/>

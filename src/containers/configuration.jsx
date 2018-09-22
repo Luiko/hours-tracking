@@ -27,20 +27,20 @@ class Configuration extends React.PureComponent {
           <legend>Cambiar Contraseña</legend>
           <label className="separate" htmlFor="password">
                 Contraseña Anterior</label><br/>
-          <input className="separate" id="password" type="password"
+          <input className="textbox separate" id="password" type="password"
             ref={(input) => {this.password = input;}}
             onChange={this.handleInput} value={this.state.password}/><br/>
           <label className="separate" htmlFor="newPassword">
                 Nueva Contraseña</label><br/>
-          <input className="separate" id="newPassword" type="password"
+          <input className="textbox separate" id="newPassword" type="password"
             ref={(input) => {this.newPassword = input;}}
             onChange={this.handleInput} value={this.state.newPassword}/><br/>
           <label className="separate" htmlFor="repeatNewPassword">
                 Repetir Nueva Contraseña</label><br/>
-          <input className="separate" id="repeatNewPassword" type="password"
+          <input className="textbox separate" id="repeatNewPassword" type="password"
             onChange={this.handleInput}
             value={this.state.repeatNewPassword}/><br/>
-          <input className="separate" type="submit" value="Cambiar"/>
+          <input className="separate left-margin" type="submit" value="Cambiar"/>
         </fieldset>
         <Alert close={this.state.closeAlert} type={this.state.type}
           handleClick={() => this.setState({ closeAlert: true })}>
