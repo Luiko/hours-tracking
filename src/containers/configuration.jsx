@@ -1,6 +1,6 @@
 import React from 'react';
 import Alert from "../components/alert";
-import { put } from 'axios';
+import { put, CancelToken } from 'axios';
 
 class Configuration extends React.PureComponent {
   constructor(props) {
@@ -15,6 +15,8 @@ class Configuration extends React.PureComponent {
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleInput = this.handleInput.bind(this);
+    this.request = CancelToken.source();
+    this.cancel_msg = 'Unmounting configuration component';
   }
 
   render() {
@@ -48,6 +50,10 @@ class Configuration extends React.PureComponent {
     </main>);
   }
 
+  componentWillUnmount() {
+    this.request.cancel(this.cancel_msg);
+  }
+
   handleSubmit(e) {
     e.preventDefault();
     const { password, newPassword, repeatNewPassword } = this.state;
@@ -65,7 +71,9 @@ class Configuration extends React.PureComponent {
       this.newPassword.focus();
       return;
     }
-    put('/password', { password, newPassword })
+    put('/password',
+      { password, newPassword }, { cancelToken: this.request.token }
+    )
       .then((response) => {
         this.setState({
           type: 'info', content: response.data.payload, closeAlert: false,
@@ -81,6 +89,8 @@ class Configuration extends React.PureComponent {
             password: ''
           });
           this.password.focus();
+        } else if (message === this.cancel_msg) {
+          console.info(message);
         } else {
           console.error(message);
         }

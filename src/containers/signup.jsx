@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { post } from 'axios';
+import { post, CancelToken } from 'axios';
 import { Redirect } from 'react-router-dom';
 import Alert from '../components/alert';
 import PropTypes from 'prop-types';
@@ -17,6 +17,8 @@ class Signup extends Component {
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleInput = this.handleInput.bind(this);
+    this.request = CancelToken.source();
+    this.cancel_msg = 'Unmounting signup component';
   }
 
   render() {
@@ -60,6 +62,10 @@ class Signup extends Component {
     this.firstTextInput.focus();
   }
 
+  componentWillUnmount() {
+    this.request.cancel(this.cancel_msg);
+  }
+
   handleSubmit(event) {
     event.preventDefault();
     if (this.state.password !== this.state.repeatpassword) {
@@ -70,7 +76,7 @@ class Signup extends Component {
     }
     const { username, password } = this.state;
     this.setState({ closeAlert: true, error: "" }); //reset alert
-    post('/signup', { username, password })
+    post('/signup', { username, password }, { cancelToken: this.request.token})
       .then(function ({ data: username }) {
         this.props.auth({ username });
       }.bind(this))
@@ -86,6 +92,8 @@ class Signup extends Component {
               error: err.response.data.message, closeAlert: false
             });
           }
+        } if (err.message === this.cancel_msg) {
+          console.info(err.message);
         } else {
           this.setState({
             error: err.message, closeAlert: false

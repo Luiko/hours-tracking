@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import axios, { post } from 'axios';
+import axios, { post, CancelToken } from 'axios';
 import BrowserRouter from '../components/index';
 import { START, PAUSE, CONTINUE, BTN } from '../locales/main-button';
 
@@ -26,6 +26,8 @@ class HoursTrackingContainer extends Component {
     this.handleClick = this.handleClick.bind(this);
     this.setTimer = this.setTimer.bind(this);
     this.auth = this.auth.bind(this);
+    this.requests = CancelToken.source();
+    this.cancel_msg = 'Unmounting app container component';
   }
 
   render() {
@@ -39,7 +41,10 @@ class HoursTrackingContainer extends Component {
 
   componentDidMount() {
     const date = new Date();
-    post('/auth', { date, diff: date.getTimezoneOffset() * -1 })
+    post('/auth',
+      { date, diff: date.getTimezoneOffset() * -1 },
+      { cancelToken: this.requests.token }
+    )
       .then(function (res) {
         const {
           username, dayHours, weekHours,
@@ -58,19 +63,26 @@ class HoursTrackingContainer extends Component {
           this.setState(state);
         }
       }.bind(this))
-      .catch(function (err) {
-        if (err.response.status === 401) {
-          const version = err.response.data;
-          console.error(err.message);
+      .catch(function ({ response, message }) {
+        if (response && response.status === 401) {
+          const version = response.data;
+          console.error(message);
           this.setState({ version });
+        } else if (message === this.cancel_msg) {
+          console.info(message);
         } else {
-          console.error(err.message);
+          console.error(message);
         }
       }.bind(this))
       .then(() => {
         this.setState({ load: true });
       })
     ;
+  }
+
+  componentWillUnmount() {
+    clearTimeout(timer);
+    this.requests.cancel(this.cancel_msg);
   }
 
   auth(account) {
@@ -131,17 +143,22 @@ class HoursTrackingContainer extends Component {
       this.saveState.call(this);
     } else if (btnName === BTN(PAUSE)) {
       this.setState({ closeAlert: true, error: "" }); //reset alert
-      post('/iterations', { start, end: Date.now() })
+      post('/iterations',
+        { start, end: Date.now() },
+        { cancelToken: this.requests.token }
+      )
         .then(function (res) {
           console.log(res.data);
         })
-        .catch(function (err) {
-          if (!err.response) {
-            this.setState({ error: err.message, closeAlert: false });
-          } else if (err.response && err.response.status === 401) {
+        .catch(function ({ response, message }) {
+          if (!response) {
+            this.setState({ error: message, closeAlert: false });
+          } else if (response && response.status === 401) {
             this.setState({ closeAlert: false, error: "Unauthenticated Session" });
+          } else if (message === this.cancel_msg) {
+            console.info(message);
           } else {
-            console.error(err.message);
+            console.error(message);
           }
         }.bind(this))
       ;
@@ -161,16 +178,19 @@ class HoursTrackingContainer extends Component {
     this.setTimer();
     axios({
       method: 'post', url: '/session', data: start,
-      headers: { 'Content-Type': 'text/plain' }
+      headers: { 'Content-Type': 'text/plain' },
+      cancelToken: this.requests.token
     }).then(function (res) {
       console.log(res.data);
-    }, function (err) {
-      if (!err.response) {
-        this.setState({ error: err.message, closeAlert: false });
-      } else if (err.response && err.response.status === 401) {
+    }, function ({ response, message }) {
+      if (!response) {
+        this.setState({ error: message, closeAlert: false });
+      } else if (response && response.status === 401) {
         this.setState({ closeAlert: false, error: "Unauthenticated Session" });
-      } {
-        console.error(err.message);
+      } else if (message === this.cancel_msg) {
+        console.info(message);
+      } else {
+        console.error(message);
       }
     }.bind(this));
   }

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Alert from '../components/alert';
-import { post } from 'axios';
+import { post, CancelToken } from 'axios';
 import { Redirect } from 'react-router-dom';
 import { START, CONTINUE, BTN } from '../locales/main-button';
 import PropTypes from 'prop-types';
@@ -14,6 +14,8 @@ class Login extends Component {
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleInput = this.handleInput.bind(this);
+    this.request = CancelToken.source();
+    this.cancel_msg = 'Unmounting login component';
   }
 
   render() {
@@ -50,6 +52,10 @@ class Login extends Component {
     this.firstTextInput.focus();
   }
 
+  componentWillUnmount() {
+    this.request.cancel(this.cancel_msg);
+  }
+
   handleSubmit(ev) {
     ev.preventDefault();
     const { username, password } = this.state;
@@ -58,7 +64,7 @@ class Login extends Component {
     post('/login', {
       username, password, date,
       diff: date.getTimezoneOffset() * -1
-    })
+    }, { cancelToken: this.request.token })
       .then(function (response) {
         if (response.data.type === 'info') {
           const { username, dayHours, weekHours, remainingTime } = response.data;
@@ -70,20 +76,19 @@ class Login extends Component {
         }
         throw 'this should not happend 0';
       }.bind(this))
-      .catch(function (err) {
+      .catch(function ({ response, message }) {
         this.textInput.focus();
-        if (err.response) {
-          const { data } = err.response;
+        if (response) {
+          const { data } = response;
           if (data && data.type === 'error') {
             const { payload } = data;
             this.setState({ error: payload, closeAlert: false, password: '' });
-            return;
           }
+        } else if (message === this.cancel_msg) {
+          console.info(message);
         } else {
-          this.setState({ error: err.message, closeAlert: false, password: '' });
-          return;
+          this.setState({ error: message, closeAlert: false, password: '' });
         }
-        throw 'this should not happend 1';
       }.bind(this))
     ;
   }
