@@ -2,25 +2,38 @@
 
 $background: hsl(200, 30%, 50%);
 $color: whitesmoke;
+$monthTextSize: px2rem(1);
+$monthTextSize: 1rem;
 :root {
-  --monthTextSize: 1rem;
+  --monthTextSize: $monthTextSize;
 }
+$fsize: 16;
 
 //Tools
 
 @function px2rem($px) {
-  @return #{$px/16}rem;
+  @return #{$px / $fsize}rem;
 }
+
+@function rem2px($rem) {
+  @return #{$rem * $fsize}px;
+}
+
 
 //Generic
 
 h1,
 ul { margin: 0 }
 
-main { padding-bottom: 2rem }
+main {
+  padding-bottom: rem2px(2);
+  padding-bottom: 2rem;
+}
 
 footer {
+  padding: rem2px(4) 0;
   padding: 4rem 0;
+  padding-bottom: rem2px(7);
   padding-bottom: 7rem;
   background: $background;
   color: $color;
@@ -31,6 +44,7 @@ a {
 }
 
 fieldset {
+  padding-top: rem2px(1);
   padding-top: 1rem;
   padding-left: 0;
 }
@@ -42,6 +56,7 @@ legend {
 //Elements
 
 .header {
+  padding: 22px 0;
   padding: px2rem(22) 0;
   background: $background;
   color: $color;
@@ -53,6 +68,7 @@ legend {
 //Objects
 
 .welcome-faded {
+  padding: rem2px(1);
   padding: 1rem;
   position: absolute;
   color: rosybrown;
@@ -70,18 +86,25 @@ legend {
 
 .list-container {
   background: $background;
+  border-radius: 0 0 13px 100%;
   border-radius: 0 0 px2rem(13) 100%;
 }
 
 .list {
+  width: rem2px(10);
   width: 10rem;
+  padding: rem2px(1) 0;
   padding: 1rem 0;
   position: relative;
+  left: rem2px(11);
   left: 11rem;
   list-style-type: none;
 }
 
-.list-item { padding: px2rem(11) }
+.list-item {
+  padding: 11px;
+  padding: px2rem(11);
+}
 
 .list-item a { color: whitesmoke }
 
@@ -95,12 +118,14 @@ legend {
 
 .pad-container {
   max-width: 380px;
+  max-width: px2rem(380);
   margin-left: auto;
   margin-right: auto;
 }
 
 .separate {
   display: inline-block;
+  margin-top: 12px;
   margin-top: px2rem(12);
 }
 
@@ -122,11 +147,13 @@ and (min-width: 690px) {
 and (min-width: 800px) {
   .pad-late {
     max-width: 800px;
+    max-width: px2rem(800);
     margin: 0 auto;
   }
 }
 
 .left-margin {
+  margin-left: rem2px(5);
   margin-left: 5rem;
 }
 
@@ -140,6 +167,7 @@ and (min-width: 800px) {
   padding: #{$pad}px;
   padding: px2rem($pad);
   border-radius: 6px;
+  border-radius: px2rem(6);
 
   display: -webkit-flex;
   display: flex;
@@ -229,6 +257,7 @@ and (min-width: 800px) {
   //app component
 
 .textbox {
+  width: rem2px(17);
   width: 17rem;
 }
 
@@ -239,26 +268,30 @@ and (min-width: 800px) {
   background-repeat: repeat;
   background-size: auto auto;
   background-repeat: no-repeat;
-  background-size: $size;
+  background-size: rem2px($size);
+  background-size: #{$size}rem;
   display: inline-block;
+  width: rem2px(2);
   width: 2rem;
+  height: rem2px(2);
   height: 2rem;
   content: '';
 }
 .twitter-icon {
   &::before {
-    @include icon('./assets/twit-apple-touch-icon-192x192.png', 2.4rem);
+    @include icon('./assets/twit-apple-touch-icon-192x192.png', 2.4);
   }
 }
 .github-icon {
   &::before {
-    @include icon('./assets/git-fluidicon.png', 2.1rem);
+    @include icon('./assets/git-fluidicon.png', 2.1);
   }
 }
 
   //stats component
 
 .monthTextLabel {
+  font-size: $monthTextSize;
   font-size: var(--monthTextSize);
 }
 
