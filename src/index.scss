@@ -46,7 +46,6 @@ a {
 fieldset {
   padding-top: rem2px(1);
   padding-top: 1rem;
-  padding-left: 0;
 }
 
 legend {
@@ -117,8 +116,9 @@ legend {
 .main-button { margin-left: 60% }
 
 .pad-container {
-  max-width: 380px;
-  max-width: px2rem(380);
+  $w: 330;
+  max-width: #{$w}px;
+  max-width: px2rem($w);
   margin-left: auto;
   margin-right: auto;
 }
@@ -128,6 +128,14 @@ legend {
   margin-top: 12px;
   margin-top: px2rem(12);
 }
+
+@media screen
+and (max-width: 380px) {
+  .pad-container {
+    width: 85%;
+  }
+}
+
 
 @media screen
 and (min-width: 360px)
@@ -161,9 +169,7 @@ and (min-width: 800px) {
   $mlef: -60;
   $pad: 20;
   $color: hsla(200, 100%, 0%, 0.8);
-
-  margin-left: #{$mlef}px;
-  margin-left: px2rem($mlef);
+  
   padding: #{$pad}px;
   padding: px2rem($pad);
   border-radius: 6px;
@@ -257,8 +263,8 @@ and (min-width: 800px) {
   //app component
 
 .textbox {
-  width: rem2px(17);
-  width: 17rem;
+  width: rem2px(16);
+  width: 16rem;
 }
 
   //about component
@@ -293,6 +299,12 @@ and (min-width: 800px) {
 .monthTextLabel {
   font-size: $monthTextSize;
   font-size: var(--monthTextSize);
+}
+
+  //configuration component
+  
+.expand {
+  width: auto;
 }
 
 //Utilities

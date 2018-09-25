@@ -22,7 +22,7 @@ class Configuration extends React.PureComponent {
   render() {
     return (<main>
       <h2 className="center">Ajustes</h2>
-      <form className="pad-container" action="" onSubmit={this.handleSubmit}>
+      <form className="pad-container expand" action="" onSubmit={this.handleSubmit}>
         <fieldset>
           <legend>Cambiar Contraseña</legend>
           <label className="separate" htmlFor="password">
