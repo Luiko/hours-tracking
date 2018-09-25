@@ -1,6 +1,6 @@
 {
   "name": "hours-tracking",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "simple time tracking",
   "main": "server/index.js",
   "scripts": {
