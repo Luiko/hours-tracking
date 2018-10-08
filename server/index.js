@@ -5,6 +5,7 @@ const Inert = require('inert');
 const HapiAuthCookie = require('hapi-auth-cookie');
 require('dotenv').config();
 const fs = require('fs');
+const plugins = require('./plugins');
 const StaticRoutes = require('./staticRoutes');
 const AccountController = require('./controllers/account');
 const IterationController = require('./controllers/iteration');
@@ -79,8 +80,9 @@ const server = new Hapi.Server({
 
   try {
     await server.register([
-      StaticRoutes, AccountController, IterationController, AdminAPI
-    ]);
+      StaticRoutes, AccountController, IterationController, AdminAPI,
+      ...plugins
+    ])
     await server.start();
   } catch (error) {
     console.error(error);
