@@ -5,4 +5,3 @@ if (Array.isArray(morePlugins)) {
 } else {
   module.exports = [];
 }
-
