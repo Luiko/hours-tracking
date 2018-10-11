@@ -70,7 +70,7 @@ exports.register = function (server) {
         } = await updateCookieState(username, request, clientDate);
         request.cookieAuth.set('clientDate', date);
         request.cookieAuth.set('diff', diff);
-        console.log('credentials', request.auth.credentials);
+        console.log('credentials', request.auth.artifacts);
         return {
           type: 'info', username, dayHours,
           weekHours, remainingTime
@@ -153,7 +153,7 @@ exports.register = function (server) {
           } = await updateCookieState(username, request, clientDate);
           request.cookieAuth.set('clientDate', date);
           request.cookieAuth.set('diff', diff);
-          console.log('credentials', request.auth.credentials);
+          console.log('credentials', request.auth.artifacts);
           const output = {
             username, dayHours, weekHours, remainingTime, version
           };
