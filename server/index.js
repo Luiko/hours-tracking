@@ -10,7 +10,7 @@ const StaticRoutes = require('./staticRoutes');
 const AccountController = require('./controllers/account');
 const IterationController = require('./controllers/iteration');
 const AdminAPI = require('./controllers/admin');
-const { getUsers } = require('./models');
+const { validUser } = require('./models');
 const { version } = require('../package.json');
 
 const {
@@ -72,8 +72,7 @@ const server = new Hapi.Server({
     requestDecoratorName: 'cookieAuth',
     redirectTo: '/login',
     async validateFunc(request, { username }) {
-      const users = await getUsers();
-      const user = users[username];
+      const user = await validUser(username);
       return { valid: !!user };
     }
   });

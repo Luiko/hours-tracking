@@ -1,6 +1,6 @@
 const Bcrypt = require('bcrypt');
 const {
-  getUsers, changePassword, deleteUser, validUser,
+  changePassword, deleteUser, validUser,
   addAccount, getWeekStats, getMonthStats, connect } = require('../models')
 ;
 const moment = require('moment');
@@ -196,8 +196,7 @@ exports.register = function (server) {
       try {
         const { username } = request.auth.credentials;
         const { password, newPassword } = request.payload;
-        const users = await getUsers();
-        const user = users[username];
+        const user = await validUser(username);
         if (await Bcrypt.compare(password, user.password)) {
           await changePassword(username, newPassword);
           return {
