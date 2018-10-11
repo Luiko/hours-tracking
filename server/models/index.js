@@ -9,7 +9,7 @@ const {
   isPointOf, iterationsToWeekSeconds
 } = require('./_index');
 const {
-  addAccount, getUsers, deleteUser, changePassword
+  addAccount, getUsers, deleteUser, changePassword, validUser
 } = require('./account');
 const { addIteration } = require('./iteration');
 const db = mongoose.connection;
@@ -178,5 +178,5 @@ module.exports = {
   addAccount, getUsers, closeConnection,
   addIteration, getDaySeconds, deleteUser,
   getWeekSeconds, changePassword, getWeekStats,
-  getMonthStats, connect
+  getMonthStats, connect, validUser
 };

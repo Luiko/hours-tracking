@@ -1,6 +1,6 @@
 const Bcrypt = require('bcrypt');
 const {
-  getUsers, changePassword, deleteUser,
+  getUsers, changePassword, deleteUser, validUser,
   addAccount, getWeekStats, getMonthStats, connect } = require('../models')
 ;
 const moment = require('moment');
@@ -55,8 +55,7 @@ exports.register = function (server) {
           type: 'error', payload: 'write valid fields'
         }).code(400);
       }
-      const users = await getUsers();
-      const user = users[username];
+      const user = await validUser(username);
       if (!user) {
         return h.response({
           type: 'error', payload: 'invalid username or password'

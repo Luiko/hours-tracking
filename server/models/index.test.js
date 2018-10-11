@@ -1,10 +1,21 @@
 const {
-  getWeekSeconds, getDaySeconds, getUsers,
+  getWeekSeconds, getDaySeconds, getUsers, validUser,
   getWeekStats, connect } = require('./index')
 ;
 const test = require('tape');
 
 connect();
+
+test('valid user', async function (t) {
+  t.plan(2);
+  const msg = 'should return a user';
+  const user =  await validUser('jeronimo');
+  t.equal(user.username, 'jeronimo', msg);
+
+  {const msg = 'should return false';
+  const user = await validUser('xrgasgfr1211');
+  t.equal(user, false, msg);}
+});
 
 test('seconds', async function (t) {
   t.plan(2);

@@ -11,7 +11,12 @@ async function addAccount(username, password) {
   process.log();
 };
 
-async function getUsers() {
+async function validUser(username) { //stateless alternative
+  const user = await Account.findOne({ username }, { username: 1, password: 1 });
+  return user? user : false;
+}
+
+async function getUsers() { //caching alternative
   const users = await Account.find({}, { _id: 0, username: 1, password: 1 });
   return users.reduce(function (prev, curr) {
     prev[curr.username] = curr;
@@ -33,4 +38,4 @@ async function changePassword(username, newPassword) {
   await user.save();
 }
 
-module.exports = { addAccount, getUsers , deleteUser, changePassword };
+module.exports = { addAccount, getUsers, deleteUser, changePassword, validUser };
