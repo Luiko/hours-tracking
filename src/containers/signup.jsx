@@ -80,23 +80,26 @@ class Signup extends Component {
       .then(function ({ data: username }) {
         this.props.auth({ username });
       }.bind(this))
-      .catch(function (err) {
-        if (err.response) {
-          if (err.response.data === 11000) {
+      .catch(function ({ response, message }) {
+        if (response) {
+          if (response.status === 409) { //user repeated
             this.setState({
-              error: 'duplicated key: we already have the same username',
-              closeAlert: false
-            });
+              error: response.data,
+              closeAlert: false,
+              username: '',
+              password: '',
+              repeatpassword: '',
+            }, () => this.firstTextInput.focus());
           } else {
             this.setState({
-              error: err.response.data.message, closeAlert: false
+              error: response.data.message, closeAlert: false
             });
           }
-        } if (err.message === this.cancel_msg) {
-          console.info(err.message);
+        } else if (message === this.cancel_msg) {
+          console.info(message);
         } else {
           this.setState({
-            error: err.message, closeAlert: false
+            error: message, closeAlert: false
           });
         }
       }.bind(this))

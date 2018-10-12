@@ -102,6 +102,9 @@ exports.register = function (server) {
         request.cookieAuth.set({ username });
         return username;
       } catch (err) {
+        if (/duplicate key error/.test(err.message)) {
+          return h.response('this username is already taken').code(409);
+        }
         console.error('sign up failed:', err.message);
         return h.response(err.code || err).code(500);
       }
