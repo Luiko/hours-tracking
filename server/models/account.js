@@ -9,7 +9,7 @@ async function addAccount(username, password) {
   const account = new Account({ username, password: hash });
   const process = await account.save();
   process.log();
-};
+}
 
 async function validUser(username) { //stateless alternative
   const user = await Account.findOne({ username }, { username: 1, password: 1 });
@@ -22,7 +22,7 @@ async function getUsers() { //caching alternative
     prev[curr.username] = curr;
     return prev;
   }, {});
-};
+}
 
 async function deleteUser(username, password) {
   const user = await Account.findOne({ username }, { password: 1 });
@@ -30,12 +30,12 @@ async function deleteUser(username, password) {
     await Account.deleteOne({ username });
     console.info('account', username, 'deleted');
   }
-};
+}
 
 async function changePassword(username, newPassword) {
-  const user = await Account.findOne({ username });
-  user.password = await Bcrypt.hash(newPassword, 14);
-  await user.save();
+  await Account.updateOne({ username }, {
+    $set: { password: await Bcrypt.hash(newPassword, 14) }
+  });
 }
 
 module.exports = { addAccount, getUsers, deleteUser, changePassword, validUser };

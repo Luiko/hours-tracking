@@ -7,7 +7,7 @@ const { hour } = require('./penv');
 
 const agent = request.agent(app);
 const user = 'algo';
-const login = agent
+const login = (agent) => agent
   .post('/login')
   .send({
     username: user, password: user, date: new Date, diff: 0
@@ -38,7 +38,7 @@ test('/auth route', async function (t) {
     })
     .catch((err) => t.fail(msg + '. ' + err.message))
   ;
-  await login;
+  await login(agent);
   {const msg = 'should fail, bad request';
   agent
     .post('/auth')
@@ -327,7 +327,7 @@ test('post /iterations', function (t) {
 });
 
 test('post /password', function (t) {
-  t.plan(6);
+  t.plan(10);
   const msg = 'should be restricted';
   request(app)
     .put('/password')
@@ -358,20 +358,41 @@ test('post /password', function (t) {
     .then(() => t.pass(msg))
     .catch((err) => t.fail(msg + '. ' + err.message))
   ;}
-  {const msg = 'should pass, valid request';
-  agent
+  {agent
     .put('/password')
-    .send({ password: user, newPassword: user })
+    .send({ password: user, newPassword: user + 12 })
     .expect(200)
     .then((res) => {
-      t.pass(msg);
+      t.pass('should pass, valid request, password changed');
       t.deepEqual(
         res.body,
         { type: 'info', payload: 'password changed' },
-        'should send info message'
+        'route pass should send info message'
       );
-    })
-    .catch((err) => t.fail(msg + '. ' + err.message))
+    },() => t.fail('should pass, valid request, password changed'))
+    .then(() => request(app).post('/login').send({
+      username: user, password: user, date: new Date, diff: 0
+    }).expect(401))
+    .then(
+      () => t.pass('should fail with last password'),
+      () => t.fail('should fail with last password')
+    )
+    .then(() => request(app).post('/login').send({
+      username: user, password: user + 12, date: new Date, diff: 0
+    }).expect(200))
+    .then(() => t.pass('user logged in'),() => t.fail('user logged in'))
+    .then(() => agent.put('/password')
+      .send({ password: user + 12, newPassword: user }).expect(200)
+    )
+    .then((res) => {
+      t.pass('reset changed password');
+      t.deepEqual(
+        res.body,
+        { type: 'info', payload: 'password changed' },
+        'should confirm login with new pass'
+      );
+    }, () => t.pass('reset changed password'))
+    .catch((err) => t.fail(err.message))
   ;}
 });
 
