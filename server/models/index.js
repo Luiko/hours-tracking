@@ -56,6 +56,7 @@ async function getWeekSeconds(username, clientDate) {
   }
 }
 
+const weekMS = 1000 * 60 * 60 * 24 * 7;
 async function getWeekStats(username, date) {
   const daysnumber = [];
   let relativeday = moment(date).startOf('week');
@@ -64,8 +65,20 @@ async function getWeekStats(username, date) {
     relativeday = relativeday.add(1, 'day');
   }
 
-  const user = await Account.findOne({ username }, { iterations: 1 });
-  const iterations = [...user.iterations];
+  const iterations = await Account.aggregate([
+    { $match: { username } },
+    {
+      $project: { iterations : { 
+        $filter: { input: "$iterations", as: "i", cond: {
+          $gte: ["$$i.start", new Date(Date.now() - weekMS)]
+        } } }
+      }
+    },
+    { $unwind: "$iterations" },
+    { $replaceRoot: { newRoot: "$iterations" } },
+    { $project: { _id: 0 } }
+  ]);
+  
   const getmilis = (iter) => (
     new Date(iter.end).getTime()) - (new Date(iter.start).getTime())
   ;
