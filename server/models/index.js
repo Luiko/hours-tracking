@@ -70,7 +70,7 @@ async function getWeekStats(username, date) {
     {
       $project: { iterations : { 
         $filter: { input: "$iterations", as: "i", cond: {
-          $gte: ["$$i.start", new Date(Date.now() - weekMS)]
+          $gte: ["$$i.start", new Date(moment(date).valueOf() - weekMS)]
         } } }
       }
     },
