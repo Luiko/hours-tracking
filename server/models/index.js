@@ -56,7 +56,10 @@ async function getWeekSeconds(username, clientDate) {
   }
 }
 
-const weekMS = 1000 * 60 * 60 * 24 * 7;
+const dayInMS = 1000 * 60 * 60 * 24;
+const getmilis = (iter) => (
+  new Date(iter.end).getTime()) - (new Date(iter.start).getTime())
+;
 async function getWeekStats(username, date) {
   const daysnumber = [];
   let relativeday = moment(date).startOf('week');
@@ -65,12 +68,15 @@ async function getWeekStats(username, date) {
     relativeday = relativeday.add(1, 'day');
   }
 
+  const dateInMS = moment(date).valueOf();
+  const weekInMS = (dayInMS * (moment(date).weekday() + 1));
+  const startOfWeekInMS = new Date(dateInMS - weekInMS);
   const iterations = await Account.aggregate([
     { $match: { username } },
     {
       $project: { iterations : { 
         $filter: { input: "$iterations", as: "i", cond: {
-          $gte: ["$$i.start", new Date(moment(date).valueOf() - weekMS)]
+          $gte: ["$$i.start", startOfWeekInMS]
         } } }
       }
     },
@@ -78,21 +84,18 @@ async function getWeekStats(username, date) {
     { $replaceRoot: { newRoot: "$iterations" } },
     { $project: { _id: 0 } }
   ]);
-  
-  const getmilis = (iter) => (
-    new Date(iter.end).getTime()) - (new Date(iter.start).getTime())
-  ;
-  const weekDaysWithMillis = {
+
+  const weekDaysMilliseconds = {
     'sunday': 0, 'monday': 0, 'tuesday': 0,
     'wednesday': 0, 'thursday': 0, 'friday': 0, 'saturday': 0
   };
-  const weekdays = Object.keys(weekDaysWithMillis);
+  const weekdays = Object.keys(weekDaysMilliseconds);
   let weekDaysLeft = moment(date).diff(moment(date).startOf('week'), 'day');
   let counter = 0;
   while (weekDaysLeft >= 0) {
     const day = moment(date).subtract(weekDaysLeft, 'days');
     const dayIterations = reduceIterationToDay(iterations, day);
-    weekDaysWithMillis[weekdays[counter]] = dayIterations.reduce(
+    weekDaysMilliseconds[weekdays[counter]] = dayIterations.reduce(
       (total, iteration) => total + getmilis(iteration),
       0
     );
@@ -105,8 +108,8 @@ async function getWeekStats(username, date) {
   const _hour = hour * 1000;
   for (let i = 0; i < 7; i++) {
     const dayname = weekdays[i];
-    if (remaining > 0 || weekDaysWithMillis[dayname] !== 0) {
-      week[dayname] = weekDaysWithMillis[dayname] + remaining;
+    if (remaining > 0 || weekDaysMilliseconds[dayname] !== 0) {
+      week[dayname] = weekDaysMilliseconds[dayname] + remaining;
       const nextRemaining = week[dayname] % _hour;
       week[dayname] = Math.floor(week[dayname] / _hour);
       remaining = nextRemaining;
@@ -119,25 +122,37 @@ async function getWeekStats(username, date) {
 }
 
 async function getMonthStats(username, date) {
-  const user = await Account.findOne({ username }, { iterations: 1 });
-  const iterations = [...user.iterations];
-  const getmilis = (iter) => (
-    new Date(iter.end).getTime()) - (new Date(iter.start).getTime())
-  ;
-  const weekDaysWithMilliseconds = {
+  const dateInMS = moment(date).valueOf();
+  const monthInMS = (dayInMS * moment(date).date());
+  const startOfMonthInMS = new Date(dateInMS - monthInMS);
+  const iterations = await Account.aggregate([
+    { $match: { username } },
+    {
+      $project: { iterations : { 
+        $filter: { input: "$iterations", as: "i", cond: {
+          $gte: ["$$i.start", startOfMonthInMS]
+        } } }
+      }
+    },
+    { $unwind: "$iterations" },
+    { $replaceRoot: { newRoot: "$iterations" } },
+    { $project: { _id: 0 } }
+  ]);
+
+  const weekDaysMilliseconds = {
     'sunday': 0, 'monday': 0, 'tuesday': 0,
     'wednesday': 0, 'thursday': 0, 'friday': 0, 'saturday': 0
   };
   const month = [];
   let relativeday = moment(date).startOf('month');
   const currentMonth = moment(date).month();
-  const weekStart = relativeday.week();
+  const weekStart = moment(relativeday).week();
 
   while (moment(relativeday).month() === currentMonth) {
-    const weekDaysWithMillis = Object.assign({}, weekDaysWithMilliseconds);
+    const weekDaysWithMillis = Object.assign({}, weekDaysMilliseconds);
     let weekdays = Object.keys(weekDaysWithMillis);
-    if (relativeday.week() === weekStart) {
-      const day = relativeday.format('dddd').toLowerCase();
+    if (moment(relativeday).week() === weekStart) {
+      const day = moment(relativeday).format('dddd').toLowerCase();
       weekdays = weekdays.reduce((prev, curr) => {
         if (prev.length || curr === day) {
           prev.push(curr);
