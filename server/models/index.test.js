@@ -2,6 +2,11 @@ const {
   getWeekSeconds, getDaySeconds, getUsers, validUser,
   getWeekStats, connect } = require('./index')
 ;
+const {
+  addIteration,
+  removeLastIteration,
+  countIterations
+} = require('../models/iteration');
 const test = require('tape');
 
 connect();
@@ -62,4 +67,30 @@ test('get weeks', async function (t) {
   t.assert(Array.isArray(days),
     'should contain also and array with the week days numbers')
   ;
+});
+
+test('iterations', async function (t) {
+  t.plan(3);
+  try {
+    const iterationsCounted = await countIterations('jeronimo');
+    const iteration = {
+      start: new Date(Date.now() - 1000 * 200),
+      end: new Date()
+    };
+    t.assert(Number.isSafeInteger(iterationsCounted), 'iterations counted');
+    await addIteration('jeronimo', iteration);
+    t.equal(
+      await countIterations('jeronimo'),
+      iterationsCounted + 1,
+      'iteration added'
+    );
+    await removeLastIteration('jeronimo');
+    t.equal(
+      await countIterations('jeronimo'),
+      iterationsCounted,
+      'last iteration removed'
+    );
+  } catch (error) {
+    t.fail(error);
+  }
 });
