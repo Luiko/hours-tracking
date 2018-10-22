@@ -29,14 +29,16 @@ function closeConnection() {
 };
 
 async function getDaySeconds(username, clientDate) {
-  const { iterations } = await Account.findOne({ username });
+  const startOfDay = moment(clientDate).startOf('day');
+  const iterations = await getIterationSince(username, startOfDay);
   const dayIterations = reduceIterationToDay(iterations, clientDate);
   const secondsDay = reduceDaySeconds(dayIterations, clientDate);
   return secondsDay;
 };
 
 async function getWeekSeconds(username, clientDate) {
-  const { iterations } = await Account.findOne({ username });
+  const startOfMonth = moment(clientDate).startOf('week').toDate();
+  const iterations = await getIterationSince(username, startOfMonth);
   try {
     const m = moment(clientDate);
     const weekStart = moment(m.toDate()).startOf('week');
@@ -70,21 +72,8 @@ async function getWeekStats(username, date) {
 
   const dateInMS = moment(date).valueOf();
   const weekInMS = (dayInMS * (moment(date).weekday() + 1));
-  const startOfWeekInMS = new Date(dateInMS - weekInMS);
-  const iterations = await Account.aggregate([
-    { $match: { username } },
-    {
-      $project: { iterations : { 
-        $filter: { input: "$iterations", as: "i", cond: {
-          $gte: ["$$i.start", startOfWeekInMS]
-        } } }
-      }
-    },
-    { $unwind: "$iterations" },
-    { $replaceRoot: { newRoot: "$iterations" } },
-    { $project: { _id: 0 } }
-  ]);
-
+  const startOfWeek = new Date(dateInMS - weekInMS);
+  const iterations = await getIterationSince(username, startOfWeek);
   const weekDaysMilliseconds = {
     'sunday': 0, 'monday': 0, 'tuesday': 0,
     'wednesday': 0, 'thursday': 0, 'friday': 0, 'saturday': 0
@@ -124,21 +113,8 @@ async function getWeekStats(username, date) {
 async function getMonthStats(username, date) {
   const dateInMS = moment(date).valueOf();
   const monthInMS = (dayInMS * moment(date).date());
-  const startOfMonthInMS = new Date(dateInMS - monthInMS);
-  const iterations = await Account.aggregate([
-    { $match: { username } },
-    {
-      $project: { iterations : { 
-        $filter: { input: "$iterations", as: "i", cond: {
-          $gte: ["$$i.start", startOfMonthInMS]
-        } } }
-      }
-    },
-    { $unwind: "$iterations" },
-    { $replaceRoot: { newRoot: "$iterations" } },
-    { $project: { _id: 0 } }
-  ]);
-
+  const startOfMonth = new Date(dateInMS - monthInMS);
+  const iterations = await getIterationSince(username, startOfMonth);
   const weekDaysMilliseconds = {
     'sunday': 0, 'monday': 0, 'tuesday': 0,
     'wednesday': 0, 'thursday': 0, 'friday': 0, 'saturday': 0
@@ -200,6 +176,22 @@ async function getMonthStats(username, date) {
   }
   
   return month;
+}
+
+function getIterationSince(username, startOf) {
+  return Account.aggregate([
+    { $match: { username } },
+    {
+      $project: { iterations : { 
+        $filter: { input: "$iterations", as: "i", cond: {
+          $gte: ["$$i.start", startOf]
+        } } }
+      }
+    },
+    { $unwind: "$iterations" },
+    { $replaceRoot: { newRoot: "$iterations" } },
+    { $project: { _id: 0 } }
+  ]);
 }
 
 module.exports = {
