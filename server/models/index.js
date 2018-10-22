@@ -182,7 +182,7 @@ function getIterationSince(username, startOf) {
   return Account.aggregate([
     { $match: { username } },
     {
-      $project: { iterations : { 
+      $project: { iterations : {
         $filter: { input: "$iterations", as: "i", cond: {
           $gte: ["$$i.start", startOf]
         } } }

@@ -20,7 +20,7 @@ install dependecies `npm install`
 
 specify some configurations on the ̣`.env` file
 
-* cookie password 
+* cookie password
 `COOKIE_PASSWORD=`
 * mongodb connection
 `STR_DB_CON=`
