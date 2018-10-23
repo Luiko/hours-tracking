@@ -58,7 +58,8 @@ now you can run the app `node server`
 
 
 ##Folder Structure
-client side files
+```
+#client side files
   dist
   │ ...
   src/
@@ -75,7 +76,7 @@ client side files
   │   ...
   └── penv.json
 
-server side files
+#server side files
   data
   │ ...
   node_modules
@@ -95,3 +96,4 @@ server side files
   │   ...
   .gitignore
   .env
+```
