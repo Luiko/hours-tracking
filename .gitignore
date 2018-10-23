@@ -4,4 +4,4 @@ private
 .env
 data
 .vscode
-server/plugins/others
+src/plugins/others

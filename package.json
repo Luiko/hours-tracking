@@ -2,13 +2,13 @@
   "name": "hours-tracking",
   "version": "0.7.2",
   "description": "simple time tracking",
-  "main": "server/index.js",
+  "main": "src/index.js",
   "scripts": {
+    "start": "node src",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon server/ --watch server",
-    "front": "webpack && node server",
-    "test-be": "nodemon server/index.test --watch server",
-    "test-db": "nodemon server/models/index.test --watch server/models",
+    "dev": "nodemon -w index.js -w src/controllers -w src/static -w src/lib -w src/models",
+    "test-be": "nodemon src/index.test -w index.js -w src/controllers -w src/static -w src/lib",
+    "test-db": "nodemon src/models/index.test -w src/models",
     "watch": "webpack -w",
     "build": "webpack --config webpack.config.prod.js"
   },
