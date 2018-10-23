@@ -55,3 +55,43 @@ run server tests `npm run test-be`
 4
 
 now you can run the app `node server`
+
+
+##Folder Structure
+client side files
+  dist
+  │ ...
+  src/
+  ├── assets
+  │   ...
+  ├── client.js
+  ├── components
+  │   ...
+  ├── containers
+  │   ...
+  ├── index.html
+  ├── index.scss
+  ├── locales
+  │   ...
+  └── penv.json
+
+server side files
+  data
+  │ ...
+  node_modules
+  │ ...
+  src/
+  ├── controllers
+  │   ...
+  ├── index.js
+  ├── index.test.js
+  ├── lib
+  │   ...
+  ├── models
+  │   ...
+  ├── plugins
+  │   ...
+  ├── static
+  │   ...
+  .gitignore
+  .env
