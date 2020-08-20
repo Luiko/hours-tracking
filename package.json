@@ -30,7 +30,7 @@
   "homepage": "https://github.com/luiko/hours-tracking#readme",
   "dependencies": {
     "axios": "^0.18.1",
-    "bcrypt": "^3.0.1",
+    "bcrypt": "^5.0.0",
     "dotenv": "^4.0.0",
     "fast-deep-equal": "^2.0.1",
     "hapi": "^17.5.5",
